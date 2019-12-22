@@ -1,7 +1,7 @@
 package pl.wolski.bank.annotations;
 
 
-import com.example.krening.services.UserService;
+import pl.wolski.bank.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ConstraintValidator;
