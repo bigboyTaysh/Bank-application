@@ -1,6 +1,7 @@
 package pl.wolski.bank.services;
 
 
+import pl.wolski.bank.models.Address;
 import pl.wolski.bank.models.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -9,7 +10,7 @@ import java.math.BigInteger;
 
 public interface UserService extends UserDetailsService {
 // Własne metody
-    void save(User user);
+    void save(User user, Address address);
 
     boolean isUniqueLogin(String login);
     boolean isUniqueEmail(String email);

@@ -24,6 +24,8 @@ public class RepositoriesInitializer {
     private RoleRepository roleRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private AddressRepository addressRepository;
 
     @Bean
     InitializingBean init() {
@@ -34,6 +36,8 @@ public class RepositoriesInitializer {
                 try {
                     Role roleUser = roleRepository.save(new Role(Role.Types.ROLE_USER));
                     Role roleAdmin = roleRepository.save(new Role(Role.Types.ROLE_ADMIN));
+
+                    Address address = new Address("a","b","c","d", "e");
 
                     User user = new User("user", true);
                     user.setRoles(new HashSet<>(Arrays.asList(roleUser)));
@@ -50,6 +54,7 @@ public class RepositoriesInitializer {
                     calendar.set(1997, 6, 18);
                     user2.setBirthDate(calendar.getTime());
                     user2.setAccountNumber(new BigDecimal("11222233334444555566667777"));
+                    user2.setAddress(address);
 
                     User admin = new User("admin", true);
                     admin.setRoles(new HashSet<>(Arrays.asList(roleAdmin)));
@@ -59,6 +64,7 @@ public class RepositoriesInitializer {
                     test.setRoles(new HashSet<>(Arrays.asList(roleAdmin, roleUser)));
                     test.setPassword(passwordEncoder.encode("useradmin"));
 
+                    addressRepository.save(address);
                     userRepository.save(user);
                     userRepository.save(user2);
                     userRepository.save(admin);

@@ -2,6 +2,7 @@ package pl.wolski.bank.services;
 
 
 import pl.wolski.bank.models.Role;
+import pl.wolski.bank.repositories.AddressRepository;
 import pl.wolski.bank.repositories.RoleRepository;
 import pl.wolski.bank.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private AddressRepository addressRepository;
+
     @Override
     //bez adnotacji @Transactional sesja jest zamykana po wywołaniu findByUsername, co uniemożliwia dociągnięcie ról, mimo fetch=EAGER.
     //ponadto, musi być włączone zarządzanie transakcjami @EnableTransactionManagement
@@ -63,13 +67,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(pl.wolski.bank.models.User user) {
+    public void save(pl.wolski.bank.models.User user, pl.wolski.bank.models.Address address) {
 
         Role userRole = roleRepository.findRoleByType(Role.Types.ROLE_USER);
+
+        addressRepository.saveAndFlush(address);
+
         List roles = Arrays.asList(userRole);
         user.setRoles(new HashSet<>(roles));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setPasswordConfirm(null);//wyzerowanie jest potrzebne ze względu na walidację adnotacjami hibernate
+        user.setAddress(address);
+
         userRepository.saveAndFlush(user);
     }
 

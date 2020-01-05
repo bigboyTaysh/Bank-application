@@ -23,19 +23,21 @@ public class UserRegistrationFormController {
 
     @GetMapping("/registrationForm.html")
     public String registration(Model model) {
+        model.addAttribute("userAddress", new Address());
         model.addAttribute("userCommand", new User());
         return "registrationForm";
     }
 
     @PostMapping("/registrationForm.html")
-    public String registration(@Valid @ModelAttribute("userCommand") User userForm, @Valid @ModelAttribute("userAddress") Address userAddress, BindingResult bindingResult) {
+    public String registration(@Valid @ModelAttribute("userCommand") User userForm,
+                               @Valid @ModelAttribute("userAddress") Address userAddress,
+                               BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return "registrationForm";
         }
-        userForm.setAddress(userAddress);
 
-        userService.save(userForm);
+        userService.save(userForm, userAddress);
         return "registrationSuccess";
     }
 
