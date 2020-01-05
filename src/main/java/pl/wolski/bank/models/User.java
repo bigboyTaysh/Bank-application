@@ -1,6 +1,8 @@
 package pl.wolski.bank.models;
 
 
+import pl.wolski.bank.annotations.UniqueEmail;
+import pl.wolski.bank.annotations.UniquePersonalIdentificationNumber;
 import pl.wolski.bank.annotations.UniqueUsername;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,7 +29,9 @@ public class User {
     private String password;
     private String firstName;
     private String lastName;
-
+    @UniquePersonalIdentificationNumber
+    private String personalIdentificationNumber;
+    @UniqueEmail
     private String email;
     private String phone;
     @Transient//pole nie będzie odwzorowane w db
