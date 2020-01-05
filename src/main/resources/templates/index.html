@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-<head>
-    <div th:replace="shared/loginHeader :: header-css"/>
+    <head>
+        <div th:replace="shared/loginHeader :: header-css"/>
 
-    <title>Strona domowa</title>
-</head>
-<body class="card">
-<div th:replace="shared/loginHeader :: header('vehicleList')"/>
-SIEMAAAAAAAAAAANO
-<img src="https://i.makeagif.com/media/11-04-2015/8Rc0ZT.gif" height="300" width="450">
-<div th:replace="shared/footer :: footer"></div>
-</body>
+        <title>Strona domowa</title>
+    </head>
+    <body class="card">
+        <div th:replace="shared/loginHeader :: header('index')"/>
+
+        <div th:replace="shared/footer :: footer"></div>
+    </body>
 </html>

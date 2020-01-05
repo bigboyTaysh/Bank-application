@@ -26,8 +26,6 @@ public class UserRegistrationFormController {
         return "registrationForm";
     }
 
-
-
     @PostMapping("/registrationForm.html")
     public String registration(@Valid @ModelAttribute("userCommand") User userForm, BindingResult bindingResult) {
 

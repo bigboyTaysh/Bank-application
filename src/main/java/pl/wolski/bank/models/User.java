@@ -26,6 +26,7 @@ public class User {
     private String username;
     private String password;
     private String email;
+    private String phone;
     @Transient//pole nie będzie odwzorowane w db
     private String passwordConfirm;
     private boolean enabled = false;

@@ -26,8 +26,6 @@ public class RepositoriesInitializer {
 
         return () -> {
 
-
-
             if (roleRepository.findAll().isEmpty() == true) {
                 try {
                     Role roleUser = roleRepository.save(new Role(Role.Types.ROLE_USER));

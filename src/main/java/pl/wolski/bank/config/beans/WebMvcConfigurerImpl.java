@@ -17,10 +17,9 @@ public class WebMvcConfigurerImpl implements WebMvcConfigurer {
         //Dodanie obsługi pozostałych zasobów
     }
 
-    /*
+
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/vehicleList").setViewName("vehicleList");
+        registry.addViewController("/index").setViewName("index");
     } // jak sie tak zrobi to ta stronka chyba nie moze byc glowna ale reszte sobie mozna tak zrobic zamiast pisac controller
-    */
 }

@@ -25,6 +25,4 @@ public class GlobalControlerAdvice {
         return "errors/databaseErrorView";
     }
 
-
-
 }
