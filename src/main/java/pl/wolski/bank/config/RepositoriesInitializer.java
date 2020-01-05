@@ -8,8 +8,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 
 @Configuration
@@ -41,9 +44,12 @@ public class RepositoriesInitializer {
                     user2.setPassword(passwordEncoder.encode("user2"));
                     user2.setEmail("email1@wp.pl");
                     user2.setFirstName("Patryk");
-                    user2.setLastName("Wol");
-                    user2.setPersonalIdentificationNumber(new BigInteger("123456789"));
-
+                    user2.setLastName("Wolak");
+                    user2.setPersonalIdentificationNumber(new BigDecimal("123456789"));
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(1997, 6, 18);
+                    user2.setBirthDate(calendar.getTime());
+                    user2.setAccountNumber(new BigDecimal("11222233334444555566667777"));
 
                     User admin = new User("admin", true);
                     admin.setRoles(new HashSet<>(Arrays.asList(roleAdmin)));

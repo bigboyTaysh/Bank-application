@@ -1,5 +1,6 @@
 package pl.wolski.bank.controllers;
 
+import pl.wolski.bank.models.Address;
 import pl.wolski.bank.models.User;
 import pl.wolski.bank.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +28,13 @@ public class UserRegistrationFormController {
     }
 
     @PostMapping("/registrationForm.html")
-    public String registration(@Valid @ModelAttribute("userCommand") User userForm, BindingResult bindingResult) {
+    public String registration(@Valid @ModelAttribute("userCommand") User userForm, @Valid @ModelAttribute("userAddress") Address userAddress, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return "registrationForm";
         }
+        userForm.setAddress(userAddress);
+
         userService.save(userForm);
         return "registrationSuccess";
     }

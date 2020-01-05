@@ -1,6 +1,7 @@
 package pl.wolski.bank.models;
 
 
+import org.springframework.format.annotation.DateTimeFormat;
 import pl.wolski.bank.annotations.UniqueEmail;
 import pl.wolski.bank.annotations.UniquePersonalIdentificationNumber;
 import pl.wolski.bank.annotations.UniqueUsername;
@@ -10,8 +11,10 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
 
@@ -25,26 +28,38 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Size(min = 2, max = 36)
+
+    @Size(min = 4, max = 36)
     @UniqueUsername
     private String username;
+
     private String password;
+
+    @Size(min = 4, max = 36)
     private String firstName;
+
+    @Size(min = 4, max = 36)
     private String lastName;
+
+    @Digits(integer=11, fraction=0)
     @UniquePersonalIdentificationNumber
-    private BigInteger personalIdentificationNumber;
+    private BigDecimal personalIdentificationNumber;
+
+    @Email
     @UniqueEmail
     private String email;
     private String phone;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Temporal(TemporalType.DATE)
     private Date birthDate;
+
+    @Digits(integer=26, fraction=0)
+    private BigDecimal accountNumber;
+
     @Transient//pole nie będzie odwzorowane w db
     private String passwordConfirm;
     private boolean enabled = false;
-
-    @AssertTrue
-    private boolean isPasswordsEquals(){
-        return password == null || passwordConfirm == null || password.equals(passwordConfirm);
-    }
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
@@ -52,6 +67,14 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="address_id", nullable = true)
+    private Address address;
+
+    @AssertTrue
+    private boolean isPasswordsEquals(){
+        return password == null || passwordConfirm == null || password.equals(passwordConfirm);
+    }
 
     public User(String username){
         this(username, false);
