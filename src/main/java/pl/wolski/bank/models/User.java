@@ -25,6 +25,9 @@ public class User {
     @UniqueUsername
     private String username;
     private String password;
+    private String firstName;
+    private String lastName;
+
     private String email;
     private String phone;
     @Transient//pole nie będzie odwzorowane w db

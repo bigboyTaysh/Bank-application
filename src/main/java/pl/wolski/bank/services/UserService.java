@@ -9,4 +9,6 @@ public interface UserService extends UserDetailsService {
     void save(User user);
 
     boolean isUniqueLogin(String login);
+
+    boolean isUniqueEmail(String email);
 }
