@@ -11,6 +11,8 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.Size;
+import java.math.BigInteger;
+import java.util.Date;
 import java.util.Set;
 
 @Getter
@@ -30,10 +32,11 @@ public class User {
     private String firstName;
     private String lastName;
     @UniquePersonalIdentificationNumber
-    private String personalIdentificationNumber;
+    private BigInteger personalIdentificationNumber;
     @UniqueEmail
     private String email;
     private String phone;
+    private Date birthDate;
     @Transient//pole nie będzie odwzorowane w db
     private String passwordConfirm;
     private boolean enabled = false;

@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -74,5 +75,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean isUniqueLogin(String username) {
         return userRepository.findByUsername(username) == null;
+    }
+
+    @Override
+    public boolean isUniqueEmail(String email) {
+        return userRepository.findByEmail(email) == null;
+    }
+
+    @Override
+    public boolean isUniquePersonalIdentificationNumber(BigInteger personalIdentificationNumber) {
+        return userRepository.findByPersonalIdentificationNumber(personalIdentificationNumber) == null;
     }
 }
