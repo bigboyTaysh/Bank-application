@@ -37,7 +37,7 @@ public class RepositoriesInitializer {
                     Role roleUser = roleRepository.save(new Role(Role.Types.ROLE_USER));
                     Role roleAdmin = roleRepository.save(new Role(Role.Types.ROLE_ADMIN));
 
-                    Address address = new Address("a","b","c","d", "e");
+                    Address address = new Address("a",1,2,"d", "e");
 
                     User user = new User("user", true);
                     user.setRoles(new HashSet<>(Arrays.asList(roleUser)));
@@ -53,7 +53,6 @@ public class RepositoriesInitializer {
                     Calendar calendar = Calendar.getInstance();
                     calendar.set(1997, 6, 18);
                     user2.setBirthDate(calendar.getTime());
-                    user2.setAccountNumber(new BigDecimal("11222233334444555566667777"));
                     user2.setAddress(address);
 
                     User admin = new User("admin", true);

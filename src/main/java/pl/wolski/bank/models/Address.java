@@ -17,12 +17,12 @@ public class Address {
     private Integer id;
 
     private String street;
-    private String houseNumber;
-    private String apartmentNumber;
+    private int houseNumber;
+    private int apartmentNumber;
     private String city;
     private String zipCode;
 
-    public Address(String street, String houseNumber, String apartmentNumber, String city, String zipCode) {
+    public Address(String street, int houseNumber, int apartmentNumber, String city, String zipCode) {
         this.street = street;
         this.houseNumber = houseNumber;
         this.apartmentNumber = apartmentNumber;

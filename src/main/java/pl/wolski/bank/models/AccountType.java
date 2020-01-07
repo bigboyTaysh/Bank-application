@@ -17,5 +17,4 @@ public class AccountType {
     private Long id;
 
     private String name;
-
 }
