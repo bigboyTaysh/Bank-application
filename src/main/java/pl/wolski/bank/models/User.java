@@ -54,9 +54,6 @@ public class User {
     @Temporal(TemporalType.DATE)
     private Date birthDate;
 
-    @Digits(integer=26, fraction=0)
-    private BigDecimal accountNumber;
-
     @Transient//pole nie będzie odwzorowane w db
     private String passwordConfirm;
     private boolean enabled = false;
