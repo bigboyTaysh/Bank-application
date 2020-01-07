@@ -3,8 +3,11 @@ package pl.wolski.bank.models;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
 @Getter
 @Setter
@@ -14,20 +17,22 @@ import javax.persistence.*;
 public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
+
 
     private String street;
-    private int houseNumber;
-    private int apartmentNumber;
+    private String houseNumber;
+
+    @Nullable
+    private String apartmentNumber;
     private String city;
     private String zipCode;
 
-    public Address(String street, int houseNumber, int apartmentNumber, String city, String zipCode) {
+    public Address(String street, String houseNumber, String apartmentNumber, String city, String zipCode) {
         this.street = street;
         this.houseNumber = houseNumber;
         this.apartmentNumber = apartmentNumber;
         this.city = city;
         this.zipCode = zipCode;
     }
-
 }
