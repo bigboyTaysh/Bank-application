@@ -9,5 +9,6 @@ import pl.wolski.bank.models.User;
 import java.math.BigDecimal;
 
 public interface AddressRepository extends JpaRepository<Address, Long> {
-    Address findByStreetAndHouseNumberAndApartmentNumberAndCityAndZipCode(String street, String houseNumber, String apartmentNumber, String City, String zipCode);
+    Address findByStreetAndHouseNumberAndApartmentNumberAndCityAndZipCode(
+            String street, String houseNumber, String apartmentNumber, String City, String zipCode);
 }

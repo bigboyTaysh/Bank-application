@@ -37,7 +37,7 @@ public class RepositoriesInitializer {
                     Role roleUser = roleRepository.save(new Role(Role.Types.ROLE_USER));
                     Role roleAdmin = roleRepository.save(new Role(Role.Types.ROLE_ADMIN));
 
-                    Address address = new Address("a","1","2","d", "e");
+                    Address address = new Address("a","1","2","d"   , "e");
 
                     User user = new User("user", true);
                     user.setRoles(new HashSet<>(Arrays.asList(roleUser)));
