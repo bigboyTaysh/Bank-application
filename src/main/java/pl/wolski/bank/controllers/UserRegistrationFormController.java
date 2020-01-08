@@ -2,6 +2,7 @@ package pl.wolski.bank.controllers;
 
 import pl.wolski.bank.models.Address;
 import pl.wolski.bank.models.User;
+import pl.wolski.bank.services.AddressService;
 import pl.wolski.bank.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,9 @@ public class UserRegistrationFormController {
     @Autowired(required = false)
     private UserService userService;
 
+    @Autowired(required = false)
+    private AddressService addressService;
+
     @GetMapping("/registrationForm.html")
     public String registration(Model model) {
         model.addAttribute("userAddress", new Address());
@@ -37,7 +41,7 @@ public class UserRegistrationFormController {
             return "registrationForm";
         }
 
-        userService.save(userForm, userAddress);
+        userService.save(userForm, addressService.findExistAddress(userAddress));
         return "registrationSuccess";
     }
 
