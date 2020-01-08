@@ -60,18 +60,24 @@ public class User {
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+            joinColumns = @JoinColumn(name = "id_user"),
+            inverseJoinColumns = @JoinColumn(name = "id_role"))
     private Set<Role> roles;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name="address_id", nullable = true)
+    @JoinColumn(name="address_id", nullable = false)
     private Address address;
 
     @AssertTrue
     private boolean isPasswordsEquals(){
         return password == null || passwordConfirm == null || password.equals(passwordConfirm);
     }
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "owned_bank_accounts",
+            joinColumns = @JoinColumn(name = "id_user"),
+            inverseJoinColumns = @JoinColumn(name = "id_bank_account"))
+    private Set<BankAccount> bankAccounts;
 
     public User(String username){
         this(username, false);

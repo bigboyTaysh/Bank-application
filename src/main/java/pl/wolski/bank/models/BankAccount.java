@@ -7,6 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -29,5 +30,9 @@ public class BankAccount {
 
     @Digits(integer = 26, fraction = 0)
     private BigDecimal bankAccountNumber;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_account_type", nullable = false)
+    private Set<AccountType> accountType;
 
 }
