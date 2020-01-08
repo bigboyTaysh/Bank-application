@@ -8,7 +8,7 @@ import pl.wolski.bank.repositories.AddressRepository;
 import pl.wolski.bank.repositories.UserRepository;
 
 
-@Service("userDetailsService")
+@Service("addressDetailsService")
 public class AddressServiceImpl implements AddressService {
 
     @Autowired
@@ -19,8 +19,9 @@ public class AddressServiceImpl implements AddressService {
 
     @Override
     public Address findExistAddress(Address address){
-        pl.wolski.bank.models.Address addressInRepository = addressRepository.findByApartmentNumberAndCityAndHouseNumberAndStreetAndZipCode(address);
+        pl.wolski.bank.models.Address addressInRepository = addressRepository.findByStreetAndHouseNumberAndApartmentNumberAndCityAndZipCode(address.getStreet(), address.getHouseNumber(), address.getApartmentNumber(), address.getCity(), address.getZipCode());
         if(addressInRepository == null) {
+            addressRepository.saveAndFlush(address);
             return address;
         }
         return addressInRepository;

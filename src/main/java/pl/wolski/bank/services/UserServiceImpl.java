@@ -70,8 +70,6 @@ public class UserServiceImpl implements UserService {
 
         Role userRole = roleRepository.findRoleByType(Role.Types.ROLE_USER);
 
-        addressRepository.saveAndFlush(address);
-
         List roles = Arrays.asList(userRole);
         user.setRoles(new HashSet<>(roles));
         user.setPassword(passwordEncoder.encode(user.getPassword()));
