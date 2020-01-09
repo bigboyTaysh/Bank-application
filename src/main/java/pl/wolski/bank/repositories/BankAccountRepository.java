@@ -8,5 +8,6 @@ import pl.wolski.bank.models.BankAccount;
 import java.math.BigDecimal;
 
 public interface BankAccountRepository extends JpaRepository<BankAccount, Long> {
+    BankAccount findById();
     BankAccount findByBankAccountNumber(BigDecimal bankAccountNumber);
 }

@@ -4,6 +4,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import pl.wolski.bank.services.BankAccountService;
 import pl.wolski.bank.services.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,13 +32,16 @@ public class UserController{
     @Autowired
     UserService userService;
 
+    @Autowired
+    BankAccountService bankAccountService;
+
     @GetMapping(path = "/index")
     //  @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST})
     public String home(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Object principal = auth.getPrincipal();
         if (!(auth instanceof AnonymousAuthenticationToken)) {
-            model.addAttribute("user", userService.findByUsername(((UserDetails)principal).getUsername()));
+            model.addAttribute("userAccount", bankAccountService.getUserAccount(userService.findByUsername(((UserDetails)principal).getUsername())));
             return "index";
         }
         return "loginForm";

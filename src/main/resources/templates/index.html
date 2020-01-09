@@ -10,31 +10,11 @@
         <table class="table table-striped">
             <thead>
             <tbody>
-                <tr th:each="vehicle : ${vehicleListPage.content}">
-
+                <tr>
                     <td>
-                        <span>[[${vehicle.name}]]</span>
+                        [[${userAccount.accountType.name}]]
                     </td>
-                    <td>
-                        <span th:if="${vehicle.model.isEmpty()}">Brak danych</span>
-                        <span th:unless="${vehicle.model.isEmpty()}">[[${vehicle.model}]]</span>
-                    </td>
-                    <td>
-                        [[${vehicle.vehicleType.name}]]
-                    </td>
-                    <td><span th:text="${#dates.format(vehicle.productionDate, 'dd-MM-yyyy')}"></span></td>
-                    <td><span th:text="${#numbers.formatDecimal(vehicle.price,2,2)}"></span></td>
-                    <td>
-                        <span th:if="${vehicle.price lt boundMin}">TANI</span>
-                        <span th:if="${vehicle.price gt boundMax}">DROGI</span>
-                        <span th:if="${vehicle.price ge boundMin && vehicle.price le boundMax}">ŚREDNI</span>
-                        <!-- tani|średni|drogi -->
-                    </td>
-                    <td sec:authorize="hasRole('ROLE_ADMIN')">
-                        <a class="btn btn-danger" th:href="@{/vehicleList.html(did=${vehicle.id})}" >Usuń</a>
-                        <a class="btn btn-success" th:href="@{/vehicleForm.html(id=${vehicle.id})}">Edytuj</a>
-                    </td>
-
+                    <td><span th:text="${#numbers.formatDecimal(userAccount.balance,2,2)}"></span></td>
                 </tr>
 
             </tbody>
