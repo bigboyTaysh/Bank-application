@@ -12,6 +12,8 @@ public interface UserService extends UserDetailsService {
 // Własne metody
     void save(User user, Address address);
 
+    User findByUsername(String username);
+
     boolean isUniqueLogin(String login);
     boolean isUniqueEmail(String email);
     boolean isUniquePersonalIdentificationNumber(BigDecimal personalIdentificationNumber);

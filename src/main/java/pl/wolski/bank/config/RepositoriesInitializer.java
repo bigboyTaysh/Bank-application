@@ -20,22 +20,25 @@ public class RepositoriesInitializer {
 
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private RoleRepository roleRepository;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @Autowired
     private AddressRepository addressRepository;
+
     @Autowired
     private BankAccountRepository bankAccountRepository;
+
     @Autowired
     private AccountTypeRepository accountTypeRepository;
 
     @Bean
     InitializingBean init() {
-
         return () -> {
-
             if (roleRepository.findAll().isEmpty() == true) {
                 try {
 
