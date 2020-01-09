@@ -28,6 +28,8 @@ public class RepositoriesInitializer {
     private AddressRepository addressRepository;
     @Autowired
     private BankAccountRepository bankAccountRepository;
+    @Autowired
+    private AccountTypeRepository accountTypeRepository;
 
     @Bean
     InitializingBean init() {
@@ -38,16 +40,18 @@ public class RepositoriesInitializer {
                 try {
 
                     AccountType accountType = new AccountType("typ1");
+                    accountTypeRepository.save(accountType);
 
                     BigDecimal accountNumber = new BigDecimal("11222233334444555566667777");
                     BigDecimal zero = new BigDecimal("0");
                     BankAccount bankAccount = new BankAccount(zero, zero, zero, accountNumber, accountType);
-
+                    bankAccountRepository.save(bankAccount);
 
                     Role roleUser = roleRepository.save(new Role(Role.Types.ROLE_USER));
                     Role roleAdmin = roleRepository.save(new Role(Role.Types.ROLE_ADMIN));
 
                     Address address = new Address("a","1","2","d"   , "e");
+                    addressRepository.save(address);
 
                     User user = new User("user", true);
                     user.setRoles(new HashSet<>(Arrays.asList(roleUser)));
@@ -75,9 +79,9 @@ public class RepositoriesInitializer {
                     test.setRoles(new HashSet<>(Arrays.asList(roleAdmin, roleUser)));
                     test.setPassword(passwordEncoder.encode("useradmin"));
 
-                    addressRepository.save(address);
                     userRepository.save(user);
                     userRepository.save(user2);
+
                     userRepository.save(admin);
                     userRepository.save(test);
                 } catch (Exception e) {

@@ -14,5 +14,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByPersonalIdentificationNumber(BigDecimal personalIdentificationNumber);
 
-    User findFirstByOrderByJoinDateDesc(User user);
+    //User findFirstByOrderByJoinDateDesc(User user);
 }

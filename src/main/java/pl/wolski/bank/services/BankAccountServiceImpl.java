@@ -12,7 +12,7 @@ import pl.wolski.bank.repositories.BankAccountRepository;
 import pl.wolski.bank.repositories.UserRepository;
 
 
-@Service("addressDetailsService")
+@Service("BankAccountDetailsService")
 public class BankAccountServiceImpl implements BankAccountService {
 
     @Autowired
