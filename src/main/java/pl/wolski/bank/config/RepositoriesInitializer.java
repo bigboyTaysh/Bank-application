@@ -41,7 +41,7 @@ public class RepositoriesInitializer {
 
                     BigDecimal accountNumber = new BigDecimal("11222233334444555566667777");
                     BigDecimal zero = new BigDecimal("0");
-                    BankAccount bankAccount = new BankAccount(zero, zero, zero, zero, accountType);
+                    BankAccount bankAccount = new BankAccount(zero, zero, zero, accountNumber, accountType);
 
 
                     Role roleUser = roleRepository.save(new Role(Role.Types.ROLE_USER));
@@ -64,8 +64,7 @@ public class RepositoriesInitializer {
                     calendar.set(1997, 6, 18);
                     user2.setBirthDate(calendar.getTime());
                     user2.setAddress(address);
-
-
+                    user2.setBankAccounts(new HashSet<>(Arrays.asList(bankAccount)));
 
 
                     User admin = new User("admin", true);
