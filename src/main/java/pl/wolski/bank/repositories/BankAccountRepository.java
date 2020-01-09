@@ -4,6 +4,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import pl.wolski.bank.models.Address;
 import pl.wolski.bank.models.BankAccount;
 
-public interface BankAccountRepository extends JpaRepository<BankAccount, Long> {
+import java.math.BigDecimal;
 
+public interface BankAccountRepository extends JpaRepository<BankAccount, Long> {
+    BankAccount findByBankAccountNumber(BigDecimal bankAccountNumber);
 }

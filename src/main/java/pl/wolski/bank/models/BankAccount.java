@@ -31,8 +31,15 @@ public class BankAccount {
     @Digits(integer = 26, fraction = 0)
     private BigDecimal bankAccountNumber;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_account_type", nullable = false)
-    private Set<AccountType> accountType;
+    private AccountType accountType;
 
+    public BankAccount(BigDecimal balance, BigDecimal availableFounds, BigDecimal lock, BigDecimal bankAccountNumber, AccountType accountType) {
+        this.balance = balance;
+        this.availableFounds = availableFounds;
+        this.lock = lock;
+        this.bankAccountNumber = bankAccountNumber;
+        this.accountType = accountType;
+    }
 }

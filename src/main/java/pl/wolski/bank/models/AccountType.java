@@ -17,4 +17,8 @@ public class AccountType {
     private Long id;
 
     private String name;
+
+    public AccountType(String name) {
+        this.name = name;
+    }
 }

@@ -54,6 +54,10 @@ public class User {
     @Temporal(TemporalType.DATE)
     private Date birthDate;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Temporal(TemporalType.DATE)
+    private Date joinDate;
+
     @Transient//pole nie będzie odwzorowane w db
     private String passwordConfirm;
     private boolean enabled = false;
