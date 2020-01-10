@@ -73,7 +73,9 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setPasswordConfirm(null);//wyzerowanie jest potrzebne ze względu na walidację adnotacjami hibernate
         user.setAddress(address);
-        user.getBankAccounts().add(bankAccount);
+
+        List bankAccountList = Arrays.asList(bankAccount);
+        user.setBankAccounts(new HashSet<>(bankAccountList));
 
         SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date(System.currentTimeMillis());
