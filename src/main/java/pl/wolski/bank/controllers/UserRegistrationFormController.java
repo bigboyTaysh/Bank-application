@@ -1,8 +1,10 @@
 package pl.wolski.bank.controllers;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.web.bind.annotation.*;
 import pl.wolski.bank.models.AccountType;
 import pl.wolski.bank.models.Address;
+import pl.wolski.bank.models.BankAccount;
 import pl.wolski.bank.models.User;
 import pl.wolski.bank.services.AccountTypeService;
 import pl.wolski.bank.services.AddressService;
@@ -12,16 +14,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
 import java.util.List;
 
-@Log4j2
+
 @Controller
+@SessionAttributes(names={"accountTypes"})
+@Log4j2
 public class UserRegistrationFormController {
     @Autowired(required = false)
     private UserService userService;
@@ -37,6 +37,7 @@ public class UserRegistrationFormController {
     public String registration(Model model) {
         model.addAttribute("userAddress", new Address());
         model.addAttribute("userCommand", new User());
+        model.addAttribute("bankAccount", new BankAccount());
         return "registrationForm";
     }
 
