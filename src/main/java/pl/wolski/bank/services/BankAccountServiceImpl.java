@@ -16,7 +16,7 @@ import pl.wolski.bank.repositories.UserRepository;
 import java.util.Optional;
 
 
-@Service("BankAccountDetailsService")
+@Service("bankAccountDetailsService")
 public class BankAccountServiceImpl implements BankAccountService {
 
     @Autowired

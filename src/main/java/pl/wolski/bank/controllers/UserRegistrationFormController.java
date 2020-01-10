@@ -1,5 +1,6 @@
 package pl.wolski.bank.controllers;
 
+import pl.wolski.bank.models.AccountType;
 import pl.wolski.bank.models.Address;
 import pl.wolski.bank.models.User;
 import pl.wolski.bank.services.AddressService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
+import java.util.List;
 
 
 @Controller
@@ -24,6 +26,10 @@ public class UserRegistrationFormController {
 
     @Autowired(required = false)
     private AddressService addressService;
+
+    @Autowired(required = false)
+    private AccountTypeService accountTypeService;
+
 
     @GetMapping("/registrationForm.html")
     public String registration(Model model) {
@@ -43,6 +49,14 @@ public class UserRegistrationFormController {
 
         userService.save(userForm, addressService.findExistAddress(userAddress));
         return "registrationSuccess";
+    }
+
+
+    @ModelAttribute("accountTypes")
+    public List<AccountType> loadTypes(){
+        List<AccountType> types = accoutn.getAllTypes();
+        log.info("Ładowanie listy "+types.size()+" typów ");
+        return types;
     }
 
     @InitBinder
