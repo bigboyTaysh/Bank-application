@@ -13,6 +13,7 @@ import pl.wolski.bank.repositories.AddressRepository;
 import pl.wolski.bank.repositories.BankAccountRepository;
 import pl.wolski.bank.repositories.UserRepository;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 
@@ -36,17 +37,26 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Override
     public BankAccount newBankAccount(BankAccount bankAccount){
-
         pl.wolski.bank.models.BankAccount bankAccountInRepository =
-                bankAccountRepository.findByBankAccountNumber(bankAccount.getBankAccountNumber());
+                bankAccountRepository.findTopByOrderByIdDesc();
 
+        BigDecimal zero = new BigDecimal("0");
+        bankAccount.setBalance(zero);
+        bankAccount.setAvailableFounds(zero);
+        bankAccount.setLock(zero);
+        bankAccount.setBankAccountNumber(bankAccountInRepository.getBankAccountNumber().add(new BigDecimal("1")));
+
+
+        bankAccountRepository.save(bankAccount);
         return bankAccount;
     }
 
     @Override
     public BankAccount getUserAccount (User user){
-        Optional<BankAccount> optionalBankAccount = bankAccountRepository.findById(user.getBankAccounts().stream().findFirst().get().getId());
-        BankAccount bankAccount = optionalBankAccount.orElseThrow(() -> new BankAccountNotFoundException(user.getBankAccounts().stream().findFirst().get().getId()));
+        Optional<BankAccount> optionalBankAccount =
+                bankAccountRepository.findById(user.getBankAccounts().stream().findFirst().get().getId());
+        BankAccount bankAccount = optionalBankAccount.orElseThrow(()
+                -> new BankAccountNotFoundException(user.getBankAccounts().stream().findFirst().get().getId()));
         return bankAccount;
     }
 }

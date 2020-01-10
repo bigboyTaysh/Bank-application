@@ -9,4 +9,5 @@ import java.math.BigDecimal;
 
 public interface BankAccountRepository extends JpaRepository<BankAccount, Long> {
     BankAccount findByBankAccountNumber(BigDecimal bankAccountNumber);
+    BankAccount findTopByOrderByIdDesc();
 }

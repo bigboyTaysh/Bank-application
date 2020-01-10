@@ -8,6 +8,7 @@ import pl.wolski.bank.models.BankAccount;
 import pl.wolski.bank.models.User;
 import pl.wolski.bank.services.AccountTypeService;
 import pl.wolski.bank.services.AddressService;
+import pl.wolski.bank.services.BankAccountService;
 import pl.wolski.bank.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,9 @@ public class UserRegistrationFormController {
     private AddressService addressService;
 
     @Autowired(required = false)
+    private BankAccountService bankAccountService;
+
+    @Autowired(required = false)
     private AccountTypeService accountTypeService;
 
 
@@ -44,13 +48,17 @@ public class UserRegistrationFormController {
     @PostMapping("/registrationForm.html")
     public String registration(@Valid @ModelAttribute("userCommand") User userForm,
                                @Valid @ModelAttribute("userAddress") Address userAddress,
+                               @Valid @ModelAttribute("bankAccount") BankAccount bankAccount,
                                BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return "registrationForm";
         }
 
-        userService.save(userForm, addressService.findExistAddress(userAddress));
+
+        userService.save(userForm, addressService.findExistAddress(userAddress), bankAccountService.newBankAccount(bankAccount));
+
+
         return "registrationSuccess";
     }
 

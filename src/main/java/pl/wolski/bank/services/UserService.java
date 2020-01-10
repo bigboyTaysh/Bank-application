@@ -2,6 +2,7 @@ package pl.wolski.bank.services;
 
 
 import pl.wolski.bank.models.Address;
+import pl.wolski.bank.models.BankAccount;
 import pl.wolski.bank.models.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
@@ -10,7 +11,7 @@ import java.math.BigInteger;
 
 public interface UserService extends UserDetailsService {
 // Własne metody
-    void save(User user, Address address);
+    void save(User user, Address address, BankAccount bankAccount);
 
     User findByUsername(String username);
 
