@@ -1,8 +1,10 @@
 package pl.wolski.bank.controllers;
 
+import lombok.extern.log4j.Log4j2;
 import pl.wolski.bank.models.AccountType;
 import pl.wolski.bank.models.Address;
 import pl.wolski.bank.models.User;
+import pl.wolski.bank.services.AccountTypeService;
 import pl.wolski.bank.services.AddressService;
 import pl.wolski.bank.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.validation.Valid;
 import java.util.List;
 
-
+@Log4j2
 @Controller
 public class UserRegistrationFormController {
     @Autowired(required = false)
@@ -54,7 +56,7 @@ public class UserRegistrationFormController {
 
     @ModelAttribute("accountTypes")
     public List<AccountType> loadTypes(){
-        List<AccountType> types = accoutn.getAllTypes();
+        List<AccountType> types = accountTypeService.getAllTypes();
         log.info("Ładowanie listy "+types.size()+" typów ");
         return types;
     }

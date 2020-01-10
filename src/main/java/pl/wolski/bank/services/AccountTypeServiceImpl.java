@@ -9,6 +9,8 @@ import pl.wolski.bank.repositories.AccountTypeRepository;
 import pl.wolski.bank.repositories.AddressRepository;
 import pl.wolski.bank.repositories.UserRepository;
 
+import java.util.List;
+
 
 @Service("accountTypeDetailsService")
 public class AccountTypeServiceImpl implements AccountTypeService {
@@ -19,5 +21,10 @@ public class AccountTypeServiceImpl implements AccountTypeService {
     @Override
     public void save(AccountType accountType) {
         accountTypeRepository.saveAndFlush(accountType);
+    }
+
+    @Override
+    public List<AccountType> getAllTypes() {
+        return accountTypeRepository.findAll();
     }
 }
