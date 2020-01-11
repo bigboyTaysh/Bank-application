@@ -10,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -45,9 +47,12 @@ public class RepositoriesInitializer {
                     AccountType accountType = new AccountType("typ1");
                     accountTypeRepository.save(accountType);
 
+                    Timestamp stamp = new Timestamp(System.currentTimeMillis());
+                    Date date = new Date(stamp.getTime());
+
                     BigDecimal accountNumber = new BigDecimal("11222233334444555566667777");
                     BigDecimal zero = new BigDecimal("0");
-                    BankAccount bankAccount = new BankAccount(zero, zero, zero, accountNumber, accountType);
+                    BankAccount bankAccount = new BankAccount(zero, zero, zero, accountNumber, date, accountType);
                     bankAccountRepository.save(bankAccount);
 
                     Role roleUser = roleRepository.save(new Role(Role.Types.ROLE_USER));

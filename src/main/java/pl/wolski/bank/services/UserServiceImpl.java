@@ -79,8 +79,6 @@ public class UserServiceImpl implements UserService {
 
         SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date(System.currentTimeMillis());
-        System.out.println(formatter.format(date));
-
         user.setJoinDate(date);
 
         userRepository.saveAndFlush(user);
