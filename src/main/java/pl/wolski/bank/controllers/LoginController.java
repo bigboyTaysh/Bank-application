@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class LoginController {
 
     @GetMapping(path = "/")
-  //  @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST})
+    //  @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST})
     public String home(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!(auth instanceof AnonymousAuthenticationToken)) {

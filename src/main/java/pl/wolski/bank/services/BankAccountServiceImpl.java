@@ -70,4 +70,9 @@ public class BankAccountServiceImpl implements BankAccountService {
 
         return bankAccount;
     }
+
+    @Override
+    public List<BankAccount> findByUsers_Id(Long id){
+        return findByUsers_Id(id);
+    };
 }

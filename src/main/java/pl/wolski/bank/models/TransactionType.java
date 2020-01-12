@@ -24,8 +24,7 @@ public class TransactionType {
     }
 
     public enum Types{
-        OUTGOING_TRANSFER,
-        INCOMING_TRANSFER,
+        TRANSFER,
         CASH_WITHDRAWAL,
         CASH_PAYMENT
     }
