@@ -1,9 +1,7 @@
 package pl.wolski.bank.services;
 
 
-import org.hibernate.Transaction;
-
-import java.util.List;
+import pl.wolski.bank.models.Transaction;
 
 public interface TransactionService {
 // Własne metody

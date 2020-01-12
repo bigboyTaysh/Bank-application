@@ -10,14 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import pl.wolski.bank.models.AccountType;
-import pl.wolski.bank.models.Address;
-import pl.wolski.bank.models.BankAccount;
-import pl.wolski.bank.models.User;
-import pl.wolski.bank.services.AccountTypeService;
-import pl.wolski.bank.services.AddressService;
-import pl.wolski.bank.services.BankAccountService;
-import pl.wolski.bank.services.UserService;
+import pl.wolski.bank.models.*;
+import pl.wolski.bank.services.*;
 
 import java.util.List;
 
@@ -38,6 +32,9 @@ public class TransactionController {
     @Autowired(required = false)
     private AccountTypeService accountTypeService;
 
+    @Autowired
+    private TransactionService transactionService;
+
     @GetMapping("/transaction")
     public String transactionForm(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -45,13 +42,14 @@ public class TransactionController {
         User user = userService.findByUsername(((UserDetails)principal).getUsername());
 
         model.addAttribute("user", user);
-        model.addAttribute("bankAccounts", user.getBankAccounts());
+        model.addAttribute("bankAccounts", loadBankAccounts());
+        model.addAttribute("transaction", new Transaction());
 
         return "registrationForm";
     }
 
     @ModelAttribute("bankAccounts")
-    public List<BankAccount> loadTypes(){
+    public List<BankAccount> loadBankAccounts(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Object principal = auth.getPrincipal();
         User user = userService.findByUsername(((UserDetails)principal).getUsername());

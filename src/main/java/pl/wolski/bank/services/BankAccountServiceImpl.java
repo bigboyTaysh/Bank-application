@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 
-@Service("bankAccountDetailsService")
+@Service
 public class BankAccountServiceImpl implements BankAccountService {
 
     @Autowired

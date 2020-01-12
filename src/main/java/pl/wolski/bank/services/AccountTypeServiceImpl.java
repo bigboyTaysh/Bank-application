@@ -12,7 +12,7 @@ import pl.wolski.bank.repositories.UserRepository;
 import java.util.List;
 
 
-@Service("accountTypeDetailsService")
+@Service
 public class AccountTypeServiceImpl implements AccountTypeService {
 
     @Autowired

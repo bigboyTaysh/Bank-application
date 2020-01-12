@@ -55,9 +55,7 @@ public class UserRegistrationFormController {
             return "registrationForm";
         }
 
-
         userService.save(userForm, addressService.findExistAddress(userAddress), bankAccountService.newBankAccount(bankAccount));
-
 
         return "registrationSuccess";
     }

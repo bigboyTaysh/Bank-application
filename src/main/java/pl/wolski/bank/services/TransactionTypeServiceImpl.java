@@ -11,7 +11,7 @@ import pl.wolski.bank.repositories.TransactionTypeRepository;
 import java.util.List;
 
 
-@Service("transactionTypeDetailsService")
+@Service
 public class TransactionTypeServiceImpl implements TransactionTypeService {
 
     @Autowired

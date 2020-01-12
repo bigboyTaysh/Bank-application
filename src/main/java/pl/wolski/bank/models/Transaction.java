@@ -14,7 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 @Table(name = "transactions")
-public class Transactions {
+public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -41,9 +41,9 @@ public class Transactions {
     @JoinColumn(name = "transaction_type_id", nullable = false)
     private TransactionType transactionType;
 
-    public Transactions(BigDecimal fromBankAccountNumber, BigDecimal toBankAccountNumber,
-                        BigDecimal value, BigDecimal balanceAfterTransaction, Date date, String title,
-                        TransactionType transactionType) {
+    public Transaction(BigDecimal fromBankAccountNumber, BigDecimal toBankAccountNumber,
+                       BigDecimal value, BigDecimal balanceAfterTransaction, Date date, String title,
+                       TransactionType transactionType) {
         this.fromBankAccountNumber = fromBankAccountNumber;
         this.toBankAccountNumber = toBankAccountNumber;
         this.value = value;
@@ -53,9 +53,9 @@ public class Transactions {
         this.transactionType = transactionType;
     }
 
-    public Transactions(BigDecimal toBankAccountNumber, BigDecimal value,
-                        BigDecimal balanceAfterTransaction, Date date,
-                        TransactionType transactionType) {
+    public Transaction(BigDecimal toBankAccountNumber, BigDecimal value,
+                       BigDecimal balanceAfterTransaction, Date date,
+                       TransactionType transactionType) {
         this.toBankAccountNumber = toBankAccountNumber;
         this.value = value;
         this.balanceAfterTransaction = balanceAfterTransaction;
