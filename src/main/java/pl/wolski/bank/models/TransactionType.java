@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -14,11 +15,18 @@ import javax.persistence.*;
 public class TransactionType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
+    @Enumerated(EnumType.STRING)//przechowywane w postaci string
+    private TransactionType.Types type;
 
-    private String name;
+    public TransactionType(TransactionType.Types type){
+        this.type = type;
+    }
 
-    public TransactionType(String name) {
-        this.name = name;
+    public enum Types{
+        OUTGOING_TRANSFER,
+        INCOMING_TRANSFER,
+        CASH_WITHDRAWAL,
+        CASH_PAYMENT
     }
 }

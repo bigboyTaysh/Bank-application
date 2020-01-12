@@ -24,7 +24,7 @@ import java.text.DecimalFormat;
 
 
 @Controller
-@SessionAttributes("searchCommand")
+@SessionAttributes("userAccount")
 public class UserController{
 
     protected final Log log = LogFactory.getLog(getClass());//Dodatkowy komponent do logowania

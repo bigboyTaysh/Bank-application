@@ -21,7 +21,7 @@ import java.util.List;
 
 
 @Controller
-@SessionAttributes(names={"accountTypes"})
+@SessionAttributes(names={"userAccount","accountTypes"})
 @Log4j2
 public class UserRegistrationFormController {
     @Autowired(required = false)
@@ -37,7 +37,7 @@ public class UserRegistrationFormController {
     private AccountTypeService accountTypeService;
 
 
-    @GetMapping("/registrationForm.html")
+    @GetMapping("/registrationForm")
     public String registration(Model model) {
         model.addAttribute("userAddress", new Address());
         model.addAttribute("userCommand", new User());
@@ -45,7 +45,7 @@ public class UserRegistrationFormController {
         return "registrationForm";
     }
 
-    @PostMapping("/registrationForm.html")
+    @PostMapping("/registrationForm")
     public String registration(@Valid @ModelAttribute("userCommand") User userForm,
                                @Valid @ModelAttribute("userAddress") Address userAddress,
                                @Valid @ModelAttribute("bankAccount") BankAccount bankAccount,
