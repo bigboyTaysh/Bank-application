@@ -16,9 +16,18 @@
                     </td>
                     <td><span th:text="${#numbers.formatDecimal(userAccount.balance,1,2)}"></span></td>
                 </tr>
-
             </tbody>
         </table>
+
+        <tbody>
+            <tr th:each="transaction : ${transactions}">
+                <td>
+                    [[${transaction.userNameFrom}]]
+                </td>
+                <td><span th:text="${#dates.format(transaction.date, 'dd-MM-yyyy')}"></span></td>
+                <td><span th:text="${#numbers.formatDecimal(transaction.value,0,2)}"></span></td>
+            </tr>
+        </tbody>
         <div th:replace="shared/footer :: footer"></div>
     </body>
 </html>

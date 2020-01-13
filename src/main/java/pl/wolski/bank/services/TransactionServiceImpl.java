@@ -12,6 +12,9 @@ import pl.wolski.bank.repositories.TransactionRepository;
 import pl.wolski.bank.repositories.TransactionTypeRepository;
 import pl.wolski.bank.repositories.UserRepository;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -47,4 +50,8 @@ public class TransactionServiceImpl implements TransactionService {
         transactionRepository.saveAndFlush(transaction);
     }
 
+    @Override
+    public List<Transaction> findUserTransactions(BigDecimal bigDecimal){
+        return findUserTransactions(bigDecimal);
+    };
 }
