@@ -38,6 +38,9 @@ public class RepositoriesInitializer {
     @Autowired
     private AccountTypeRepository accountTypeRepository;
 
+    @Autowired
+    private TransactionTypeRepository transactionTypeRepository;
+
     @Bean
     InitializingBean init() {
         return () -> {
@@ -57,6 +60,8 @@ public class RepositoriesInitializer {
 
                     Role roleUser = roleRepository.save(new Role(Role.Types.ROLE_USER));
                     Role roleAdmin = roleRepository.save(new Role(Role.Types.ROLE_ADMIN));
+
+                    TransactionType transactionType = transactionTypeRepository.save(new TransactionType(TransactionType.Types.TRANSFER));
 
                     Address address = new Address("a","1","2","d"   , "e");
                     addressRepository.save(address);

@@ -37,7 +37,7 @@ public class UserRegistrationFormController {
     private AccountTypeService accountTypeService;
 
 
-    @GetMapping("/registrationForm")
+    @GetMapping("/registrationForm.html")
     public String registration(Model model) {
         model.addAttribute("userAddress", new Address());
         model.addAttribute("userCommand", new User());
@@ -45,7 +45,7 @@ public class UserRegistrationFormController {
         return "registrationForm";
     }
 
-    @PostMapping("/registrationForm")
+    @PostMapping("/registrationForm.html")
     public String registration(@Valid @ModelAttribute("userCommand") User userForm,
                                @Valid @ModelAttribute("userAddress") Address userAddress,
                                @Valid @ModelAttribute("bankAccount") BankAccount bankAccount,

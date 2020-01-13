@@ -20,12 +20,16 @@
                 <div class="navbar-nav-scroll">
                     <ul class="nav nav-tabs bg-dark">
                         <li class="nav-item">
-                            <a class="nav-link" th:classappend="${pageName eq 'home'}?'active'" th:href="@{/}">Strona
+                            <a class="nav-link" th:classappend="${pageName eq 'home'}?'active'" th:href="@{/index}">Strona
                                 główna</a>
                         </li>
                         <li class="nav-item" sec:authorize="isAnonymous()">
                             <a class="nav-link" th:classappend="${pageName eq 'registration'}?'active'"
                                href="/registrationForm.html">Rejestracja</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:classappend="${pageName eq 'transaction'}?'active'" th:href="@{/transaction}">
+                                Przelew</a>
                         </li>
                     </ul>
                 </div>

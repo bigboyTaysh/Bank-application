@@ -11,4 +11,6 @@ public interface TransactionTypeService {
     void save(TransactionType transactionType);
 
     List<TransactionType> getAllTypes();
+
+    TransactionType findByType(TransactionType.Types types);
 }

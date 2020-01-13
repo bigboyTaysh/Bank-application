@@ -4,6 +4,7 @@ package pl.wolski.bank.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.wolski.bank.models.AccountType;
+import pl.wolski.bank.models.Transaction;
 import pl.wolski.bank.models.TransactionType;
 import pl.wolski.bank.repositories.AccountTypeRepository;
 import pl.wolski.bank.repositories.TransactionTypeRepository;
@@ -25,5 +26,10 @@ public class TransactionTypeServiceImpl implements TransactionTypeService {
     @Override
     public List<TransactionType> getAllTypes() {
         return transactionTypeRepository.findAll();
+    }
+
+    @Override
+    public TransactionType findByType(TransactionType.Types types){
+        return transactionTypeRepository.findTransactionTypeByType(types);
     }
 }

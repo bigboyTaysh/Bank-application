@@ -72,7 +72,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     @Override
-    public List<BankAccount> findByUsers_Id(Long id){
-        return findByUsers_Id(id);
+    public List<BankAccount> findUserAccounts(User user){
+        return bankAccountRepository.findAllByUsers(user);
     };
 }

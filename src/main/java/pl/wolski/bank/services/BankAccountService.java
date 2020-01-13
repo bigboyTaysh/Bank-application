@@ -11,5 +11,5 @@ public interface BankAccountService {
     void save(BankAccount bankAccount, AccountType accountType);
     BankAccount newBankAccount(BankAccount bankAccount);
     BankAccount getUserAccount(User user);
-    List<BankAccount> findByUsers_Id(Long id);
+    List<BankAccount> findUserAccounts(User user);
 }
