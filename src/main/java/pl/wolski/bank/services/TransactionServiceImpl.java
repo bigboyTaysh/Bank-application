@@ -13,6 +13,8 @@ import pl.wolski.bank.repositories.TransactionTypeRepository;
 import pl.wolski.bank.repositories.UserRepository;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 
@@ -45,13 +47,17 @@ public class TransactionServiceImpl implements TransactionService {
         TransactionType transactionType = transactionTypeRepository.findTransactionTypeByType(TransactionType.Types.TRANSFER);
         transaction.setTransactionType(transactionType);
 
+        Timestamp stamp = new Timestamp(System.currentTimeMillis());
+        Date date = new Date(stamp.getTime());
+        transaction.setDate(date);
+
         bankAccountRepository.save(bankAccountTo);
         bankAccountRepository.save(bankAccountFrom);
         transactionRepository.saveAndFlush(transaction);
     }
 
     @Override
-    public List<Transaction> findUserTransactions(BigDecimal bigDecimal){
-        return findUserTransactions(bigDecimal);
+    public List<Transaction> findUserTransactions(BigDecimal fromBankAccountNumber, BigDecimal toBankAccountNumber){
+        return transactionRepository.findByFromBankAccountNumberOrToBankAccountNumberOrderByDateDesc(fromBankAccountNumber, toBankAccountNumber);
     };
 }

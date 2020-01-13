@@ -11,5 +11,5 @@ public interface TransactionService {
 // Własne metody
     void save(User user, Transaction transaction);
 
-    List<Transaction> findUserTransactions(BigDecimal bigDecimal);
+    List<Transaction> findUserTransactions(BigDecimal fromBankAccountNumber, BigDecimal toBankAccountNumber);
 }

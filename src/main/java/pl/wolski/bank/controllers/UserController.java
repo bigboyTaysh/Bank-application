@@ -48,21 +48,23 @@ public class UserController{
     public String home(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Object principal = auth.getPrincipal();
-        User user = (User) principal;
-        model.addAttribute("user", user);
         if (!(auth instanceof AnonymousAuthenticationToken)) {
-            model.addAttribute("userAccount", bankAccountService.getUserAccount(userService.findByUsername(user.getUsername())));
+            model.addAttribute("userAccount", bankAccountService.getUserAccount(userService.findByUsername(((UserDetails)principal).getUsername())));
             return "index";
         }
         return "loginForm";
     }
 
     @ModelAttribute("transactions")
-    public List<Transaction> loadTransactions(Model model){
+    public List<Transaction> loadTransactions(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = auth.getPrincipal();
         List<Transaction> transactions = transactionService.findUserTransactions(
-                ((BankAccount) model.getAttribute("userAccount")).getBankAccountNumber());
+                bankAccountService.getUserAccount(userService.findByUsername(((UserDetails)principal).getUsername())).getBankAccountNumber(),
+                bankAccountService.getUserAccount(userService.findByUsername(((UserDetails)principal).getUsername())).getBankAccountNumber());
+
         log.info("Ładowanie listy " + transactions.size() + " transakcji ");
-        return transactions.subList(0, 3);
+        return transactions;
     }
 
     @InitBinder
