@@ -21,7 +21,7 @@ import java.util.List;
 
 
 @Controller
-@SessionAttributes(names={"accountTypes"})
+@SessionAttributes(names={"userAccount","accountTypes"})
 @Log4j2
 public class UserRegistrationFormController {
     @Autowired(required = false)
@@ -55,9 +55,7 @@ public class UserRegistrationFormController {
             return "registrationForm";
         }
 
-
         userService.save(userForm, addressService.findExistAddress(userAddress), bankAccountService.newBankAccount(bankAccount));
-
 
         return "registrationSuccess";
     }
