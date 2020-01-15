@@ -1,33 +1,72 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html xmlns:th="http://www.thymeleaf.org">
     <head>
-        <div th:replace="shared/loginHeader :: header-css"/>
-
+        <div th:replace="shared/header :: header-css"/>
         <title>Strona domowa</title>
     </head>
-    <body class="card">
+    <body>
         <div th:replace="shared/header :: header('home')"/>
-        <table class="table table-striped">
+        <table class="table">
             <thead>
             <tbody>
                 <tr>
                     <td>
                         [[${userAccount.accountType.name}]]
                     </td>
-                    <td><span th:text="${#numbers.formatDecimal(userAccount.balance,1,2)}"></span></td>
+                    <td>
+                        <span th:style="${'color: red;'}"
+                              th:text="${'Blokady   ' + #numbers.formatDecimal(userAccount.lock,1,2)}"></span>
+                    </td>
+                    <td>Dostępne środki</td>
+                </tr>
+                <tr>
+                    <td>
+                        [[${userAccount.bankAccountNumber}]]
+                    </td>
+                    <td>
+                        <span th:text="${'Saldo ' + #numbers.formatDecimal(userAccount.balance,1,2)}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${#numbers.formatDecimal(userAccount.availableFounds,1,2)}"></span>
+                    </td>
                 </tr>
             </tbody>
         </table>
 
-        <tbody>
-            <tr th:each="transaction : ${transactions}">
-                <td>
-                    [[${transaction.userNameFrom}]]
-                </td>
-                <td><span th:text="${#dates.format(transaction.date, 'dd-MM-yyyy')}"></span></td>
-                <td><span th:text="${#numbers.formatDecimal(transaction.value,0,2)}"></span></td>
-            </tr>
-        </tbody>
+        <br> <br>
+
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <td>
+                        Data
+                    </td>
+                    <td>
+                        Odbiorca/Nadawca
+                    </td>
+                    <td>
+                        Tytuł
+                    </td>
+                    <td>
+                        Kwota
+                    </td>
+                </tr>
+                <tr th:each="transaction : ${transactions}">
+                    <td>
+                        <span th:text="${#dates.format(transaction.date, 'dd-MM-yyyy')}"></span>
+                    </td>
+                    <td>
+                        [[${transaction.userNameFrom}]]
+                    </td>
+                    <td>
+                        [[${transaction.title}]]
+                    </td>
+                    <td>
+                        <span th:text="${#numbers.formatDecimal(transaction.value,1,2)}"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
         <div th:replace="shared/footer :: footer"></div>
     </body>
 </html>
