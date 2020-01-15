@@ -42,6 +42,9 @@ public class BankAccount {
     @JoinColumn(name = "id_account_type", nullable = false)
     private AccountType accountType;
 
+    @ManyToMany(mappedBy = "bankAccounts")
+    private Set<User> users;
+
     public BankAccount(BigDecimal balance, BigDecimal availableFounds, BigDecimal lock, BigDecimal bankAccountNumber, Date creationDate, AccountType accountType) {
         this.balance = balance;
         this.availableFounds = availableFounds;

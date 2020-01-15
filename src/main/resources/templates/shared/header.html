@@ -5,10 +5,12 @@
     <head>
         <div th:fragment="header-css">
             <!-- this is header-css -->
+            <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+            <script src="webjars/bootstrap/3.4.1/js/bootstrap.min.js"></script>
             <link rel="stylesheet" type="text/css"
                   href="webjars/bootstrap-material-design/4.1.2/dist/css/bootstrap-material-design.css"/>
             <link rel="stylesheet" type="text/css"
-                  href="statics/css/main.css"/>
+                  href="css/main.css"/>
         </div>
     </head>
     <body>
@@ -20,12 +22,22 @@
                 <div class="navbar-nav-scroll">
                     <ul class="nav nav-tabs bg-dark">
                         <li class="nav-item">
-                            <a class="nav-link" th:classappend="${pageName eq 'home'}?'active'" th:href="@{/}">Strona
+                            <a class="nav-link" th:classappend="${pageName eq 'home'}?'active'" th:href="@{/index}">Strona
                                 główna</a>
                         </li>
-                        <li class="nav-item" sec:authorize="isAnonymous()">
-                            <a class="nav-link" th:classappend="${pageName eq 'registration'}?'active'"
-                               href="/registrationForm.html">Rejestracja</a>
+                        <li class="nav-item dropdown">
+                            <a th:classappend="${pageName eq 'transaction'}?'active'" th:href="@{/transaction}"
+                               class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                Transakcje
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" th:href="@{/transaction}"> Przelew</a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" th:classappend="${pageName eq 'bankAccounts'}?'active'" th:href="@{/bankAccounts}">
+                                Rachunki</a>
                         </li>
                     </ul>
                 </div>
@@ -54,7 +66,6 @@
                             się</a>
                     </li>
                 </ul>
-
             </nav>
 
 

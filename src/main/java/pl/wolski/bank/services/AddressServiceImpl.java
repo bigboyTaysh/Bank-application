@@ -9,7 +9,7 @@ import pl.wolski.bank.repositories.AddressRepository;
 import pl.wolski.bank.repositories.UserRepository;
 
 
-@Service("addressDetailsService")
+@Service
 public class AddressServiceImpl implements AddressService {
 
     @Autowired
