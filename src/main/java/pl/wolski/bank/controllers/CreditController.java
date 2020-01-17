@@ -43,8 +43,9 @@ public class CreditController {
 
     @PostMapping("/creditApplication")
     public String creditForm2(@Valid @ModelAttribute("creditApplication") CreditApplication creditApplication,
-                             @RequestParam(required = true) Double creditRates,
                              BindingResult bindingResult){
+        creditApplicationService.save(creditApplication);
+
         return "index";
     }
 

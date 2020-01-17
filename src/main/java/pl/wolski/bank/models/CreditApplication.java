@@ -32,7 +32,7 @@ public class CreditApplication {
     private int numberOfMonths;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_credit_type", nullable = true)
+    @JoinColumn(name = "id_credit_type", nullable = false)
     private CreditType creditType;
 
     //@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
