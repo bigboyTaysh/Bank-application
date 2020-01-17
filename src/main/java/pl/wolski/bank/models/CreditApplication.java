@@ -26,6 +26,9 @@ public class CreditApplication {
     @Digits(integer = 17, fraction = 4)
     private BigDecimal totalRepayment;
 
+    @Digits(integer = 17, fraction = 4)
+    private BigDecimal monthRepayment;
+
     private int numberOfMonths;
 
     @ManyToOne(fetch = FetchType.EAGER)

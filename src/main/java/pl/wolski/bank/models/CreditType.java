@@ -18,6 +18,8 @@ public class CreditType {
 
     private String name;
 
+    private Double creditRates;
+
     public CreditType(String name) {
         this.name = name;
     }

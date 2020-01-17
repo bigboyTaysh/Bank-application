@@ -9,4 +9,5 @@ import java.util.List;
 public interface CreditTypeService {
 // Własne metody
     void save(CreditType creditType);
+    List<CreditType> findAll();
 }

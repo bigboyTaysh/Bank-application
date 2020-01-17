@@ -29,6 +29,9 @@ public class Credit {
     @Digits(integer = 17, fraction = 4)
     private BigDecimal currentRepayment;
 
+    @Digits(integer = 17, fraction = 4)
+    private BigDecimal monthRepayment;
+
     private int numberOfMonths;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -46,5 +49,4 @@ public class Credit {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_credit_type", nullable = true)
     private CreditType creditType;
-
 }
