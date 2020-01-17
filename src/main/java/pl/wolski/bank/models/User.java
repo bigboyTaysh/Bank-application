@@ -78,6 +78,9 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "id_bank_account"))
     private Set<BankAccount> bankAccounts;
 
+    @OneToMany(mappedBy = "user")
+    private Set<CreditApplication> creditApplications;
+
     @AssertTrue
     private boolean isPasswordsEquals(){
         return password == null || passwordConfirm == null || password.equals(passwordConfirm);

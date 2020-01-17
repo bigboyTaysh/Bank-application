@@ -39,6 +39,16 @@
                             <a class="nav-link" th:classappend="${pageName eq 'bankAccounts'}?'active'" th:href="@{/bankAccounts}">
                                 Rachunki</a>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a th:classappend="${pageName eq 'creditApplication'}?'active'" th:href="@{/creditApplication}"
+                               class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLinkTwo"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                Kredyty
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkTwo">
+                                <a class="dropdown-item" th:href="@{/creditApplication}">Złóż wniosek</a>
+                            </div>
+                        </li>
                     </ul>
                 </div>
 
