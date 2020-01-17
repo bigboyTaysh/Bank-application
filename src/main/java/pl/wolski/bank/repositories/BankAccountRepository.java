@@ -15,5 +15,5 @@ public interface BankAccountRepository extends JpaRepository<BankAccount, Long> 
     BankAccount findByBankAccountNumber(BigDecimal bankAccountNumber);
     BankAccount findTopByOrderByIdDesc();
 
-    List<BankAccount> findAllByUsers(User user);
+    List<BankAccount> findAllByUser(User user);
 }

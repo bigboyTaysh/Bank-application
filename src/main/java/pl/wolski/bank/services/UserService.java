@@ -11,7 +11,7 @@ import java.math.BigInteger;
 
 public interface UserService extends UserDetailsService {
 // Własne metody
-    void save(User user, Address address, BankAccount bankAccount);
+    void save(User user, Address address);
 
     User findByUsername(String username);
 

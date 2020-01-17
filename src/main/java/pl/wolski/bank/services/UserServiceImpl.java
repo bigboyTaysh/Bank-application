@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(pl.wolski.bank.models.User user, pl.wolski.bank.models.Address address, BankAccount bankAccount) {
+    public void save(pl.wolski.bank.models.User user, pl.wolski.bank.models.Address address) {
 
         Role userRole = roleRepository.findRoleByType(Role.Types.ROLE_USER);
 
@@ -73,9 +73,6 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setPasswordConfirm(null);//wyzerowanie jest potrzebne ze względu na walidację adnotacjami hibernate
         user.setAddress(address);
-
-        List bankAccountList = Arrays.asList(bankAccount);
-        user.setBankAccounts(new HashSet<>(bankAccountList));
 
         SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date(System.currentTimeMillis());

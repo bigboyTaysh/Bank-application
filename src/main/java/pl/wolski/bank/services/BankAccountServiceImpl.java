@@ -5,17 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.wolski.bank.exceptions.BankAccountNotFoundException;
 import pl.wolski.bank.models.AccountType;
-import pl.wolski.bank.models.Address;
 import pl.wolski.bank.models.BankAccount;
 import pl.wolski.bank.models.User;
 import pl.wolski.bank.repositories.AccountTypeRepository;
-import pl.wolski.bank.repositories.AddressRepository;
 import pl.wolski.bank.repositories.BankAccountRepository;
 import pl.wolski.bank.repositories.UserRepository;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -38,9 +35,11 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     @Override
-    public BankAccount newBankAccount(BankAccount bankAccount){
+    public BankAccount newBankAccount(User user, BankAccount bankAccount){
         pl.wolski.bank.models.BankAccount bankAccountInRepository =
                 bankAccountRepository.findTopByOrderByIdDesc();
+
+        User userInRepo = userRepository.findByUsername(user.getUsername());
 
         Timestamp stamp = new Timestamp(System.currentTimeMillis());
         Date date = new Date(stamp.getTime());
@@ -53,6 +52,8 @@ public class BankAccountServiceImpl implements BankAccountService {
         bankAccount.setLock(zero);
         bankAccount.setBankAccountNumber(
                 bankAccountInRepository.getBankAccountNumber().add(new BigDecimal("1")));
+
+        bankAccount.setUser(userInRepo);
 
         bankAccountRepository.save(bankAccount);
 
@@ -73,6 +74,6 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Override
     public List<BankAccount> findUserAccounts(User user){
-        return bankAccountRepository.findAllByUsers(user);
+        return bankAccountRepository.findAllByUser(user);
     };
 }
