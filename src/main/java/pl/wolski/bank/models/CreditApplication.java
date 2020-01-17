@@ -39,6 +39,8 @@ public class CreditApplication {
     //@Temporal(TemporalType.DATE)
     private Date dateOfSubmissionOfTheApplication;
 
+    private boolean accepted;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="id_user", nullable = false)
     private User user;

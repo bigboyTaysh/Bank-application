@@ -44,9 +44,12 @@ public class CreditController {
     @PostMapping("/creditApplication")
     public String creditForm2(@Valid @ModelAttribute("creditApplication") CreditApplication creditApplication,
                              BindingResult bindingResult){
-        creditApplicationService.save(creditApplication);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = auth.getPrincipal();
 
-        return "index";
+        creditApplicationService.save(creditApplication, ((UserDetails)principal).getUsername());
+
+        return "creditApplicationSuccess";
     }
 
     @ModelAttribute("creditTypes")

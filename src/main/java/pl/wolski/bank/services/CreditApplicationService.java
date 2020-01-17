@@ -5,5 +5,5 @@ import pl.wolski.bank.models.CreditApplication;
 
 public interface CreditApplicationService {
 // Własne metody
-    void save(CreditApplication creditApplication);
+    void save(CreditApplication creditApplication, String username);
 }
