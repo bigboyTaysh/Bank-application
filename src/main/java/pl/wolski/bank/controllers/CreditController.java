@@ -19,7 +19,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Controller
-@SessionAttributes(names = {"user", "creditTypes"})
+@SessionAttributes(names = {"user"})
 @Log4j2
 public class CreditController {
     @Autowired(required = false)
@@ -37,7 +37,6 @@ public class CreditController {
     @GetMapping("/creditApplication")
     public String creditForm(Model model) {
         model.addAttribute("creditApplication", new CreditApplication());
-        //model.addAttribute("creditType", new CreditType());
 
         return "creditApplicationForm";
     }

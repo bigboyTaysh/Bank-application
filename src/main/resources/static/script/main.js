@@ -1,19 +1,21 @@
 $(document).ready(function () {
-    $("#creditAmount").keyup(function () {
+    $("#creditApplication").bind("keyup change", function () {
         var creditAmount = $("input[name=creditAmount]").val();
         var months = $("select[name=numberOfMonths]").val();
         var creditRates = $("select[name=creditRates]").val();
 
-        $("input[name=totalRepayment]").val((creditAmount * (1 + (0.01 * creditRates))).toFixed(2));
-        $("input[name=monthRepayment]").val((($("input[name=totalRepayment]").val())/months).toFixed(2));
+        $("input[name=totalRepayment]").val((f(creditAmount, months, creditRates).valueOf() * months).toFixed(2));
+        $("input[name=monthRepayment]").val((f(creditAmount, months, creditRates).valueOf()).toFixed(2));
     });
 
-    $("select[name=numberOfMonths]").change(function() {
-        var creditAmount = $("input[name=creditAmount]").val();
-        var months = $("select[name=numberOfMonths]").val();
-        var creditRates = $("select[name=creditRates]").val();
+    function f(creditAmount, months, creditRates) {
+        let sum = 0.0;
+        creditAmount = creditAmount * 1.0599;
+        console.log(creditAmount + " " + months + " " + creditRates)
 
-        $("input[name=totalRepayment]").val((creditAmount * (1 + (0.01 * creditRates))).toFixed(2));
-        $("input[name=monthRepayment]").val((($("input[name=totalRepayment]").val())/months).toFixed(2));
-    });
+            for (let i = 1; i <= months; i++){
+                sum = sum + Math.pow((1 + ((0.01 * creditRates)/12)),0-i);
+            }
+        return creditAmount / sum;
+    }
 });
