@@ -10,11 +10,12 @@ $(document).ready(function () {
 
     function f(creditAmount, months, creditRates) {
         let sum = 0.0;
-        creditAmount = creditAmount * 1.0599;
-        console.log(creditAmount + " " + months + " " + creditRates)
+        let commission = 1.0;
+        let numberOfInstallmentsPaidDuringTheYear = 12;
+        creditAmount = creditAmount * commission;
 
             for (let i = 1; i <= months; i++){
-                sum = sum + Math.pow((1 + ((0.01 * creditRates)/12)),0-i);
+                sum = sum + Math.pow((1 + ((0.01 * creditRates)/numberOfInstallmentsPaidDuringTheYear)),0-i);
             }
         return creditAmount / sum;
     }
