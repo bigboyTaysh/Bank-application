@@ -56,7 +56,7 @@ public class UserController{
             boolean isAdmin = false;
 
             for(Role role: userRole) {
-                if(role.getType() == Role.Types.ROLE_ADMIN)
+                if(role.getType() == Role.Types.ROLE_ADMIN || role.getType() == Role.Types.ROLE_EMPLOYEE)
                     isAdmin = true;
             }
 

@@ -49,7 +49,7 @@
                                 <a class="dropdown-item" th:href="@{/creditApplication}">Złóż wniosek</a>
                             </div>
                         </li>
-                        <li class="nav-item" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')">
                             <a class="nav-link" th:classappend="${pageName eq 'creditApplicationsList'}?'active'"  th:href="@{/creditApplicationsList}">Lista wniosków</a>
                         </li>
                     </ul>

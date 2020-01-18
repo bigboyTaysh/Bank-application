@@ -20,7 +20,11 @@ public class CreditType {
 
     private Double creditRates;
 
-    public CreditType(String name) {
+    private Double commission;
+
+    public CreditType(String name, double creditRates, double commission) {
         this.name = name;
+        this.creditRates = creditRates;
+        this.commission = commission;
     }
 }

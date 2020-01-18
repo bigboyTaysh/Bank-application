@@ -11,21 +11,66 @@
             <tbody>
                 <tr>
                     <td>
-                        Data
+                        Imię Nazwisko
                     </td>
                     <td>
-                        Odbiorca/Nadawca
+                        Data złożenia wniosku
                     </td>
                     <td>
-                        Tytuł
+                        Kwota kredytu
                     </td>
                     <td>
-                        Kwota
+                        Całkowita kwota
+                    </td>
+                    <td>
+                        Okres(miesiące)
+                    </td>
+                    <td>
+                        Rodzaj kredytu
+                    </td>
+                    <td>
+                        Oprocentowanie
+                    </td>
+                    <td>
+                        Prowizja
+                    </td>
+                    <td>
+                        Miesięczna rata
+                    </td>
+                    <td>
+                        Status wniosku
                     </td>
                 </tr>
                 <tr th:each="creditApplication : ${creditApplicationsList}">
                     <td>
                         [[${creditApplication.user.firstName + ' ' + creditApplication.user.lastName}]]
+                    </td>
+                    <td>
+                        [[${creditApplication.dateOfSubmissionOfTheApplication}]]
+                    </td>
+                    <td>
+                        [[${creditApplication.creditAmount}]]
+                    </td>
+                    <td>
+                        [[${creditApplication.totalRepayment}]]
+                    </td>
+                    <td>
+                        [[${creditApplication.numberOfMonths}]]
+                    </td>
+                    <td>
+                        [[${creditApplication.creditType.name}]]
+                    </td>
+                    <td>
+                        [[${creditApplication.creditType.creditRates}]]
+                    </td>
+                    <td>
+                        [[${creditApplication.creditType.commission}]]
+                    </td>
+                    <td>
+                        [[${creditApplication.monthRepayment}]]
+                    </td>
+                    <td>
+                        [[${creditApplication.accepted}]]
                     </td>
                 </tr>
             </tbody>
