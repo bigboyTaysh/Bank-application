@@ -13,5 +13,5 @@ public interface CreditService {
 
     List<Credit> findByUser(User user);
 
-    boolean payOffTheCredit(Long id, BigDecimal monthRepayment);
+    boolean payOffTheCredit(Long id, BigDecimal monthRepayment, User user);
 }

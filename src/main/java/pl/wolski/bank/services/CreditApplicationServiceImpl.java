@@ -64,7 +64,7 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
             credit.setCurrentRepayment(new BigDecimal("0"));
             credit.setMonthRepayment(creditApplication.getMonthRepayment());
             credit.setNumberOfMonths(creditApplication.getNumberOfMonths());
-            credit.setNumberOfMonthsToTheEnd(0);
+            credit.setNumberOfMonthsToTheEnd(creditApplication.getNumberOfMonths());
 
             Date date = new Date(System.currentTimeMillis());
             credit.setStartDate(date);

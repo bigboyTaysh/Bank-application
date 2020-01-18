@@ -61,7 +61,11 @@ public class CreditController {
                                   @RequestParam(value = "id", required = false) String id,
                                   @RequestParam(value = "credit", required = false) String credit) {
 
-        if(creditService.payOffTheCredit(Long.parseLong(id), new BigDecimal(credit))){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = auth.getPrincipal();
+
+
+        if(creditService.payOffTheCredit(Long.parseLong(id), new BigDecimal(credit), userService.findByUsername(((UserDetails)principal).getUsername()))){
             model.addAttribute("message", "Pomyślnie zapłacono");
         } else {
             model.addAttribute("message", "Nie udało się zapłacić");

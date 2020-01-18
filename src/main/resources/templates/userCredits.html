@@ -77,55 +77,63 @@
                     </td>
                     <td>
                         <div th:switch="${userCredit.isPaidOff}">
-                            <span th:case="true">Aktywny</span>
-                            <span th:case="false">Spłacono</span>
+                            <span th:case="false">Aktywny</span>
+                            <span th:case="true">Spłacono</span>
                         </div>
                     </td>
-                    <td>
-                        <form method="POST">
-                            <input type="hidden" name="id" th:value="${userCredit.id}" />
-                            <div class="form-group">
-                                <input type="text" name="credit" th:value="${userCredit.monthRepayment}"
-                                       class="form-control" readonly
-                                       autofocus="true"/>
-                            </div>
-                            <input
-                                    type="hidden"
-                                    th:name="${_csrf.parameterName}"
-                                    th:value="${_csrf.token}"/>
-                            <input type="submit" class="btn btn-lg btn-primary btn-block" value="Zapłać ratę"/>
-                        </form>
-                    </td>
-                    <td>
-                        <form method="POST">
-                            <div class="form-group">
-                                <input type="number" name="value"
-                                       class="form-control" placeholder="Kwota" required="true"
-                                       autofocus="true"/>
-                            </div>
-                            <input type="hidden" name="id" th:value="${userCredit.id}"/>
-                            <input
-                                    type="hidden"
-                                    th:name="${_csrf.parameterName}"
-                                    th:value="${_csrf.token}"/>
-                            <input type="submit" class="btn btn-lg btn-primary btn-block" value="Zapłać"/>
-                        </form>
-                    </td>
-                    <td>
-                        <form method="POST">
-                            <input type="hidden" name="id" th:value="${userCredit.id}" />
-                            <div class="form-group">
-                                <input type="text" name="credit" th:value="${userCredit.totalRepayment}"
-                                       class="form-control" readonly
-                                       autofocus="true"/>
-                            </div>
-                            <input
-                                    type="hidden"
-                                    th:name="${_csrf.parameterName}"
-                                    th:value="${_csrf.token}"/>
-                            <input type="submit" class="btn btn-lg btn-primary btn-block" value="Spłać kredyt"/>
-                        </form>
-                    </td>
+                    <div th:switch="${userCredit.isPaidOff}">
+                        <div th:case="false">
+                            <td>
+                                <form method="POST">
+                                    <input type="hidden" name="id" th:value="${userCredit.id}" />
+                                    <div class="form-group">
+                                        <input type="text" name="credit" th:value="${userCredit.monthRepayment}"
+                                               class="form-control" readonly
+                                               autofocus="true"/>
+                                    </div>
+                                    <input
+                                            type="hidden"
+                                            th:name="${_csrf.parameterName}"
+                                            th:value="${_csrf.token}"/>
+                                    <input type="submit" class="btn btn-lg btn-primary btn-block" value="Zapłać ratę"/>
+                                </form>
+                            </td>
+                            <td>
+                                <form method="POST">
+                                    <div class="form-group">
+                                        <select class="form-control" name="credit">
+                                            <option th:each="month : ${#numbers.sequence(1, userCredit.getNumberOfMonthsToTheEnd())}"
+                                                    th:value="${month * userCredit.monthRepayment}"
+                                                    th:text="${month}"
+                                            />
+                                        </select>
+                                    </div>
+                                    <input type="hidden" name="id" th:value="${userCredit.id}"/>
+                                    <input
+                                            type="hidden"
+                                            th:name="${_csrf.parameterName}"
+                                            th:value="${_csrf.token}"/>
+                                    <input type="submit" class="btn btn-lg btn-primary btn-block" value="Zapłać"/>
+                                </form>
+                            </td>
+                            <td>
+                                <form method="POST">
+                                    <input type="hidden" name="id" th:value="${userCredit.id}" />
+                                    <div class="form-group">
+                                        <input type="text" name="credit" th:value="${userCredit.totalRepayment}"
+                                               class="form-control" readonly
+                                               autofocus="true"/>
+                                    </div>
+                                    <input
+                                            type="hidden"
+                                            th:name="${_csrf.parameterName}"
+                                            th:value="${_csrf.token}"/>
+                                    <input type="submit" class="btn btn-lg btn-primary btn-block" value="Spłać kredyt"/>
+                                </form>
+                            </td>
+                        </div>
+                        <span th:case="true"></span>
+                    </div>
                 </tr>
             </tbody>
         </table>
