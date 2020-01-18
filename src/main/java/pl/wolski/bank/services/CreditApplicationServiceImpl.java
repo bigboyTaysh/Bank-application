@@ -10,6 +10,7 @@ import pl.wolski.bank.repositories.CreditTypeRepository;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 
 
 @Service
@@ -29,8 +30,12 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
 
         creditApplication.setUser(userService.findByUsername(username));
 
-        creditApplication.setAccepted(false);
 
         creditApplicationRepository.saveAndFlush(creditApplication);
+    }
+
+    @Override
+    public List<CreditApplication> findAll(){
+        return creditApplicationRepository.findAll();
     }
 }

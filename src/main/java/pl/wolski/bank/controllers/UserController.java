@@ -5,6 +5,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import pl.wolski.bank.models.BankAccount;
+import pl.wolski.bank.models.Role;
 import pl.wolski.bank.models.Transaction;
 import pl.wolski.bank.models.User;
 import pl.wolski.bank.services.BankAccountService;
@@ -43,29 +44,46 @@ public class UserController{
     @Autowired
     TransactionService transactionService;
 
-    @GetMapping(path = "/index")
-    //  @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST})
+    //@GetMapping(path = "/index")
+    @RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
     public String home(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Object principal = auth.getPrincipal();
         if (!(auth instanceof AnonymousAuthenticationToken)) {
-            model.addAttribute("userAccount", bankAccountService.getUserAccount(userService.findByUsername(((UserDetails)principal).getUsername())));
-            return "index";
+            /* The user is logged in :slight_smile: */
+            List<Role> userRole = (userService.findRoleByUser(userService.findByUsername(((UserDetails)principal).getUsername())));
+
+            boolean isAdmin = false;
+
+            for(Role role: userRole) {
+                if(role.getType() == Role.Types.ROLE_ADMIN)
+                    isAdmin = true;
+            }
+
+            if(isAdmin == true){
+                return "redirect:/creditApplicationsList";
+            } else {
+                List<Transaction> transactions = transactionService.findUserTransactions(
+                        bankAccountService.getUserAccount(userService.findByUsername(((UserDetails)principal).getUsername())).getBankAccountNumber(),
+                        bankAccountService.getUserAccount(userService.findByUsername(((UserDetails)principal).getUsername())).getBankAccountNumber());
+                model.addAttribute("transactions", transactions);
+                model.addAttribute("userAccount", bankAccountService.getUserAccount(userService.findByUsername(((UserDetails)principal).getUsername())));
+                return "index";
+            }
         }
         return "loginForm";
     }
 
+    /*
     @ModelAttribute("transactions")
     public List<Transaction> loadTransactions(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Object principal = auth.getPrincipal();
-        List<Transaction> transactions = transactionService.findUserTransactions(
-                bankAccountService.getUserAccount(userService.findByUsername(((UserDetails)principal).getUsername())).getBankAccountNumber(),
-                bankAccountService.getUserAccount(userService.findByUsername(((UserDetails)principal).getUsername())).getBankAccountNumber());
 
         log.info("Ładowanie listy " + transactions.size() + " transakcji ");
         return transactions;
     }
+    */
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {//Rejestrujemy edytory właściwości

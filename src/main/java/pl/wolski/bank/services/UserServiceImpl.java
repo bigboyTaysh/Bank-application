@@ -87,6 +87,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<Role> findRoleByUser(pl.wolski.bank.models.User user){
+        return roleRepository.findByUsers(user);
+    }
+
+    @Override
     public boolean isUniqueLogin(String username) {
         return userRepository.findByUsername(username) == null;
     }

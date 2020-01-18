@@ -41,6 +41,13 @@ public class CreditController {
         return "creditApplicationForm";
     }
 
+    @GetMapping("/creditApplicationsList")
+    public String creditApplicationsList(Model model) {
+        model.addAttribute("creditApplicationsList", creditApplicationService.findAll());
+
+        return "creditApplicationsList";
+    }
+
     @PostMapping("/creditApplication")
     public String creditForm2(@Valid @ModelAttribute("creditApplication") CreditApplication creditApplication,
                              BindingResult bindingResult){
