@@ -72,10 +72,12 @@
                     </td>
                     <td>
                         <div th:if="${creditApplication.accepted == null}">
-                            <a th:href="@{/acceptApplication(id=${creditApplication.id})}">
+                            <a th:style="${'color: green;'}"
+                               th:href="@{/acceptApplication(id=${creditApplication.id})}">
                                 Akceptuj
                             </a>
-                            <a th:href="@{/discardApplication(id=${creditApplication.id})}">
+                            <a th:style="${'color: red;'}"
+                               th:href="@{/discardApplication(id=${creditApplication.id})}">
                                 Odrzuć
                             </a>
                         </div>

@@ -47,6 +47,8 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
         Optional<CreditApplication> optionalCreditApplication = creditApplicationRepository.findById(id);
         CreditApplication creditApplication = optionalCreditApplication.orElseThrow(() -> new UserNotFoundException(id));
 
+        creditApplication.setAccepted(status);
+        creditApplicationRepository.save(creditApplication);
     }
 
 }
