@@ -7,6 +7,7 @@ import pl.wolski.bank.models.Credit;
 import pl.wolski.bank.models.User;
 import pl.wolski.bank.repositories.CreditRepository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -24,5 +25,10 @@ public class CreditServiceImpl implements CreditService {
     @Override
     public List<Credit> findByUser(User user){
         return creditRepository.findByUser(user);
+    }
+
+    @Override
+    public  boolean payOffTheCredit(Long id, BigDecimal monthRepayment){
+        return true;
     }
 }

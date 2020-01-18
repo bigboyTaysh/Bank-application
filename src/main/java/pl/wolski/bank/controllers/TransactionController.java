@@ -68,7 +68,8 @@ public class TransactionController {
         userService.save(userForm, addressService.findExistAddress(userAddress), bankAccountService.newBankAccount(bankAccount));
 
          */
-        return "transactionSuccess";
+        model.addAttribute("message", "Pomyślnie wykonanano przelew");
+        return "actionMessage";
     }
 
     @ModelAttribute("bankAccounts")

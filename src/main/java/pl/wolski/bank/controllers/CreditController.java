@@ -17,6 +17,7 @@ import pl.wolski.bank.services.CreditTypeService;
 import pl.wolski.bank.services.UserService;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
@@ -53,6 +54,23 @@ public class CreditController {
         return "userCredits";
     }
 
+    //@PostMapping(path = "/userCredits", params={"value"})
+    //@GetMapping("/userCredits")
+    @PostMapping(value = "/userCredits")
+    public String payOffTheCredit(Model model,
+                                  @RequestParam(value = "id", required = false) String id,
+                                  @RequestParam(value = "credit", required = false) String credit) {
+
+        if(creditService.payOffTheCredit(Long.parseLong(id), new BigDecimal(credit))){
+            model.addAttribute("message", "Pomyślnie zapłacono");
+        } else {
+            model.addAttribute("message", "Nie udało się zapłacić");
+        }
+
+        return "actionMessage";
+    }
+
+
     @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
     @GetMapping("/creditApplicationsList")
     public String creditApplicationsList(Model model) {
@@ -62,14 +80,17 @@ public class CreditController {
     }
 
     @PostMapping("/creditApplication")
-    public String creditForm2(@Valid @ModelAttribute("creditApplication") CreditApplication creditApplication,
+    public String creditForm2(Model model,
+                              @Valid @ModelAttribute("creditApplication") CreditApplication creditApplication,
                              BindingResult bindingResult){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Object principal = auth.getPrincipal();
 
         creditApplicationService.save(creditApplication, ((UserDetails)principal).getUsername());
 
-        return "creditApplicationSuccess";
+        model.addAttribute("message", "Pomyślnie wypełniono wniosek!");
+
+        return "actionMessage";
     }
 
     @ModelAttribute("creditTypes")
