@@ -78,6 +78,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<CreditApplication> creditApplications;
 
+    @OneToMany(mappedBy = "user")
+    private Set<Credit> credits;
+
     @AssertTrue
     private boolean isPasswordsEquals(){
         return password == null || passwordConfirm == null || password.equals(passwordConfirm);

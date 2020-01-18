@@ -35,6 +35,11 @@ public class BankAccountServiceImpl implements BankAccountService {
     }
 
     @Override
+    public void save(BankAccount bankAccount) {
+        bankAccountRepository.saveAndFlush(bankAccount);
+    }
+
+    @Override
     public BankAccount newBankAccount(User user, BankAccount bankAccount){
         pl.wolski.bank.models.BankAccount bankAccountInRepository =
                 bankAccountRepository.findTopByOrderByIdDesc();

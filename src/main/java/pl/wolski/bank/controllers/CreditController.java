@@ -42,6 +42,18 @@ public class CreditController {
         return "creditApplicationForm";
     }
 
+    @GetMapping("/userCredits")
+    public String userCredits(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = auth.getPrincipal();
+
+        model.addAttribute("userCredits", creditService.findByUser(
+                userService.findByUsername(((UserDetails)principal).getUsername())));
+
+        return "userCredits";
+    }
+
+    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
     @GetMapping("/creditApplicationsList")
     public String creditApplicationsList(Model model) {
         model.addAttribute("creditApplicationsList", creditApplicationService.findAll());

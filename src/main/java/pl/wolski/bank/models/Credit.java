@@ -34,6 +34,8 @@ public class Credit {
 
     private int numberOfMonths;
 
+    private int numberOfMonthsToTheEnd;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Date startDate;
@@ -46,7 +48,13 @@ public class Credit {
     @Temporal(TemporalType.DATE)
     private Date lastPayment;
 
+    private Boolean isPaidOff;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_credit_type", nullable = true)
     private CreditType creditType;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name="id_user", nullable = false)
+    private User user;
 }
