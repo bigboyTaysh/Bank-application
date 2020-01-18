@@ -63,12 +63,16 @@ public class TransactionController {
 
         User user = (User)model.getAttribute("user");
 
-        transactionService.save(user, transaction);
+        if(transactionService.save(user, transaction)){
+            model.addAttribute("message", "Pomyślnie wykonanano przelew");
+        } else {
+            model.addAttribute("message", "Nie udało się wykonać przelewu");
+        }
         /*
         userService.save(userForm, addressService.findExistAddress(userAddress), bankAccountService.newBankAccount(bankAccount));
 
          */
-        model.addAttribute("message", "Pomyślnie wykonanano przelew");
+
         return "actionMessage";
     }
 
