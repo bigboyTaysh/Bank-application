@@ -6,7 +6,6 @@
     </head>
     <body>
         <div th:replace="shared/header :: header('creditApplicationsList')"/>
-        <table class="table">
         <table class="table table-striped">
             <tbody>
                 <tr>
@@ -43,7 +42,9 @@
                 </tr>
                 <tr th:each="creditApplication : ${creditApplicationsList}">
                     <td>
-                        [[${creditApplication.user.firstName + ' ' + creditApplication.user.lastName}]]
+                        <a th:href="@{/user(id=${creditApplication.user.id})}">
+                            [[${creditApplication.user.firstName + ' ' + creditApplication.user.lastName}]]
+                        </a>
                     </td>
                     <td>
                         [[${creditApplication.dateOfSubmissionOfTheApplication}]]
@@ -70,11 +71,25 @@
                         [[${creditApplication.monthRepayment}]]
                     </td>
                     <td>
-                        [[${creditApplication.accepted}]]
+                        <div th:if="${creditApplication.accepted == null}">
+                            <a th:href="@{/acceptApplication(id=${creditApplication.id})}">
+                                Akceptuj
+                            </a>
+                            <a th:href="@{/discardApplication(id=${creditApplication.id})}">
+                                Odrzuć
+                            </a>
+                        </div>
+                        <div th:unless="${creditApplication.accepted == null}">
+                            <div th:switch="${creditApplication.accepted}">
+                                <p th:case="true">Potwierdzono</p>
+                                <p th:case="false">Odrzucono</p>
+                            </div>
+                        </div>
                     </td>
                 </tr>
             </tbody>
         </table>
         <div th:replace="shared/footer :: footer"></div>
+
     </body>
 </html>

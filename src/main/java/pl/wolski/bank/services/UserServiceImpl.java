@@ -1,7 +1,7 @@
 package pl.wolski.bank.services;
 
 
-import pl.wolski.bank.models.BankAccount;
+import pl.wolski.bank.exceptions.UserNotFoundException;
 import pl.wolski.bank.models.Role;
 import pl.wolski.bank.repositories.AddressRepository;
 import pl.wolski.bank.repositories.RoleRepository;
@@ -84,6 +84,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public pl.wolski.bank.models.User findByUsername(String username){
         return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public pl.wolski.bank.models.User findById(Long id){
+        Optional<pl.wolski.bank.models.User> optionalUser = userRepository.findById(id);
+        pl.wolski.bank.models.User user = optionalUser.orElseThrow(() -> new UserNotFoundException(id));
+
+        return user;
     }
 
     @Override

@@ -39,7 +39,7 @@ public class CreditApplication {
     //@Temporal(TemporalType.DATE)
     private Date dateOfSubmissionOfTheApplication;
 
-    private boolean accepted;
+    private Boolean accepted;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="id_user", nullable = false)

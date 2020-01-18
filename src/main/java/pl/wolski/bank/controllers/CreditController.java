@@ -2,6 +2,7 @@ package pl.wolski.bank.controllers;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -64,5 +65,21 @@ public class CreditController {
         List<CreditType> creditTypes = creditTypeService.findAll();
         log.info("Ładowanie listy " + creditTypes.size() + " typów kredytów ");
         return creditTypes;
+    }
+
+    @Secured("ROLE_ADMIN")
+    @RequestMapping(value = "/acceptApplication", method = RequestMethod.GET)
+    public String acceptApplication(Model model, Long id) {
+
+
+        return "redirect:/creditApplicationsList";
+    }
+
+    @Secured("ROLE_ADMIN")
+    @RequestMapping(value = "/discardApplication", method = RequestMethod.GET)
+    public String discardApplication(Model model, Long id) {
+        model.addAttribute("creditApplicationsList", creditApplicationService.findAll());
+
+        return "redirect:/creditApplicationsList";
     }
 }

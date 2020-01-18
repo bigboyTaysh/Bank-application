@@ -3,14 +3,17 @@ package pl.wolski.bank.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.wolski.bank.exceptions.UserNotFoundException;
 import pl.wolski.bank.models.CreditApplication;
 import pl.wolski.bank.models.CreditType;
+import pl.wolski.bank.models.User;
 import pl.wolski.bank.repositories.CreditApplicationRepository;
 import pl.wolski.bank.repositories.CreditTypeRepository;
 
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -38,4 +41,12 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
     public List<CreditApplication> findAll(){
         return creditApplicationRepository.findAll();
     }
+
+    @Override
+    public void updateCreditApplicationStatus(Long id, boolean status){
+        Optional<CreditApplication> optionalCreditApplication = creditApplicationRepository.findById(id);
+        CreditApplication creditApplication = optionalCreditApplication.orElseThrow(() -> new UserNotFoundException(id));
+
+    }
+
 }
