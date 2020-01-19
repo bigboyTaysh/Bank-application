@@ -39,8 +39,15 @@ public class NotificationController {
     public String notifications(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Object principal = auth.getPrincipal();
+        User user = userService.findByUsername(((UserDetails)principal).getUsername());
 
-        model.addAttribute("notifications", notificationService.getAllUserNotification(userService.findByUsername(((UserDetails) principal).getUsername())));
+        List<Notification> notificationList = notificationService.findByUserAndWasRead(user, false);
+        for (Notification notification : notificationList){
+            notification.setWasRead(true);
+            notificationService.save(notification);
+        }
+
+        model.addAttribute("notifications", notificationService.getAllUserNotification(userService.findByUsername(user.getUsername())));
 
         return "notifications";
     }
