@@ -11,5 +11,7 @@ public interface NotificationService {
 // Własne metody
     void save(Notification notification);
 
+    List<Notification> findByUserAndWasRead(User user, boolean wasRead);
+
     List<Notification> getAllUserNotification(User user);
 }

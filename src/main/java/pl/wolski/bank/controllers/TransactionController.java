@@ -41,6 +41,9 @@ public class TransactionController {
     @Autowired
     private CurrencyService currencyService;
 
+    @Autowired
+    private NotificationService notificationService;
+
     @GetMapping("/transaction")
     public String transactionForm(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -83,6 +86,16 @@ public class TransactionController {
          */
 
         return "actionMessage";
+    }
+
+    @ModelAttribute("notificationCounter")
+    public int notificationCounter(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = auth.getPrincipal();
+        User user = userService.findByUsername(((UserDetails)principal).getUsername());
+        List<Notification> notificationList = notificationService.findByUserAndWasRead(user, false);
+        log.info("Ładowanie listy " + notificationList.size() + " kont bankowych ");
+        return notificationList.size();
     }
 
     @ModelAttribute("bankAccounts")

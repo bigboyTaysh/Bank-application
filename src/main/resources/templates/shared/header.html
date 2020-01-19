@@ -77,7 +77,12 @@
                 <ul class="nav-tabs navbar-nav ml-md-auto bg-dark">
                     <li class="nav-item" sec:authorize="hasRole('ROLE_USER')">
                         <a class="nav-link" th:classappend="${pageName eq 'notifications'}?'active'" th:href="@{/notifications}">
-                            Powiadomienia
+                            <div th:if="${notificationCounter == null}">
+                                <span>Powiadomienia</span>
+                            </div>
+                            <div th:if="${notificationCounter != null}">
+                                <span>([[${notificationCounter}]]) Powiadomienia</span>
+                            </div>
                         </a>
                     </li>
 

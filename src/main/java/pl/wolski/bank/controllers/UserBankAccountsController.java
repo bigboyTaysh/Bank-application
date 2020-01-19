@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import pl.wolski.bank.models.BankAccount;
+import pl.wolski.bank.models.Notification;
 import pl.wolski.bank.models.Transaction;
 import pl.wolski.bank.models.User;
 import pl.wolski.bank.services.BankAccountService;
+import pl.wolski.bank.services.NotificationService;
 import pl.wolski.bank.services.TransactionService;
 import pl.wolski.bank.services.UserService;
 
@@ -41,6 +43,9 @@ public class UserBankAccountsController {
     @Autowired
     TransactionService transactionService;
 
+    @Autowired
+    private NotificationService notificationService;
+
     @GetMapping(path = "/bankAccounts")
     //  @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST})
     public String bankAccounts(Model model) {
@@ -54,6 +59,16 @@ public class UserBankAccountsController {
             return "bankAccounts";
         }
         return "loginForm";
+    }
+
+    @ModelAttribute("notificationCounter")
+    public int notificationCounter(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = auth.getPrincipal();
+        User user = userService.findByUsername(((UserDetails)principal).getUsername());
+        List<Notification> notificationList = notificationService.findByUserAndWasRead(user, false);
+        log.info("Ładowanie listy " + notificationList.size() + " kont bankowych ");
+        return notificationList.size();
     }
 
     @InitBinder
