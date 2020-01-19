@@ -37,13 +37,13 @@ import java.util.Optional;
 public class UserController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    BankAccountService bankAccountService;
+    private BankAccountService bankAccountService;
 
     @Autowired
-    TransactionService transactionService;
+    private TransactionService transactionService;
 
     @GetMapping(path = "/index")
     //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})

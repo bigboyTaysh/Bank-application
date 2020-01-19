@@ -8,18 +8,15 @@
         <div th:replace="shared/header :: header('notifications')"/>
         <table class="table table-striped">
             <tbody>
-                <tr th:each="transaction : ${transactions}">
+                <tr th:each="notification : ${notifications}">
                     <td>
-                        <span th:text="${#dates.format(transaction.date, 'dd-MM-yyyy')}"></span>
+                        [[${notification.title}]]
                     </td>
                     <td>
-                        [[${transaction.userNameFrom}]]
+                        <span th:text="${#dates.format(notification.date, 'dd-MM-yyyy')}"></span>
                     </td>
                     <td>
-                        [[${transaction.title}]]
-                    </td>
-                    <td>
-                        <span th:text="${#numbers.formatDecimal(transaction.value,1,2)}"></span>
+                        [[${notification.message}]]
                     </td>
                 </tr>
             </tbody>

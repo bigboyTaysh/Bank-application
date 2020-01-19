@@ -4,11 +4,8 @@ package pl.wolski.bank.services;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.wolski.bank.models.*;
 import pl.wolski.bank.simulation.MyThread;
-import pl.wolski.bank.models.BankAccount;
-import pl.wolski.bank.models.Transaction;
-import pl.wolski.bank.models.TransactionType;
-import pl.wolski.bank.models.User;
 import pl.wolski.bank.repositories.BankAccountRepository;
 import pl.wolski.bank.repositories.TransactionRepository;
 import pl.wolski.bank.repositories.TransactionTypeRepository;
@@ -33,6 +30,9 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Autowired
     private BankAccountService bankAccountService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @Override
     public boolean save(User user, Transaction transaction) {
@@ -67,6 +67,7 @@ public class TransactionServiceImpl implements TransactionService {
         } else {
             if(bankAccountFrom.getAvailableFounds().compareTo(transaction.getValue()) == 0 ||
                     bankAccountFrom.getAvailableFounds().compareTo(transaction.getValue()) == 1) {
+
                 bankAccountFrom.setBalance(bankAccountFrom.getBalance().subtract(transaction.getValue()));
                 bankAccountFrom.setAvailableFounds(bankAccountFrom.getAvailableFounds().subtract(transaction.getValue()));
 
@@ -82,6 +83,13 @@ public class TransactionServiceImpl implements TransactionService {
                 Timestamp stamp = new Timestamp(System.currentTimeMillis());
                 Date date = new Date(stamp.getTime());
                 transaction.setDate(date);
+
+                Notification notification = new Notification();
+                notification.setDate(date);
+                notification.setTitle("Uznanie rachunku");
+                //notification.setMessage("+" + transaction.getValue() + );
+
+                notificationService.save(notification);
 
                 bankAccountRepository.save(bankAccountTo);
                 bankAccountRepository.save(bankAccountFrom);

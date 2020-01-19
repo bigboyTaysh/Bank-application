@@ -13,9 +13,11 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import pl.wolski.bank.models.Notification;
 import pl.wolski.bank.models.Role;
 import pl.wolski.bank.models.Transaction;
 import pl.wolski.bank.services.BankAccountService;
+import pl.wolski.bank.services.NotificationService;
 import pl.wolski.bank.services.TransactionService;
 import pl.wolski.bank.services.UserService;
 
@@ -28,33 +30,22 @@ import java.util.List;
 public class NotificationController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    BankAccountService bankAccountService;
-
-    @Autowired
-    TransactionService transactionService;
+    private NotificationService notificationService;
 
     @GetMapping(path = "/notifications")
     //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
     public String notifications(Model model) {
-        //model.addAttribute("notifications", )
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = auth.getPrincipal();
+
+        model.addAttribute("notifications", notificationService.getAllUserNotification(userService.findByUsername(((UserDetails) principal).getUsername())));
 
         return "notifications";
     }
 
-
-    /*
-    @ModelAttribute("transactions")
-    public List<Transaction> loadTransactions(){
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = auth.getPrincipal();
-
-        log.info("Ładowanie listy " + transactions.size() + " transakcji ");
-        return transactions;
-    }
-    */
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {//Rejestrujemy edytory właściwości
