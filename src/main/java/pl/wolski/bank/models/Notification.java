@@ -11,7 +11,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "transactions")
+@Table(name = "notifications")
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,6 +22,8 @@ public class Notification {
     private Date date;
 
     private String message;
+
+    private boolean wasRead;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="id_user", nullable = false)

@@ -2,6 +2,7 @@ package pl.wolski.bank.services;
 
 
 import lombok.extern.log4j.Log4j2;
+import org.hibernate.validator.constraints.Currency;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.wolski.bank.models.*;
@@ -34,11 +35,63 @@ public class TransactionServiceImpl implements TransactionService {
     @Autowired
     private NotificationService notificationService;
 
+    @Autowired
+    private CurrencyService currencyService;
+
     @Override
     public boolean save(User user, Transaction transaction) {
         BankAccount bankAccountTo = bankAccountRepository.findByBankAccountNumber(transaction.getToBankAccountNumber());
         BankAccount bankAccountFrom = bankAccountRepository.findByBankAccountNumber(transaction.getFromBankAccountNumber());
 
+        BigDecimal availableFounds = bankAccountFrom.getAvailableFounds();
+        BigDecimal commission = bankAccountFrom.getAccountType().getCommission();
+        BigDecimal value = transaction.getValue();
+        int compareTo = availableFounds.compareTo(value.add(commission));
+
+        Timestamp stamp = new Timestamp(System.currentTimeMillis());
+        Date date = new Date(stamp.getTime());
+
+        if(compareTo == 0 || compareTo == 1){
+            bankAccountFrom.setAvailableFounds(availableFounds.subtract(value.add(commission)));
+
+            if(bankAccountTo == null){
+                bankAccountFrom.setLock(bankAccountFrom.getLock().add(value.add(commission)));
+
+                bankAccountService.runThread(transaction.getFromBankAccountNumber(), value);
+            } else {
+                bankAccountFrom.setBalance(bankAccountFrom.getBalance().subtract(value.add(commission)));
+
+                bankAccountTo.setBalance(bankAccountTo.getBalance().add(value));
+                bankAccountTo.setAvailableFounds(bankAccountTo.getAvailableFounds().add(value));
+                transaction.setBalanceAfterTransactionUserTo(bankAccountTo.getBalance());
+
+                Notification notification = new Notification();
+                notification.setDate(date);
+                notification.setTitle("Uznanie rachunku");
+                notification.setMessage("+" + value + transaction.getCurrency().getName()
+                        + "\n Na rachunku " + bankAccountTo.getBankAccountNumber());
+                notification.setUser(user);
+                notification.setWasRead(false);
+                notificationService.save(notification);
+            }
+
+            transaction.setBalanceAfterTransactionUserFrom(bankAccountFrom.getBalance());
+            transaction.setUserNameFrom(user.getFirstName() + " " + user.getLastName());
+            TransactionType transactionType = transactionTypeRepository.findTransactionTypeByType(TransactionType.Types.TRANSFER);
+            transaction.setTransactionType(transactionType);
+            transaction.setDate(date);
+
+            if(bankAccountTo != null){
+                bankAccountRepository.save(bankAccountTo);
+            }
+            bankAccountRepository.save(bankAccountFrom);
+            transactionRepository.saveAndFlush(transaction);
+
+            return true;
+        } else {
+            return false;
+        }
+        /*
         if(bankAccountTo == null){
             if(bankAccountFrom.getAvailableFounds().compareTo(transaction.getValue()) == 0 ||
                     bankAccountFrom.getAvailableFounds().compareTo(transaction.getValue()) == 1){
@@ -100,6 +153,8 @@ public class TransactionServiceImpl implements TransactionService {
                 return false;
             }
         }
+
+         */
     }
 
     @Override

@@ -8,6 +8,11 @@
         <div th:replace="shared/header :: header('notifications')"/>
         <table class="table table-striped">
             <tbody>
+                <tr th:if="${notifications.isEmpty()}">
+                    <td>
+                        Brak powiadomień!
+                    </td>
+                </tr>
                 <tr th:each="notification : ${notifications}">
                     <td>
                         [[${notification.title}]]

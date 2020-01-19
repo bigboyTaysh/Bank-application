@@ -32,6 +32,9 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
     @Autowired
     private BankAccountService bankAccountService;
 
+    @Autowired
+    private NotificationService notificationService;
+
     @Override
     public void save(CreditApplication creditApplication, String username) {
         Timestamp stamp = new Timestamp(System.currentTimeMillis());
@@ -84,6 +87,16 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
             BankAccount bankAccount = bankAccountService.getUserAccount(user);
             bankAccount.setBalance(bankAccount.getBalance().add(creditApplication.getCreditAmount()));
             bankAccount.setAvailableFounds(bankAccount.getAvailableFounds().add(creditApplication.getCreditAmount()));
+
+            Notification notification = new Notification();
+            notification.setDate(date);
+            notification.setTitle("Wniosek o kredyt zaakceptopowano");
+            notification.setMessage("Uznanie: +" + creditApplication.getCreditAmount() + bankAccount.getCurrency().getName()
+                    + "\n Na rachunku " + bankAccount.getBankAccountNumber());
+            notification.setUser(user);
+            notification.setWasRead(false);
+
+            notificationService.save(notification);
 
             bankAccountService.save(bankAccount);
             creditRepository.save(credit);
