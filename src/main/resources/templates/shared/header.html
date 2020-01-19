@@ -38,13 +38,23 @@
                                 </a>
                             </div>
                         </li>
-                        <li class="nav-item" sec:authorize="hasRole('ROLE_USER')">
-                            <a class="nav-link" th:classappend="${pageName eq 'bankAccounts'}?'active'" th:href="@{/bankAccounts}">
+                        <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_USER')">
+                            <a th:classappend="${pageName eq 'creditApplication'}?'active'"
+                               class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLinkThree"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
                                 Rachunki
                             </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkThree">
+                                <a class="dropdown-item" th:href="@{/bankAccounts}">
+                                    Moje rachunki
+                                </a>
+                                <a class="dropdown-item" th:href="@{/newUserBankAccount}">
+                                    Załóż konto walutowe
+                                </a>
+                            </div>
                         </li>
                         <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_USER')">
-                            <a th:classappend="${pageName eq 'creditApplication'}?'active'" th:href="@{/creditApplication}"
+                            <a th:classappend="${pageName eq 'creditApplication'}?'active'"
                                class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLinkTwo"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
                                 Kredyty
