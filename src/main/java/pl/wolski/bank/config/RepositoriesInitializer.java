@@ -41,11 +41,16 @@ public class RepositoriesInitializer {
     @Autowired
     private TransactionTypeRepository transactionTypeRepository;
 
+    @Autowired
+    private CreditTypeRepository creditTypeRepository;
+
     @Bean
     InitializingBean init() {
         return () -> {
             if (roleRepository.findAll().isEmpty() == true) {
                 try {
+                    CreditType creditType = new CreditType("kredyt gotówkowy", 8.99, 0.0);
+                    creditTypeRepository.save(creditType);
 
                     AccountType accountType = new AccountType("typ1");
                     accountTypeRepository.save(accountType);
@@ -56,10 +61,10 @@ public class RepositoriesInitializer {
                     BigDecimal accountNumber = new BigDecimal("11222233334444555566667777");
                     BigDecimal zero = new BigDecimal("0");
                     BankAccount bankAccount = new BankAccount(zero, zero, zero, accountNumber, date, accountType);
-                    bankAccountRepository.save(bankAccount);
 
                     Role roleUser = roleRepository.save(new Role(Role.Types.ROLE_USER));
                     Role roleAdmin = roleRepository.save(new Role(Role.Types.ROLE_ADMIN));
+                    Role roleEmployee = roleRepository.save(new Role(Role.Types.ROLE_EMPLOYEE));
 
                     TransactionType transactionType = transactionTypeRepository.save(new TransactionType(TransactionType.Types.TRANSFER));
 
@@ -81,12 +86,14 @@ public class RepositoriesInitializer {
                     calendar.set(1997, 6, 18);
                     user2.setBirthDate(calendar.getTime());
                     user2.setAddress(address);
-                    user2.setBankAccounts(new HashSet<>(Arrays.asList(bankAccount)));
-
 
                     User admin = new User("admin", true);
                     admin.setRoles(new HashSet<>(Arrays.asList(roleAdmin)));
                     admin.setPassword(passwordEncoder.encode("admin"));
+
+                    User emplo = new User("emplo", true);
+                    emplo.setRoles(new HashSet<>(Arrays.asList(roleEmployee)));
+                    emplo.setPassword(passwordEncoder.encode("emplo"));
 
                     User test = new User("useradmin", true);
                     test.setRoles(new HashSet<>(Arrays.asList(roleAdmin, roleUser)));
@@ -94,7 +101,10 @@ public class RepositoriesInitializer {
 
                     userRepository.save(user);
                     userRepository.save(user2);
+                    bankAccount.setUser(user2);
+                    bankAccountRepository.save(bankAccount);
 
+                    userRepository.save(emplo);
                     userRepository.save(admin);
                     userRepository.save(test);
                 } catch (Exception e) {

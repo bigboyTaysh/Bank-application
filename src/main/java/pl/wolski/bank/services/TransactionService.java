@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface TransactionService {
 // Własne metody
-    void save(User user, Transaction transaction);
+    boolean save(User user, Transaction transaction);
 
     List<Transaction> findUserTransactions(BigDecimal fromBankAccountNumber, BigDecimal toBankAccountNumber);
 }
