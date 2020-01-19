@@ -46,7 +46,8 @@ public class UserRegistrationFormController {
     }
 
     @PostMapping("/registrationForm.html")
-    public String registration(@Valid @ModelAttribute("userCommand") User userForm,
+    public String registration(Model model,
+                               @Valid @ModelAttribute("userCommand") User userForm,
                                @Valid @ModelAttribute("userAddress") Address userAddress,
                                @Valid @ModelAttribute("bankAccount") BankAccount bankAccount,
                                BindingResult bindingResult) {
@@ -55,9 +56,11 @@ public class UserRegistrationFormController {
             return "registrationForm";
         }
 
-        userService.save(userForm, addressService.findExistAddress(userAddress), bankAccountService.newBankAccount(bankAccount));
+        userService.save(userForm, addressService.findExistAddress(userAddress));
+        bankAccountService.newBankAccount(userForm, bankAccount);
 
-        return "registrationSuccess";
+        model.addAttribute("message", "Zostałeś zarejestrowany");
+        return "actionMessage";
     }
 
 

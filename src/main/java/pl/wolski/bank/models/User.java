@@ -72,11 +72,14 @@ public class User {
     @JoinColumn(name="address_id", nullable = true)
     private Address address;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "owned_bank_accounts",
-            joinColumns = @JoinColumn(name = "id_user"),
-            inverseJoinColumns = @JoinColumn(name = "id_bank_account"))
+    @OneToMany(mappedBy = "user")
     private Set<BankAccount> bankAccounts;
+
+    @OneToMany(mappedBy = "user")
+    private Set<CreditApplication> creditApplications;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Credit> credits;
 
     @AssertTrue
     private boolean isPasswordsEquals(){

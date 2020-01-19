@@ -1,7 +1,7 @@
 package pl.wolski.bank.services;
 
 
-import pl.wolski.bank.models.BankAccount;
+import pl.wolski.bank.exceptions.UserNotFoundException;
 import pl.wolski.bank.models.Role;
 import pl.wolski.bank.repositories.AddressRepository;
 import pl.wolski.bank.repositories.RoleRepository;
@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(pl.wolski.bank.models.User user, pl.wolski.bank.models.Address address, BankAccount bankAccount) {
+    public void save(pl.wolski.bank.models.User user, pl.wolski.bank.models.Address address) {
 
         Role userRole = roleRepository.findRoleByType(Role.Types.ROLE_USER);
 
@@ -73,9 +73,6 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setPasswordConfirm(null);//wyzerowanie jest potrzebne ze względu na walidację adnotacjami hibernate
         user.setAddress(address);
-
-        List bankAccountList = Arrays.asList(bankAccount);
-        user.setBankAccounts(new HashSet<>(bankAccountList));
 
         SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date(System.currentTimeMillis());
@@ -87,6 +84,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public pl.wolski.bank.models.User findByUsername(String username){
         return userRepository.findByUsername(username);
+    }
+
+    @Override
+    public pl.wolski.bank.models.User findById(Long id){
+        Optional<pl.wolski.bank.models.User> optionalUser = userRepository.findById(id);
+        pl.wolski.bank.models.User user = optionalUser.orElseThrow(() -> new UserNotFoundException(id));
+
+        return user;
+    }
+
+    @Override
+    public List<Role> findRoleByUser(pl.wolski.bank.models.User user){
+        return roleRepository.findByUsers(user);
     }
 
     @Override

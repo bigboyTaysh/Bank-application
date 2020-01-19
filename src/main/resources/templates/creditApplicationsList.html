@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <div th:replace="shared/header :: header-css"/>
+        <title>Strona domowa</title>
+    </head>
+    <body>
+        <div th:replace="shared/header :: header('creditApplicationsList')"/>
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <td>
+                        Imię Nazwisko
+                    </td>
+                    <td>
+                        Data złożenia wniosku
+                    </td>
+                    <td>
+                        Kwota kredytu
+                    </td>
+                    <td>
+                        Całkowita kwota
+                    </td>
+                    <td>
+                        Okres(miesiące)
+                    </td>
+                    <td>
+                        Rodzaj kredytu
+                    </td>
+                    <td>
+                        Oprocentowanie
+                    </td>
+                    <td>
+                        Prowizja
+                    </td>
+                    <td>
+                        Miesięczna rata
+                    </td>
+                    <td>
+                        Status wniosku
+                    </td>
+                </tr>
+                <tr th:each="creditApplication : ${creditApplicationsList}">
+                    <td>
+                        <a th:href="@{/user(id=${creditApplication.user.id})}">
+                            [[${creditApplication.user.firstName + ' ' + creditApplication.user.lastName}]]
+                        </a>
+                    </td>
+                    <td>
+                        [[${creditApplication.dateOfSubmissionOfTheApplication}]]
+                    </td>
+                    <td>
+                        [[${creditApplication.creditAmount}]]
+                    </td>
+                    <td>
+                        [[${creditApplication.totalRepayment}]]
+                    </td>
+                    <td>
+                        [[${creditApplication.numberOfMonths}]]
+                    </td>
+                    <td>
+                        [[${creditApplication.creditType.name}]]
+                    </td>
+                    <td>
+                        [[${creditApplication.creditType.creditRates}]]
+                    </td>
+                    <td>
+                        [[${creditApplication.creditType.commission}]]
+                    </td>
+                    <td>
+                        [[${creditApplication.monthRepayment}]]
+                    </td>
+                    <td>
+                        <div th:if="${creditApplication.accepted == null}">
+                            <a th:style="${'color: green;'}"
+                               th:href="@{/acceptApplication(id=${creditApplication.id})}">
+                                Akceptuj
+                            </a>
+                            <a th:style="${'color: red;'}"
+                               th:href="@{/discardApplication(id=${creditApplication.id})}">
+                                Odrzuć
+                            </a>
+                        </div>
+                        <div th:unless="${creditApplication.accepted == null}">
+                            <div th:switch="${creditApplication.accepted}">
+                                <p th:case="true">Potwierdzono</p>
+                                <p th:case="false">Odrzucono</p>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div th:replace="shared/footer :: footer"></div>
+
+    </body>
+</html>

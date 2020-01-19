@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
     <head>
-        <div th:replace="shared/loginHeader :: header-css"/>
+        <div th:replace="shared/header :: header-css"/>
         <title>Strona domowa</title>
     </head>
     <body>
@@ -9,7 +9,7 @@
 
         <div id="main" class="container">
     <span style="font-size: 30pt">
-        Pomyślnie wykonany przelew
+        [[${message}]]
     </span>
         </div>
         <div th:replace="shared/footer :: footer"></div>
