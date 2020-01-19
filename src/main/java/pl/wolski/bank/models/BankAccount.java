@@ -37,10 +37,13 @@ public class BankAccount {
     //@Temporal(TemporalType.DATE)
     private Date creationDate;
 
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_account_type", nullable = false)
     private AccountType accountType;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_account_currency", nullable = false)
+    private Currency currency;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="id_user", nullable = false)
