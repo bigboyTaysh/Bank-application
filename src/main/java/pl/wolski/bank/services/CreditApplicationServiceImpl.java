@@ -46,18 +46,18 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
 
     @Override
     public List<CreditApplication> findAll(){
-        return creditApplicationRepository.findAll();
+        return creditApplicationRepository.findAllByOrderByDateOfSubmissionOfTheApplicationDesc();
     }
 
     @Override
-    public void updateCreditApplicationStatus(Long id, boolean status){
+    public void updateCreditApplicationStatus(Long id, boolean isAccepted){
         Optional<CreditApplication> optionalCreditApplication = creditApplicationRepository.findById(id);
         CreditApplication creditApplication = optionalCreditApplication.orElseThrow(() -> new UserNotFoundException(id));
 
-        creditApplication.setAccepted(status);
+        creditApplication.setAccepted(isAccepted);
         creditApplicationRepository.save(creditApplication);
 
-        if(status){
+        if(isAccepted){
             Credit credit = new Credit();
             credit.setCreditAmount(creditApplication.getCreditAmount());
             credit.setTotalRepayment(creditApplication.getTotalRepayment());

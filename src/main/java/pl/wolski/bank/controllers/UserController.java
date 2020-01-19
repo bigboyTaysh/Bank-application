@@ -64,7 +64,7 @@ public class UserController {
             if (isAdmin == true) {
                 return "redirect:/creditApplicationsList";
             } else {
-                List<Transaction> transactions = transactionService.findUserTransactions(
+                List<Transaction> transactions = transactionService.findUserTop5Transactions(
                         bankAccountService.getUserAccount(userService.findByUsername(((UserDetails) principal).getUsername())).getBankAccountNumber(),
                         bankAccountService.getUserAccount(userService.findByUsername(((UserDetails) principal).getUsername())).getBankAccountNumber());
                 model.addAttribute("transactions", transactions);
