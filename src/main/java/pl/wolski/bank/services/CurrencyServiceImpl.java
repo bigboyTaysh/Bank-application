@@ -34,4 +34,9 @@ public class CurrencyServiceImpl implements CurrencyService {
                 .divide(currencyRepository.findByName(currencyTo.getName()).getSale()))
                 .multiply(value);
     }
+
+    @Override
+    public Currency findByName(String name){
+        return currencyRepository.findByName(name);
+    }
 }

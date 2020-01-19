@@ -84,7 +84,7 @@ public class CreditController {
     }
 
     @PostMapping("/creditApplication")
-    public String creditForm2(Model model,
+    public String creditForm(Model model,
                               @Valid @ModelAttribute("creditApplication") CreditApplication creditApplication,
                              BindingResult bindingResult){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

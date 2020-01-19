@@ -11,5 +11,6 @@ public interface CurrencyService {
 // Własne metody
     void save(Currency currency);
     List<Currency> findAll();
+    Currency findByName(String name);
     BigDecimal currencyExchange(Currency currencyFrom, Currency currencyTo, BigDecimal value);
 }

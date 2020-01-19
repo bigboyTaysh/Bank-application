@@ -36,6 +36,7 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Autowired
     private CurrencyRepository currencyRepository;
 
+
     @Override
     public void save(BankAccount bankAccount, AccountType accountType) {
         accountTypeRepository.saveAndFlush(accountType);
@@ -54,7 +55,6 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Override
     public BankAccount newBankAccount(User user, BankAccount bankAccount){
-        Currency currency = currencyRepository.findByName("PLN");
 
         pl.wolski.bank.models.BankAccount bankAccountInRepository =
                 bankAccountRepository.findTopByOrderByIdDesc();
@@ -73,11 +73,20 @@ public class BankAccountServiceImpl implements BankAccountService {
         bankAccount.setBankAccountNumber(
                 bankAccountInRepository.getBankAccountNumber().add(new BigDecimal("1")));
         bankAccount.setUser(userInRepo);
-        bankAccount.setCurrency(currency);
+
+        if(bankAccount.getCurrency() == null){
+            bankAccount.setCurrency(currencyRepository.findByName("PLN"));
+        }
+
 
         bankAccountRepository.save(bankAccount);
 
         return bankAccount;
+    }
+
+    @Override
+    public  BankAccount findByUserAndCurrency(User user, Currency currency){
+        return bankAccountRepository.findByUserAndCurrency(user,currency);
     }
 
     @Override
