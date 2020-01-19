@@ -8,6 +8,7 @@ import pl.wolski.bank.models.Currency;
 import pl.wolski.bank.repositories.CreditTypeRepository;
 import pl.wolski.bank.repositories.CurrencyRepository;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -25,5 +26,12 @@ public class CurrencyServiceImpl implements CurrencyService {
     @Override
     public List<Currency> findAll(){
         return currencyRepository.findAll();
+    }
+
+    @Override
+    public BigDecimal currencyExchange(Currency currencyFrom, Currency currencyTo, BigDecimal value){
+        return ((currencyRepository.findByName(currencyFrom.getName())).getPurchase()
+                .divide(currencyRepository.findByName(currencyTo.getName()).getSale()))
+                .multiply(value);
     }
 }

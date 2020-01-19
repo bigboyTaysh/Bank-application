@@ -20,17 +20,15 @@
                                 </div>
                             </div>
 
-                            <div>
-                                <div class="form-group">
-                                    <select th:field="*{fromBankAccountNumber}" class="form-control">
-                                        <option th:each="account : ${bankAccounts}"
-                                                th:value="${account.bankAccountNumber}"
-                                                th:text="${account.accountType.name + ' ' +
+                            <div class="form-group">
+                                <select th:field="*{fromBankAccountNumber}" class="form-control">
+                                    <option th:each="account : ${bankAccounts}"
+                                            th:value="${account.bankAccountNumber}"
+                                            th:text="${account.accountType.name + ' ' +
                                                 account.bankAccountNumber.toString() + ' ' +
                                                 account.availableFounds.toString()}"
-                                        />
-                                    </select>
-                                </div>
+                                    />
+                                </select>
                             </div>
 
                             <div class="form-group">
@@ -56,6 +54,16 @@
                                        class="form-control" placeholder="Kwota" required="true"
                                        autofocus="true"/>
                             </div>
+
+                            <div class="form-group">
+                                <select th:field="*{currency}" class="form-control">
+                                    <option th:each="currency : ${currencyList}"
+                                            th:value="${currency.name}"
+                                            th:text="${currency.name}"
+                                    />
+                                </select>
+                            </div>
+
 
 
                             <div class="row">

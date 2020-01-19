@@ -34,6 +34,10 @@ public class Transaction {
     @Digits(integer = 17, fraction = 4)
     private BigDecimal balanceAfterTransactionUserTo;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_urrency", nullable = false)
+    private Currency currency;
+
     //@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     //@Temporal(TemporalType.DATE)
     private Date date;

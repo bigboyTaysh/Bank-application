@@ -5,4 +5,5 @@ import pl.wolski.bank.models.CreditType;
 import pl.wolski.bank.models.Currency;
 
 public interface CurrencyRepository extends JpaRepository<Currency, Long> {
+    Currency findByName(String name);
 }

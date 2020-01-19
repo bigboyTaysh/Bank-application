@@ -18,7 +18,7 @@
                                 </td>
                                 <td>
                         <span th:style="${'color: red;'}"
-                              th:text="${'Blokady   ' + #numbers.formatDecimal(userAccount.lock,1,2)}"></span>
+                              th:text="${'Blokady   ' + #numbers.formatDecimal(userAccount.lock,1,2) + ' ' + userAccount.currency.name}"></span>
                                 </td>
                                 <td>Dostępne środki</td>
                             </tr>
@@ -27,10 +27,10 @@
                                     [[${userAccount.bankAccountNumber}]]
                                 </td>
                                 <td>
-                                    <span th:text="${'Saldo ' + #numbers.formatDecimal(userAccount.balance,1,2)}"></span>
+                                    <span th:text="${'Saldo ' + #numbers.formatDecimal(userAccount.balance,1,2) + ' ' + userAccount.currency.name}"></span>
                                 </td>
                                 <td>
-                                    <span th:text="${#numbers.formatDecimal(userAccount.availableFounds,1,2)}"></span>
+                                    <span th:text="${#numbers.formatDecimal(userAccount.availableFounds,1,2) + ' ' + userAccount.currency.name}"></span>
                                 </td>
                             </tr>
                         </table>

@@ -38,6 +38,9 @@ public class TransactionController {
     @Autowired
     private TransactionService transactionService;
 
+    @Autowired
+    private CurrencyService currencyService;
+
     @GetMapping("/transaction")
     public String transactionForm(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -84,5 +87,12 @@ public class TransactionController {
         List<BankAccount> bankAccounts = bankAccountService.findUserAccounts(user);
         log.info("Ładowanie listy " + bankAccounts.size() + " kont bankowych ");
         return bankAccounts;
+    }
+
+    @ModelAttribute("currencyList")
+    public List<Currency> loadCurrency(){
+        List<Currency> currencyList = currencyService.findAll();
+        log.info("Ładowanie listy " + currencyList.size() + " walut");
+        return currencyList;
     }
 }

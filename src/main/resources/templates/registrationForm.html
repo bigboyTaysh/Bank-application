@@ -24,7 +24,6 @@
                                 <div class="form-group">
                                     <select th:field="*{accountType.id}" class="form-control"
                                             th:classappend="${#fields.hasErrors('accountType.id')}?'is-invalid'">
-                                        <option value="-1">wybierz typ konta</option>
                                         <option th:each="type : ${accountTypes}"
                                                 th:value="${type.id}"
                                                 th:text=" ${type.name}"

@@ -7,9 +7,11 @@ import org.springframework.stereotype.Service;
 import pl.wolski.bank.exceptions.BankAccountNotFoundException;
 import pl.wolski.bank.models.AccountType;
 import pl.wolski.bank.models.BankAccount;
+import pl.wolski.bank.models.Currency;
 import pl.wolski.bank.models.User;
 import pl.wolski.bank.repositories.AccountTypeRepository;
 import pl.wolski.bank.repositories.BankAccountRepository;
+import pl.wolski.bank.repositories.CurrencyRepository;
 import pl.wolski.bank.repositories.UserRepository;
 import pl.wolski.bank.simulation.MyThread;
 
@@ -31,6 +33,9 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Autowired
     private AccountTypeRepository accountTypeRepository;
 
+    @Autowired
+    private CurrencyRepository currencyRepository;
+
     @Override
     public void save(BankAccount bankAccount, AccountType accountType) {
         accountTypeRepository.saveAndFlush(accountType);
@@ -49,6 +54,8 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Override
     public BankAccount newBankAccount(User user, BankAccount bankAccount){
+        Currency currency = currencyRepository.findByName("PLN");
+
         pl.wolski.bank.models.BankAccount bankAccountInRepository =
                 bankAccountRepository.findTopByOrderByIdDesc();
 
@@ -65,8 +72,8 @@ public class BankAccountServiceImpl implements BankAccountService {
         bankAccount.setLock(zero);
         bankAccount.setBankAccountNumber(
                 bankAccountInRepository.getBankAccountNumber().add(new BigDecimal("1")));
-
         bankAccount.setUser(userInRepo);
+        bankAccount.setCurrency(currency);
 
         bankAccountRepository.save(bankAccount);
 

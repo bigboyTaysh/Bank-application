@@ -42,7 +42,7 @@ public class BankAccount {
     private AccountType accountType;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_account_currency", nullable = false)
+    @JoinColumn(name = "id_currency", nullable = false)
     private Currency currency;
 
     @ManyToOne(fetch = FetchType.EAGER)

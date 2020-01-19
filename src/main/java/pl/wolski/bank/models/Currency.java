@@ -29,4 +29,7 @@ public class Currency {
 
     @OneToMany(mappedBy = "currency")
     private Set<BankAccount> bankAccounts;
+
+    @OneToMany(mappedBy = "currency")
+    private Set<Transaction> transactions;
 }
