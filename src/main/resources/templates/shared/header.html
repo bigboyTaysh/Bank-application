@@ -64,6 +64,13 @@
                                 Lista wniosków
                             </a>
                         </li>
+
+                        <li sec:authorize="isAnonymous()"
+                            class="nav-item"
+                            th:class="${pageName eq 'logonForm'}? 'active'">
+                            <a class="nav-link" th:classappend="${pageName eq 'loginForm'}?'active'" th:href="@{/login}">Zaloguj
+                                się</a>
+                        </li>
                     </ul>
                 </div>
 
@@ -87,13 +94,6 @@
                                     th:name="${_csrf.parameterName}"
                                     th:value="${_csrf.token}"/>
                         </form>
-                    </li>
-
-                    <li sec:authorize="isAnonymous()"
-                        class="nav-item"
-                        th:class="${pageName eq 'logonForm'}? 'active'">
-                        <a class="nav-link" th:classappend="${pageName eq 'loginForm'}?'active'" th:href="@{/login}">Zaloguj
-                            się</a>
                     </li>
                 </ul>
             </nav>

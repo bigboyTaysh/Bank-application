@@ -23,11 +23,26 @@
                             <div class="form-group">
                                 <select th:field="*{fromBankAccountNumber}" class="form-control">
                                     <option th:each="account : ${bankAccounts}"
-                                            th:value="${account.bankAccountNumber}"
-                                            th:text="${account.accountType.name + ' ' +
-                                                account.bankAccountNumber.toString() + ' ' +
-                                                account.availableFounds.toString()}"
-                                    />
+                                            th:value="${account.bankAccountNumber}">
+                                        <div th:if="${account.accountType.type.toString().equals('PAY_ACC_FOR_YOUNG')}">
+                                            <span>KONTO DLA MŁODYCH
+                                                [[${account.bankAccountNumber.toString() + ' ' +
+                                                account.availableFounds.toString()}]]
+                                            </span>
+                                        </div>
+                                        <div th:if="${account.accountType.type.toString().equals('PAY_ACC_FOR_ADULT')}">
+                                            <span>STANDARDOWE KONTO
+                                                [[${account.bankAccountNumber.toString() + ' ' +
+                                                account.availableFounds.toString()}]]
+                                            </span>
+                                        </div>
+                                        <div th:if="${account.accountType.type.toString().equals('FOR_CUR_ACC')}">
+                                            <span>KONTO WALUTOWE
+                                                [[${account.bankAccountNumber.toString() + ' ' +
+                                                account.availableFounds.toString()}]]
+                                            </span>
+                                        </div>
+                                    </option>>
                                 </select>
                             </div>
 
@@ -63,9 +78,6 @@
                                     />
                                 </select>
                             </div>
-
-
-
                             <div class="row">
                                 <div class="col-xs-6 col-sm-6 col-md-6">
                                     <input

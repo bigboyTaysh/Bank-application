@@ -66,11 +66,17 @@ public class TransactionController {
 
         User user = (User)model.getAttribute("user");
 
-        if(transactionService.save(user, transaction)){
-            model.addAttribute("message", "Pomyślnie wykonanano przelew");
+        if((bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber())).getCurrency().getName()
+                        .equals(transaction.getCurrency().getName())){
+            if(transactionService.save(user, transaction)){
+                model.addAttribute("message", "Pomyślnie wykonanano przelew");
+            } else {
+                model.addAttribute("message", "Brak środków na koncie");
+            }
         } else {
-            model.addAttribute("message", "Nie udało się wykonać przelewu");
+            model.addAttribute("message", "Podaj poprawną walutę");
         }
+
         /*
         userService.save(userForm, addressService.findExistAddress(userAddress), bankAccountService.newBankAccount(bankAccount));
 

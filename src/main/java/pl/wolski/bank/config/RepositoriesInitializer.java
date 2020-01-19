@@ -68,8 +68,17 @@ public class RepositoriesInitializer {
                     currency2.setSale(new BigDecimal("4.2533"));
                     currencyService.save(currency2);
 
-                    AccountType accountType = new AccountType("typ1");
+                    AccountType accountType = new AccountType(AccountType.Types.PAY_ACC_FOR_ADULT);
+                    AccountType accountType2 = new AccountType(AccountType.Types.PAY_ACC_FOR_YOUNG);
+                    AccountType accountType3 = new AccountType(AccountType.Types.FOR_CUR_ACC);
+
+                    accountType.setCommission(new BigDecimal("5.0"));
+                    accountType2.setCommission(new BigDecimal("0"));
+                    accountType3.setCommission(new BigDecimal("0"));
+
                     accountTypeRepository.save(accountType);
+                    accountTypeRepository.save(accountType2);
+                    accountTypeRepository.save(accountType3);
 
                     Timestamp stamp = new Timestamp(System.currentTimeMillis());
                     Date date = new Date(stamp.getTime());

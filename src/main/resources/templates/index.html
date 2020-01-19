@@ -11,7 +11,15 @@
             <tbody>
                 <tr>
                     <td>
-                        [[${userAccount.accountType.name}]]
+                        <div th:if="${userAccount.accountType.type.toString().equals('PAY_ACC_FOR_YOUNG')}">
+                            <span>KONTO DLA MŁODYCH</span>
+                        </div>
+                        <div th:if="${userAccount.accountType.type.toString().equals('PAY_ACC_FOR_ADULT')}">
+                            <span>STANDARDOWE KONTO</span>
+                        </div>
+                        <div th:if="${userAccount.accountType.type.toString().equals('FOR_CUR_ACC')}">
+                            <span>KONTO WALUTOWE</span>
+                        </div>
                     </td>
                     <td>
                         <span th:style="${'color: red;'}"

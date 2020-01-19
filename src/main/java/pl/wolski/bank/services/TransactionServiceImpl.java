@@ -87,7 +87,7 @@ public class TransactionServiceImpl implements TransactionService {
                 Notification notification = new Notification();
                 notification.setDate(date);
                 notification.setTitle("Uznanie rachunku");
-                //notification.setMessage("+" + transaction.getValue() + );
+                notification.setMessage("+" + transaction.getValue() + transaction.getCurrency().getName());
 
                 notificationService.save(notification);
 
