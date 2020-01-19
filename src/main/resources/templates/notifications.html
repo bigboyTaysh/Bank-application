@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <div th:replace="shared/header :: header-css"/>
+        <title>Strona domowa</title>
+    </head>
+    <body>
+        <div th:replace="shared/header :: header('notifications')"/>
+        <table class="table table-striped">
+            <tbody>
+                <tr th:each="transaction : ${transactions}">
+                    <td>
+                        <span th:text="${#dates.format(transaction.date, 'dd-MM-yyyy')}"></span>
+                    </td>
+                    <td>
+                        [[${transaction.userNameFrom}]]
+                    </td>
+                    <td>
+                        [[${transaction.title}]]
+                    </td>
+                    <td>
+                        <span th:text="${#numbers.formatDecimal(transaction.value,1,2)}"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div th:replace="shared/footer :: footer"></div>
+    </body>
+</html>
