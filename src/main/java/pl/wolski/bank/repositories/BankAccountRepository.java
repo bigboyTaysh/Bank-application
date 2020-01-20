@@ -14,4 +14,5 @@ public interface BankAccountRepository extends JpaRepository<BankAccount, Long> 
     BankAccount findByUserAndCurrency(User user, Currency currency);
 
     List<BankAccount> findAllByUser(User user);
+    List<BankAccount> findAllByUserOrderByCreationDate(User user);
 }

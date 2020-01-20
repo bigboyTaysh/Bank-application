@@ -63,16 +63,17 @@ public class UserRegistrationFormController {
         Date date = new Date(stamp.getTime());
 
         Calendar a = Calendar.getInstance(), b = Calendar.getInstance();
-        a.setTime(date);
-        b.setTime(userForm.getBirthDate());
+        a.setTime(userForm.getBirthDate());
+        b.setTime(date);
 
         int diff = b.get(Calendar.YEAR) - a.get(Calendar.YEAR);
         if (a.get(Calendar.MONTH) > b.get(Calendar.MONTH) ||
-                (a.get(Calendar.MONTH) == b.get(Calendar.MONTH) && a.get(Calendar.DATE) > b.get(Calendar.DATE))) {
+                (a.get(Calendar.MONTH) == b.get(Calendar.MONTH) &&
+                        a.get(Calendar.DATE) > b.get(Calendar.DATE))) {
             diff--;
         }
 
-        diff = Math.abs(diff);
+        diff = diff;
         log.info("Wiek: " + diff);
 
 

@@ -38,6 +38,9 @@ public class TransactionServiceImpl implements TransactionService {
     @Autowired
     private CurrencyService currencyService;
 
+    @Autowired
+    private UserService userService;
+
     @Override
     public boolean save(User user, Transaction transaction) {
         BankAccount bankAccountTo = bankAccountRepository.findByBankAccountNumber(transaction.getToBankAccountNumber());
@@ -46,31 +49,45 @@ public class TransactionServiceImpl implements TransactionService {
         BigDecimal availableFounds = bankAccountFrom.getAvailableFounds();
         BigDecimal commission = bankAccountFrom.getAccountType().getCommission();
         BigDecimal value = transaction.getValue();
-        int compareTo = availableFounds.compareTo(value.add(commission));
+        BigDecimal valueExchange;
+
+        if (!transaction.getCurrency().getName().equals(bankAccountFrom.getCurrency().getName())){
+            valueExchange = currencyService.currencyExchange(bankAccountFrom.getCurrency().getName(),
+                    transaction.getCurrency().getName(), value);
+        } else {
+            valueExchange = value;
+        }
+
+        int compareTo = availableFounds.compareTo(valueExchange.add(commission));
 
         Timestamp stamp = new Timestamp(System.currentTimeMillis());
         Date date = new Date(stamp.getTime());
 
         if(compareTo == 0 || compareTo == 1){
-            bankAccountFrom.setAvailableFounds(availableFounds.subtract(value.add(commission)));
+            bankAccountFrom.setAvailableFounds(availableFounds.subtract(valueExchange.add(commission)));
 
             if(bankAccountTo == null){
-                bankAccountFrom.setLock(bankAccountFrom.getLock().add(value.add(commission)));
 
-                bankAccountService.runThread(transaction.getFromBankAccountNumber(), value);
+                bankAccountFrom.setLock(bankAccountFrom.getLock().add(valueExchange.add(commission)));
+
+                bankAccountService.runThread(transaction.getFromBankAccountNumber(), valueExchange.add(commission));
             } else {
-                bankAccountFrom.setBalance(bankAccountFrom.getBalance().subtract(value.add(commission)));
+
+
+                bankAccountFrom.setBalance(bankAccountFrom.getBalance().subtract(valueExchange.add(commission)));
 
                 bankAccountTo.setBalance(bankAccountTo.getBalance().add(value));
                 bankAccountTo.setAvailableFounds(bankAccountTo.getAvailableFounds().add(value));
                 transaction.setBalanceAfterTransactionUserTo(bankAccountTo.getBalance());
+
+                User userTo = userService.findByBankAccounts(bankAccountTo);
 
                 Notification notification = new Notification();
                 notification.setDate(date);
                 notification.setTitle("Uznanie rachunku");
                 notification.setMessage("+" + value + transaction.getCurrency().getName()
                         + "\n Na rachunku " + bankAccountTo.getBankAccountNumber());
-                notification.setUser(user);
+                notification.setUser(userTo);
                 notification.setWasRead(false);
                 notificationService.save(notification);
             }
@@ -89,6 +106,8 @@ public class TransactionServiceImpl implements TransactionService {
 
             return true;
         } else {
+            log.info("Wynik porównania " + Integer.toString(compareTo));
+
             return false;
         }
         /*

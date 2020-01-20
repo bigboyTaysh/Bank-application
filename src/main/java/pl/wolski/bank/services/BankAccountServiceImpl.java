@@ -50,7 +50,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Override
     public BankAccount findByBankAccountNumber(BigDecimal bankAccountNumber){
-        return findByBankAccountNumber(bankAccountNumber);
+        return bankAccountRepository.findByBankAccountNumber(bankAccountNumber);
     }
 
     @Override
@@ -103,7 +103,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Override
     public List<BankAccount> findUserAccounts(User user){
-        return bankAccountRepository.findAllByUser(user);
+        return bankAccountRepository.findAllByUserOrderByCreationDate(user);
     }
 
     public void runThread(BigDecimal fromBankAccountNumber, BigDecimal value) {

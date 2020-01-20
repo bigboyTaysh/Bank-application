@@ -1,6 +1,7 @@
 package pl.wolski.bank.services;
 
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.wolski.bank.models.CreditType;
@@ -11,7 +12,7 @@ import pl.wolski.bank.repositories.CurrencyRepository;
 import java.math.BigDecimal;
 import java.util.List;
 
-
+@Log4j2
 @Service
 public class CurrencyServiceImpl implements CurrencyService {
 
@@ -29,10 +30,11 @@ public class CurrencyServiceImpl implements CurrencyService {
     }
 
     @Override
-    public BigDecimal currencyExchange(Currency currencyFrom, Currency currencyTo, BigDecimal value){
-        return ((currencyRepository.findByName(currencyFrom.getName())).getPurchase()
-                .divide(currencyRepository.findByName(currencyTo.getName()).getSale()))
-                .multiply(value);
+    public BigDecimal currencyExchange(String currencyFrom, String currencyTo, BigDecimal value){
+        BigDecimal lala = ((currencyRepository.findByName(currencyTo)).getPurchase().multiply(value))
+                .divide(currencyRepository.findByName(currencyFrom).getSale());
+        log.info("Wymiana: " + lala);
+        return lala;
     }
 
     @Override

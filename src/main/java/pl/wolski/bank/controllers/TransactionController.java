@@ -58,7 +58,6 @@ public class TransactionController {
 
     @PostMapping("/transaction")
     public String transaction(Model model,
-                              @Valid @ModelAttribute("bankAccount") BankAccount bankAccount,
                                @Valid @ModelAttribute("transaction") Transaction transaction,
                                BindingResult bindingResult) {
 
@@ -69,15 +68,23 @@ public class TransactionController {
 
         User user = (User)model.getAttribute("user");
 
-        if((bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber())).getCurrency().getName()
-                        .equals(transaction.getCurrency().getName())){
+        if(bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber()) != null){
+            if((bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber())).getCurrency().getName()
+                    .equals(transaction.getCurrency().getName())){
+                if(transactionService.save(user, transaction)){
+                    model.addAttribute("message", "Pomyślnie wykonanano przelew");
+                } else {
+                    model.addAttribute("message", "Brak środków na koncie");
+                }
+            } else {
+                model.addAttribute("message", "Podaj poprawną walutę");
+            }
+        } else {
             if(transactionService.save(user, transaction)){
                 model.addAttribute("message", "Pomyślnie wykonanano przelew");
             } else {
-                model.addAttribute("message", "Brak środków na koncie");
+                model.addAttribute("message", "Nie udało się wykonać przelewu");
             }
-        } else {
-            model.addAttribute("message", "Podaj poprawną walutę");
         }
 
         /*
@@ -94,7 +101,6 @@ public class TransactionController {
         Object principal = auth.getPrincipal();
         User user = userService.findByUsername(((UserDetails)principal).getUsername());
         List<Notification> notificationList = notificationService.findByUserAndWasRead(user, false);
-        log.info("Ładowanie listy " + notificationList.size() + " kont bankowych ");
         return notificationList.size();
     }
 
@@ -111,7 +117,6 @@ public class TransactionController {
     @ModelAttribute("currencyList")
     public List<Currency> loadCurrency(){
         List<Currency> currencyList = currencyService.findAll();
-        log.info("Ładowanie listy " + currencyList.size() + " walut");
         return currencyList;
     }
 }

@@ -15,4 +15,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmail(String email);
 
     User findByPersonalIdentificationNumber(BigDecimal personalIdentificationNumber);
+
+    User findByBankAccounts(BankAccount bankAccount);
 }

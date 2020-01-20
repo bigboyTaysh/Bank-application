@@ -73,7 +73,7 @@
                             <div class="form-group">
                                 <select th:field="*{currency}" class="form-control">
                                     <option th:each="currency : ${currencyList}"
-                                            th:value="${currency.name}"
+                                            th:value="${currency.id}"
                                             th:text="${currency.name}"
                                     />
                                 </select>
