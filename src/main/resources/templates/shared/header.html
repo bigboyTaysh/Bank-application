@@ -22,8 +22,9 @@
                 <div class="navbar-nav-scroll">
                     <ul class="nav nav-tabs bg-dark">
                         <li class="nav-item" sec:authorize="hasRole('ROLE_USER')">
-                            <a class="nav-link" th:classappend="${pageName eq 'home'}?'active'" th:href="@{/index}">Strona
-                                główna</a>
+                            <a class="nav-link" th:classappend="${pageName eq 'home'}?'active'" th:href="@{/index}">
+                                Strona główna
+                            </a>
                         </li>
                         <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_USER')">
                             <a th:classappend="${pageName eq 'transaction'}?'active'" th:href="@{/transaction}"
@@ -32,31 +33,68 @@
                                 Transakcje
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <a class="dropdown-item" th:href="@{/transaction}"> Przelew</a>
+                                <a class="dropdown-item" th:href="@{/transaction}">
+                                    Przelew
+                                </a>
                             </div>
                         </li>
-                        <li class="nav-item" sec:authorize="hasRole('ROLE_USER')">
-                            <a class="nav-link" th:classappend="${pageName eq 'bankAccounts'}?'active'" th:href="@{/bankAccounts}">
-                                Rachunki</a>
+                        <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_USER')">
+                            <a th:classappend="${pageName eq 'creditApplication'}?'active'"
+                               class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLinkThree"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                Rachunki
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkThree">
+                                <a class="dropdown-item" th:href="@{/bankAccounts}">
+                                    Moje rachunki
+                                </a>
+                                <a class="dropdown-item" th:href="@{/newUserBankAccount}">
+                                    Załóż konto walutowe
+                                </a>
+                            </div>
                         </li>
                         <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_USER')">
-                            <a th:classappend="${pageName eq 'creditApplication'}?'active'" th:href="@{/creditApplication}"
+                            <a th:classappend="${pageName eq 'creditApplication'}?'active'"
                                class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLinkTwo"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
                                 Kredyty
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkTwo">
-                                <a class="dropdown-item" th:href="@{/userCredits}">Moje kredyty</a>
-                                <a class="dropdown-item" th:href="@{/creditApplication}">Złóż wniosek</a>
+                                <a class="dropdown-item" th:href="@{/userCredits}">
+                                    Moje kredyty
+                                </a>
+                                <a class="dropdown-item" th:href="@{/creditApplication}">
+                                    Złóż wniosek
+                                </a>
                             </div>
                         </li>
                         <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')">
-                            <a class="nav-link" th:classappend="${pageName eq 'creditApplicationsList'}?'active'"  th:href="@{/creditApplicationsList}">Lista wniosków</a>
+                            <a class="nav-link" th:classappend="${pageName eq 'creditApplicationsList'}?'active'"
+                               th:href="@{/creditApplicationsList}">
+                                Lista wniosków
+                            </a>
+                        </li>
+
+                        <li sec:authorize="isAnonymous()"
+                            class="nav-item"
+                            th:class="${pageName eq 'logonForm'}? 'active'">
+                            <a class="nav-link" th:classappend="${pageName eq 'loginForm'}?'active'" th:href="@{/login}">Zaloguj
+                                się</a>
                         </li>
                     </ul>
                 </div>
 
                 <ul class="nav-tabs navbar-nav ml-md-auto bg-dark">
+                    <li class="nav-item" sec:authorize="hasRole('ROLE_USER')">
+                        <a class="nav-link" th:classappend="${pageName eq 'notifications'}?'active'" th:href="@{/notifications}">
+                            <div th:if="${notificationCounter == 0}">
+                                <span>Powiadomienia</span>
+                            </div>
+                            <div th:if="${notificationCounter != 0}">
+                                <span>([[${notificationCounter}]]) Powiadomienia</span>
+                            </div>
+                        </a>
+                    </li>
 
                     <label style="color:yellow; margin-top: 20px;" sec:authorize="isAuthenticated()">
                         Witaj <span sec:authentication="name"/>!
@@ -71,13 +109,6 @@
                                     th:name="${_csrf.parameterName}"
                                     th:value="${_csrf.token}"/>
                         </form>
-                    </li>
-
-                    <li sec:authorize="isAnonymous()"
-                        class="nav-item"
-                        th:class="${pageName eq 'logonForm'}? 'active'">
-                        <a class="nav-link" th:classappend="${pageName eq 'loginForm'}?'active'" th:href="@{/login}">Zaloguj
-                            się</a>
                     </li>
                 </ul>
             </nav>

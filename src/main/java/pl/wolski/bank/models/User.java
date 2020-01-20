@@ -81,6 +81,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<Credit> credits;
 
+    @OneToMany(mappedBy = "user")
+    private Set<Notification> notifications;
+
     @AssertTrue
     private boolean isPasswordsEquals(){
         return password == null || passwordConfirm == null || password.equals(passwordConfirm);

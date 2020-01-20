@@ -1,7 +1,6 @@
 package pl.wolski.bank.controllers;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -15,10 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import pl.wolski.bank.models.BankAccount;
-import pl.wolski.bank.models.Notification;
-import pl.wolski.bank.models.Transaction;
-import pl.wolski.bank.models.User;
+import pl.wolski.bank.models.*;
 import pl.wolski.bank.services.BankAccountService;
 import pl.wolski.bank.services.NotificationService;
 import pl.wolski.bank.services.TransactionService;
@@ -27,38 +23,33 @@ import pl.wolski.bank.services.UserService;
 import java.text.DecimalFormat;
 import java.util.List;
 
-
+@Log4j2
 @Controller
 @SessionAttributes(names = {"user", "userAccount"})
-public class UserBankAccountsController {
-
-    protected final Log log = LogFactory.getLog(getClass());//Dodatkowy komponent do logowania
+public class NotificationController {
 
     @Autowired
-    UserService userService;
-
-    @Autowired
-    BankAccountService bankAccountService;
-
-    @Autowired
-    TransactionService transactionService;
+    private UserService userService;
 
     @Autowired
     private NotificationService notificationService;
 
-    @GetMapping(path = "/bankAccounts")
-    //  @RequestMapping(method = {RequestMethod.GET, RequestMethod.POST})
-    public String bankAccounts(Model model) {
+    @GetMapping(path = "/notifications")
+    //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
+    public String notifications(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (!(auth instanceof AnonymousAuthenticationToken)) {
-            Object principal = auth.getPrincipal();
-            User user = userService.findByUsername(((UserDetails)principal).getUsername());
-            List<BankAccount> bankAccounts = bankAccountService.findUserAccounts(user);
-            log.info("Ładowanie listy " + bankAccounts.size() + " kont bankowych ");
-            model.addAttribute("userAccounts", bankAccounts);
-            return "bankAccounts";
+        Object principal = auth.getPrincipal();
+        User user = userService.findByUsername(((UserDetails)principal).getUsername());
+
+        List<Notification> notificationList = notificationService.findByUserAndWasRead(user, false);
+        for (Notification notification : notificationList){
+            notification.setWasRead(true);
+            notificationService.save(notification);
         }
-        return "loginForm";
+
+        model.addAttribute("notifications", notificationService.getAllUserNotification(userService.findByUsername(user.getUsername())));
+
+        return "notifications";
     }
 
     @ModelAttribute("notificationCounter")

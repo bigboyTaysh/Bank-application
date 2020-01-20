@@ -27,4 +27,9 @@ public class AccountTypeServiceImpl implements AccountTypeService {
     public List<AccountType> getAllTypes() {
         return accountTypeRepository.findAll();
     }
+
+    @Override
+    public AccountType findAccountTypeByType(AccountType.Types type){
+        return accountTypeRepository.findAccountTypeByType(type);
+    }
 }

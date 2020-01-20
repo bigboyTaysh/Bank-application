@@ -17,6 +17,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -41,7 +44,8 @@ public class UserRegistrationFormController {
     public String registration(Model model) {
         model.addAttribute("userAddress", new Address());
         model.addAttribute("userCommand", new User());
-        model.addAttribute("bankAccount", new BankAccount());
+        model.addAttribute("message", "");
+
         return "registrationForm";
     }
 
@@ -49,17 +53,51 @@ public class UserRegistrationFormController {
     public String registration(Model model,
                                @Valid @ModelAttribute("userCommand") User userForm,
                                @Valid @ModelAttribute("userAddress") Address userAddress,
-                               @Valid @ModelAttribute("bankAccount") BankAccount bankAccount,
                                BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return "registrationForm";
         }
 
-        userService.save(userForm, addressService.findExistAddress(userAddress));
-        bankAccountService.newBankAccount(userForm, bankAccount);
+        Timestamp stamp = new Timestamp(System.currentTimeMillis());
+        Date date = new Date(stamp.getTime());
 
-        model.addAttribute("message", "Zostałeś zarejestrowany");
+        Calendar a = Calendar.getInstance(), b = Calendar.getInstance();
+        a.setTime(userForm.getBirthDate());
+        b.setTime(date);
+
+        int diff = b.get(Calendar.YEAR) - a.get(Calendar.YEAR);
+        if (a.get(Calendar.MONTH) > b.get(Calendar.MONTH) ||
+                (a.get(Calendar.MONTH) == b.get(Calendar.MONTH) &&
+                        a.get(Calendar.DATE) > b.get(Calendar.DATE))) {
+            diff--;
+        }
+
+        diff = diff;
+        log.info("Wiek: " + diff);
+
+
+        BankAccount bankAccount = new BankAccount();
+
+        if(diff >= 16 && diff <=26){
+            bankAccount.setAccountType(
+                    accountTypeService.findAccountTypeByType(AccountType.Types.PAY_ACC_FOR_YOUNG));
+            userService.save(userForm, addressService.findExistAddress(userAddress));
+            bankAccountService.newBankAccount(userForm, bankAccount);
+
+        } else if (diff >= 26 && diff <= 150 ) {
+            bankAccount.setAccountType(
+                    accountTypeService.findAccountTypeByType(AccountType.Types.PAY_ACC_FOR_ADULT));
+            userService.save(userForm, addressService.findExistAddress(userAddress));
+            bankAccountService.newBankAccount(userForm, bankAccount);
+
+        } else {
+            model.addAttribute("message", "Nieprawidłowa data, bądź jesteś zbyt młody żeby samodzielnie posaidać konto w banku");
+            return "registrationForm";
+        }
+
+
+        model.addAttribute("message", "Zostałeś pomyślnie zarejestrowany");
         return "actionMessage";
     }
 

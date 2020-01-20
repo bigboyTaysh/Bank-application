@@ -11,11 +11,19 @@
             <tbody>
                 <tr>
                     <td>
-                        [[${userAccount.accountType.name}]]
+                        <div th:if="${userAccount.accountType.type.toString().equals('PAY_ACC_FOR_YOUNG')}">
+                            <span>KONTO DLA MŁODYCH</span>
+                        </div>
+                        <div th:if="${userAccount.accountType.type.toString().equals('PAY_ACC_FOR_ADULT')}">
+                            <span>STANDARDOWE KONTO</span>
+                        </div>
+                        <div th:if="${userAccount.accountType.type.toString().equals('FOR_CUR_ACC')}">
+                            <span>KONTO WALUTOWE</span>
+                        </div>
                     </td>
                     <td>
                         <span th:style="${'color: red;'}"
-                              th:text="${'Blokady   ' + #numbers.formatDecimal(userAccount.lock,1,2)}"></span>
+                              th:text="${'Blokady   ' + #numbers.formatDecimal(userAccount.lock,1,2) + ' ' + userAccount.currency.name}"></span>
                     </td>
                     <td>Dostępne środki</td>
                 </tr>
@@ -24,10 +32,10 @@
                         [[${userAccount.bankAccountNumber}]]
                     </td>
                     <td>
-                        <span th:text="${'Saldo ' + #numbers.formatDecimal(userAccount.balance,1,2)}"></span>
+                        <span th:text="${'Saldo ' + #numbers.formatDecimal(userAccount.balance,1,2) + ' ' + userAccount.currency.name}"></span>
                     </td>
                     <td>
-                        <span th:text="${#numbers.formatDecimal(userAccount.availableFounds,1,2)}"></span>
+                        <span th:text="${#numbers.formatDecimal(userAccount.availableFounds,1,2) + ' ' + userAccount.currency.name}"></span>
                     </td>
                 </tr>
             </tbody>
@@ -62,7 +70,7 @@
                         [[${transaction.title}]]
                     </td>
                     <td>
-                        <span th:text="${#numbers.formatDecimal(transaction.value,1,2)}"></span>
+                        <span th:text="${#numbers.formatDecimal(transaction.value,1,2)  + ' ' + transaction.currency.name}"></span>
                     </td>
                 </tr>
             </tbody>
