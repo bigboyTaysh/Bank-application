@@ -42,7 +42,12 @@ public class TransactionServiceImpl implements TransactionService {
     private UserService userService;
 
     @Override
-    public boolean save(User user, Transaction transaction) {
+    public void save(Transaction transaction){
+        transactionRepository.save(transaction);
+    }
+
+    @Override
+    public boolean doCashTransfer(User user, Transaction transaction) {
         BankAccount bankAccountTo = bankAccountRepository.findByBankAccountNumber(transaction.getToBankAccountNumber());
         BankAccount bankAccountFrom = bankAccountRepository.findByBankAccountNumber(transaction.getFromBankAccountNumber());
 
@@ -72,8 +77,6 @@ public class TransactionServiceImpl implements TransactionService {
 
                 bankAccountService.runThread(transaction.getFromBankAccountNumber(), valueExchange.add(commission));
             } else {
-
-
                 bankAccountFrom.setBalance(bankAccountFrom.getBalance().subtract(valueExchange.add(commission)));
 
                 bankAccountTo.setBalance(bankAccountTo.getBalance().add(value));
@@ -110,70 +113,6 @@ public class TransactionServiceImpl implements TransactionService {
 
             return false;
         }
-        /*
-        if(bankAccountTo == null){
-            if(bankAccountFrom.getAvailableFounds().compareTo(transaction.getValue()) == 0 ||
-                    bankAccountFrom.getAvailableFounds().compareTo(transaction.getValue()) == 1){
-
-                bankAccountFrom.setAvailableFounds(bankAccountFrom.getAvailableFounds().subtract(transaction.getValue()));
-                bankAccountFrom.setLock(bankAccountFrom.getLock().add(transaction.getValue()));
-
-                bankAccountService.runThread(transaction.getFromBankAccountNumber(), transaction.getValue());
-
-                transaction.setBalanceAfterTransactionUserFrom(bankAccountFrom.getBalance().subtract(transaction.getValue()));
-                transaction.setUserNameFrom(user.getFirstName() + " " + user.getLastName());
-                TransactionType transactionType = transactionTypeRepository.findTransactionTypeByType(TransactionType.Types.TRANSFER);
-                transaction.setTransactionType(transactionType);
-
-                Timestamp stamp = new Timestamp(System.currentTimeMillis());
-                Date date = new Date(stamp.getTime());
-                transaction.setDate(date);
-
-                bankAccountRepository.save(bankAccountFrom);
-                transactionRepository.saveAndFlush(transaction);
-
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            if(bankAccountFrom.getAvailableFounds().compareTo(transaction.getValue()) == 0 ||
-                    bankAccountFrom.getAvailableFounds().compareTo(transaction.getValue()) == 1) {
-
-                bankAccountFrom.setBalance(bankAccountFrom.getBalance().subtract(transaction.getValue()));
-                bankAccountFrom.setAvailableFounds(bankAccountFrom.getAvailableFounds().subtract(transaction.getValue()));
-
-                bankAccountTo.setBalance(bankAccountTo.getBalance().add(transaction.getValue()));
-                bankAccountTo.setAvailableFounds(bankAccountTo.getAvailableFounds().add(transaction.getValue()));
-
-                transaction.setBalanceAfterTransactionUserFrom(bankAccountFrom.getBalance());
-                transaction.setBalanceAfterTransactionUserTo(bankAccountTo.getBalance());
-                transaction.setUserNameFrom(user.getFirstName() + " " + user.getLastName());
-                TransactionType transactionType = transactionTypeRepository.findTransactionTypeByType(TransactionType.Types.TRANSFER);
-                transaction.setTransactionType(transactionType);
-
-                Timestamp stamp = new Timestamp(System.currentTimeMillis());
-                Date date = new Date(stamp.getTime());
-                transaction.setDate(date);
-
-                Notification notification = new Notification();
-                notification.setDate(date);
-                notification.setTitle("Uznanie rachunku");
-                notification.setMessage("+" + transaction.getValue() + transaction.getCurrency().getName());
-
-                notificationService.save(notification);
-
-                bankAccountRepository.save(bankAccountTo);
-                bankAccountRepository.save(bankAccountFrom);
-                transactionRepository.saveAndFlush(transaction);
-
-                return true;
-            } else {
-                return false;
-            }
-        }
-
-         */
     }
 
     @Override

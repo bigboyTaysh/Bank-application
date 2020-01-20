@@ -9,8 +9,9 @@ import java.util.List;
 
 public interface TransactionService {
 // Własne metody
-    boolean save(User user, Transaction transaction);
+    void save(Transaction transaction);
 
+    boolean doCashTransfer(User user, Transaction transaction);
 
     List<Transaction> findUserTop5Transactions(BigDecimal fromBankAccountNumber, BigDecimal toBankAccountNumber);
     List<Transaction> findUserTransactions(BigDecimal fromBankAccountNumber, BigDecimal toBankAccountNumber);

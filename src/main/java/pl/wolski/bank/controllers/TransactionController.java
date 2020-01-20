@@ -73,7 +73,7 @@ public class TransactionController {
         if(bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber()) != null){
             if((bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber())).getCurrency().getName()
                     .equals(transaction.getCurrency().getName())){
-                if(transactionService.save(user, transaction)){
+                if(transactionService.doCashTransfer(user, transaction)){
                     model.addAttribute("message", "Pomyślnie wykonanano przelew");
                 } else {
                     model.addAttribute("message", "Brak środków na koncie");
@@ -82,7 +82,7 @@ public class TransactionController {
                 model.addAttribute("message", "Podaj poprawną walutę");
             }
         } else {
-            if(transactionService.save(user, transaction)){
+            if(transactionService.doCashTransfer(user, transaction)){
                 model.addAttribute("message", "Pomyślnie wykonanano przelew");
             } else {
                 model.addAttribute("message", "Nie udało się wykonać przelewu");
