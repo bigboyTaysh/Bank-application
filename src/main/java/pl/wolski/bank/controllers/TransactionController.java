@@ -2,6 +2,7 @@ package pl.wolski.bank.controllers;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +17,7 @@ import pl.wolski.bank.models.*;
 import pl.wolski.bank.services.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -87,12 +89,37 @@ public class TransactionController {
             }
         }
 
-        /*
-        userService.save(userForm, addressService.findExistAddress(userAddress), bankAccountService.newBankAccount(bankAccount));
-
-         */
-
         return "actionMessage";
+    }
+
+    @Secured("ROLE_EMPLOYEE")
+    @GetMapping(path = "/cashWithdrawal")
+    //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
+    public String cashWithdraw(Model model,
+                       String bankAccountNumber) {
+        BankAccount bankAccount = bankAccountService.findByBankAccountNumber(new BigDecimal(bankAccountNumber));
+
+        log.info("Znaleziono konto " + bankAccount.getBankAccountNumber());
+
+        model.addAttribute("bankAccount", bankAccount);
+        model.addAttribute("transaction", new Transaction());
+
+
+        return "cashWithdrawalForm";
+    }
+
+    @Secured("ROLE_EMPLOYEE")
+    @GetMapping(path = "/cashPayment")
+    //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
+    public String cashPayment(Model model,
+                       BigDecimal bankAccountNumber) {
+        BankAccount bankAccount = bankAccountService.findByBankAccountNumber(bankAccountNumber);
+
+        model.addAttribute("bankAccount", bankAccount);
+        model.addAttribute("transaction", new Transaction());
+
+
+        return "user";
     }
 
     @ModelAttribute("notificationCounter")

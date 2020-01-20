@@ -88,13 +88,13 @@
                     </td>
                     <td>
                         <a th:style="${'color: red;'}"
-                           th:href="@{/cashWithdrawal(id=${userAccount.id})}">
+                           th:href="@{/cashWithdrawal(bankAccountNumber=${userAccount.bankAccountNumber})}">
                             Wypłata
                         </a>
                     </td>
                     <td>
                         <a th:style="${'color: green;'}"
-                           th:href="@{/cashPayment(id=${userAccount.id})}">
+                           th:href="@{/cashPayment(bankAccountNumber=${userAccount.bankAccountNumber})}">
                             Wpłata
                         </a>
                     </td>

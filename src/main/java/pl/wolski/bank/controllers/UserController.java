@@ -96,7 +96,7 @@ public class UserController {
         return "user";
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured({"ROLE_ADMIN","ROLE_EMPLOYEE"})
     @GetMapping(path = "/users")
     //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
     public String users(Model model) {
