@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import pl.wolski.bank.services.CurrencyService;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -44,6 +45,9 @@ public class RepositoriesInitializer {
     @Autowired
     private CreditTypeRepository creditTypeRepository;
 
+    @Autowired
+    private CurrencyService currencyService;
+
     @Bean
     InitializingBean init() {
         return () -> {
@@ -52,8 +56,29 @@ public class RepositoriesInitializer {
                     CreditType creditType = new CreditType("kredyt gotówkowy", 8.99, 0.0);
                     creditTypeRepository.save(creditType);
 
-                    AccountType accountType = new AccountType("typ1");
+                    Currency currency = new Currency();
+                    currency.setName("PLN");
+                    currency.setPurchase(new BigDecimal("1.0000"));
+                    currency.setSale(new BigDecimal("1.0000"));
+                    currencyService.save(currency);
+
+                    Currency currency2 = new Currency();
+                    currency2.setName("EUR");
+                    currency2.setPurchase(new BigDecimal("4.295"));
+                    currency2.setSale(new BigDecimal("4.2533"));
+                    currencyService.save(currency2);
+
+                    AccountType accountType = new AccountType(AccountType.Types.PAY_ACC_FOR_ADULT);
+                    AccountType accountType2 = new AccountType(AccountType.Types.PAY_ACC_FOR_YOUNG);
+                    AccountType accountType3 = new AccountType(AccountType.Types.FOR_CUR_ACC);
+
+                    accountType.setCommission(new BigDecimal("5.0"));
+                    accountType2.setCommission(new BigDecimal("0"));
+                    accountType3.setCommission(new BigDecimal("0"));
+
                     accountTypeRepository.save(accountType);
+                    accountTypeRepository.save(accountType2);
+                    accountTypeRepository.save(accountType3);
 
                     Timestamp stamp = new Timestamp(System.currentTimeMillis());
                     Date date = new Date(stamp.getTime());
@@ -61,6 +86,7 @@ public class RepositoriesInitializer {
                     BigDecimal accountNumber = new BigDecimal("11222233334444555566667777");
                     BigDecimal zero = new BigDecimal("0");
                     BankAccount bankAccount = new BankAccount(zero, zero, zero, accountNumber, date, accountType);
+                    bankAccount.setCurrency(currency);
 
                     Role roleUser = roleRepository.save(new Role(Role.Types.ROLE_USER));
                     Role roleAdmin = roleRepository.save(new Role(Role.Types.ROLE_ADMIN));

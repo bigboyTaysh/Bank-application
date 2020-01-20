@@ -14,25 +14,10 @@
                     <form th:method="POST" th:object="${userCommand}">
                         <fieldset>
                             <h1>Proszę, zarejestruj się</h1>
+                            <span style="color: red;">[[${message}]]</span>
                             <div class="form-group">
                                 <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
                                     <p th:each="err : ${#fields.errors('*')}" th:text="${err}"></p>
-                                </div>
-                            </div>
-
-                            <div th:object="${bankAccount}">
-                                <div class="form-group">
-                                    <select th:field="*{accountType.id}" class="form-control"
-                                            th:classappend="${#fields.hasErrors('accountType.id')}?'is-invalid'">
-                                        <option value="-1">wybierz typ konta</option>
-                                        <option th:each="type : ${accountTypes}"
-                                                th:value="${type.id}"
-                                                th:text=" ${type.name}"
-                                        />
-                                    </select>
-                                    <div class="error text-danger" th:if="${#fields.hasErrors('accountType.id')}">
-                                        <p th:each="err : ${#fields.errors('accountType.id')}" th:text="${err}"></p>
-                                    </div>
                                 </div>
                             </div>
 

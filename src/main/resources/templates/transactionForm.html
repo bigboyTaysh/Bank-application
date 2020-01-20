@@ -20,17 +20,30 @@
                                 </div>
                             </div>
 
-                            <div>
-                                <div class="form-group">
-                                    <select th:field="*{fromBankAccountNumber}" class="form-control">
-                                        <option th:each="account : ${bankAccounts}"
-                                                th:value="${account.bankAccountNumber}"
-                                                th:text="${account.accountType.name + ' ' +
-                                                account.bankAccountNumber.toString() + ' ' +
-                                                account.availableFounds.toString()}"
-                                        />
-                                    </select>
-                                </div>
+                            <div class="form-group">
+                                <select th:field="*{fromBankAccountNumber}" class="form-control">
+                                    <option th:each="account : ${bankAccounts}"
+                                            th:value="${account.bankAccountNumber}">
+                                        <div th:if="${account.accountType.type.toString().equals('PAY_ACC_FOR_YOUNG')}">
+                                            <span>KONTO DLA MŁODYCH
+                                                [[${account.bankAccountNumber.toString() + ' ' +
+                                                account.availableFounds.toString()}]]
+                                            </span>
+                                        </div>
+                                        <div th:if="${account.accountType.type.toString().equals('PAY_ACC_FOR_ADULT')}">
+                                            <span>STANDARDOWE KONTO
+                                                [[${account.bankAccountNumber.toString() + ' ' +
+                                                account.availableFounds.toString()}]]
+                                            </span>
+                                        </div>
+                                        <div th:if="${account.accountType.type.toString().equals('FOR_CUR_ACC')}">
+                                            <span>KONTO WALUTOWE
+                                                [[${account.bankAccountNumber.toString() + ' ' +
+                                                account.availableFounds.toString()}]]
+                                            </span>
+                                        </div>
+                                    </option>>
+                                </select>
                             </div>
 
                             <div class="form-group">
@@ -52,12 +65,19 @@
                             </div>
 
                             <div class="form-group">
-                                <input type="number" th:field="*{value}"
+                                <input type="number" step="0.01" th:min="0.01" th:field="*{value}"
                                        class="form-control" placeholder="Kwota" required="true"
                                        autofocus="true"/>
                             </div>
 
-
+                            <div class="form-group">
+                                <select th:field="*{currency}" class="form-control">
+                                    <option th:each="currency : ${currencyList}"
+                                            th:value="${currency.id}"
+                                            th:text="${currency.name}"
+                                    />
+                                </select>
+                            </div>
                             <div class="row">
                                 <div class="col-xs-6 col-sm-6 col-md-6">
                                     <input

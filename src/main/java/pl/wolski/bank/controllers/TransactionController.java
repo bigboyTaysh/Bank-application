@@ -38,6 +38,12 @@ public class TransactionController {
     @Autowired
     private TransactionService transactionService;
 
+    @Autowired
+    private CurrencyService currencyService;
+
+    @Autowired
+    private NotificationService notificationService;
+
     @GetMapping("/transaction")
     public String transactionForm(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -52,7 +58,6 @@ public class TransactionController {
 
     @PostMapping("/transaction")
     public String transaction(Model model,
-                              @Valid @ModelAttribute("bankAccount") BankAccount bankAccount,
                                @Valid @ModelAttribute("transaction") Transaction transaction,
                                BindingResult bindingResult) {
 
@@ -63,17 +68,40 @@ public class TransactionController {
 
         User user = (User)model.getAttribute("user");
 
-        if(transactionService.save(user, transaction)){
-            model.addAttribute("message", "Pomyślnie wykonanano przelew");
+        if(bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber()) != null){
+            if((bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber())).getCurrency().getName()
+                    .equals(transaction.getCurrency().getName())){
+                if(transactionService.save(user, transaction)){
+                    model.addAttribute("message", "Pomyślnie wykonanano przelew");
+                } else {
+                    model.addAttribute("message", "Brak środków na koncie");
+                }
+            } else {
+                model.addAttribute("message", "Podaj poprawną walutę");
+            }
         } else {
-            model.addAttribute("message", "Nie udało się wykonać przelewu");
+            if(transactionService.save(user, transaction)){
+                model.addAttribute("message", "Pomyślnie wykonanano przelew");
+            } else {
+                model.addAttribute("message", "Nie udało się wykonać przelewu");
+            }
         }
+
         /*
         userService.save(userForm, addressService.findExistAddress(userAddress), bankAccountService.newBankAccount(bankAccount));
 
          */
 
         return "actionMessage";
+    }
+
+    @ModelAttribute("notificationCounter")
+    public int notificationCounter(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = auth.getPrincipal();
+        User user = userService.findByUsername(((UserDetails)principal).getUsername());
+        List<Notification> notificationList = notificationService.findByUserAndWasRead(user, false);
+        return notificationList.size();
     }
 
     @ModelAttribute("bankAccounts")
@@ -84,5 +112,11 @@ public class TransactionController {
         List<BankAccount> bankAccounts = bankAccountService.findUserAccounts(user);
         log.info("Ładowanie listy " + bankAccounts.size() + " kont bankowych ");
         return bankAccounts;
+    }
+
+    @ModelAttribute("currencyList")
+    public List<Currency> loadCurrency(){
+        List<Currency> currencyList = currencyService.findAll();
+        return currencyList;
     }
 }

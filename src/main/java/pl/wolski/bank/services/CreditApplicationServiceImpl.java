@@ -32,6 +32,9 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
     @Autowired
     private BankAccountService bankAccountService;
 
+    @Autowired
+    private NotificationService notificationService;
+
     @Override
     public void save(CreditApplication creditApplication, String username) {
         Timestamp stamp = new Timestamp(System.currentTimeMillis());
@@ -46,18 +49,18 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
 
     @Override
     public List<CreditApplication> findAll(){
-        return creditApplicationRepository.findAll();
+        return creditApplicationRepository.findAllByOrderByDateOfSubmissionOfTheApplicationDesc();
     }
 
     @Override
-    public void updateCreditApplicationStatus(Long id, boolean status){
+    public void updateCreditApplicationStatus(Long id, boolean isAccepted){
         Optional<CreditApplication> optionalCreditApplication = creditApplicationRepository.findById(id);
         CreditApplication creditApplication = optionalCreditApplication.orElseThrow(() -> new UserNotFoundException(id));
 
-        creditApplication.setAccepted(status);
+        creditApplication.setAccepted(isAccepted);
         creditApplicationRepository.save(creditApplication);
 
-        if(status){
+        if(isAccepted){
             Credit credit = new Credit();
             credit.setCreditAmount(creditApplication.getCreditAmount());
             credit.setTotalRepayment(creditApplication.getTotalRepayment());
@@ -84,6 +87,16 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
             BankAccount bankAccount = bankAccountService.getUserAccount(user);
             bankAccount.setBalance(bankAccount.getBalance().add(creditApplication.getCreditAmount()));
             bankAccount.setAvailableFounds(bankAccount.getAvailableFounds().add(creditApplication.getCreditAmount()));
+
+            Notification notification = new Notification();
+            notification.setDate(date);
+            notification.setTitle("Wniosek o kredyt zaakceptopowano");
+            notification.setMessage("Uznanie: +" + creditApplication.getCreditAmount() + bankAccount.getCurrency().getName()
+                    + "\n Na rachunku " + bankAccount.getBankAccountNumber());
+            notification.setUser(user);
+            notification.setWasRead(false);
+
+            notificationService.save(notification);
 
             bankAccountService.save(bankAccount);
             creditRepository.save(credit);

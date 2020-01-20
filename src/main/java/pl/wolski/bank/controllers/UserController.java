@@ -6,11 +6,9 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import pl.wolski.bank.models.BankAccount;
-import pl.wolski.bank.models.Role;
-import pl.wolski.bank.models.Transaction;
-import pl.wolski.bank.models.User;
+import pl.wolski.bank.models.*;
 import pl.wolski.bank.services.BankAccountService;
+import pl.wolski.bank.services.NotificationService;
 import pl.wolski.bank.services.TransactionService;
 import pl.wolski.bank.services.UserService;
 import org.apache.commons.logging.Log;
@@ -37,13 +35,16 @@ import java.util.Optional;
 public class UserController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @Autowired
-    BankAccountService bankAccountService;
+    private BankAccountService bankAccountService;
 
     @Autowired
-    TransactionService transactionService;
+    private TransactionService transactionService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @GetMapping(path = "/index")
     //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
@@ -64,7 +65,7 @@ public class UserController {
             if (isAdmin == true) {
                 return "redirect:/creditApplicationsList";
             } else {
-                List<Transaction> transactions = transactionService.findUserTransactions(
+                List<Transaction> transactions = transactionService.findUserTop5Transactions(
                         bankAccountService.getUserAccount(userService.findByUsername(((UserDetails) principal).getUsername())).getBankAccountNumber(),
                         bankAccountService.getUserAccount(userService.findByUsername(((UserDetails) principal).getUsername())).getBankAccountNumber());
                 model.addAttribute("transactions", transactions);
@@ -76,6 +77,15 @@ public class UserController {
         return "loginForm";
     }
 
+    @ModelAttribute("notificationCounter")
+    public int notificationCounter(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = auth.getPrincipal();
+        User user = userService.findByUsername(((UserDetails)principal).getUsername());
+        List<Notification> notificationList = notificationService.findByUserAndWasRead(user, false);
+        log.info("Ładowanie listy " + notificationList.size() + " kont bankowych ");
+        return notificationList.size();
+    }
 
     /*
     @ModelAttribute("transactions")

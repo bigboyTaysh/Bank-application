@@ -11,10 +11,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import pl.wolski.bank.models.*;
-import pl.wolski.bank.services.CreditApplicationService;
-import pl.wolski.bank.services.CreditService;
-import pl.wolski.bank.services.CreditTypeService;
-import pl.wolski.bank.services.UserService;
+import pl.wolski.bank.services.*;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
@@ -35,6 +32,9 @@ public class CreditController {
 
     @Autowired(required = false)
     private CreditTypeService creditTypeService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @GetMapping("/creditApplication")
     public String creditForm(Model model) {
@@ -84,7 +84,7 @@ public class CreditController {
     }
 
     @PostMapping("/creditApplication")
-    public String creditForm2(Model model,
+    public String creditForm(Model model,
                               @Valid @ModelAttribute("creditApplication") CreditApplication creditApplication,
                              BindingResult bindingResult){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -118,5 +118,15 @@ public class CreditController {
         creditApplicationService.updateCreditApplicationStatus(id, false);
 
         return "redirect:/creditApplicationsList";
+    }
+
+    @ModelAttribute("notificationCounter")
+    public int notificationCounter(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = auth.getPrincipal();
+        User user = userService.findByUsername(((UserDetails)principal).getUsername());
+        List<Notification> notificationList = notificationService.findByUserAndWasRead(user, false);
+        log.info("Ładowanie listy " + notificationList.size() + " kont bankowych ");
+        return notificationList.size();
     }
 }

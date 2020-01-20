@@ -7,9 +7,11 @@ import org.springframework.stereotype.Service;
 import pl.wolski.bank.exceptions.BankAccountNotFoundException;
 import pl.wolski.bank.models.AccountType;
 import pl.wolski.bank.models.BankAccount;
+import pl.wolski.bank.models.Currency;
 import pl.wolski.bank.models.User;
 import pl.wolski.bank.repositories.AccountTypeRepository;
 import pl.wolski.bank.repositories.BankAccountRepository;
+import pl.wolski.bank.repositories.CurrencyRepository;
 import pl.wolski.bank.repositories.UserRepository;
 import pl.wolski.bank.simulation.MyThread;
 
@@ -31,6 +33,10 @@ public class BankAccountServiceImpl implements BankAccountService {
     @Autowired
     private AccountTypeRepository accountTypeRepository;
 
+    @Autowired
+    private CurrencyRepository currencyRepository;
+
+
     @Override
     public void save(BankAccount bankAccount, AccountType accountType) {
         accountTypeRepository.saveAndFlush(accountType);
@@ -44,11 +50,12 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Override
     public BankAccount findByBankAccountNumber(BigDecimal bankAccountNumber){
-        return findByBankAccountNumber(bankAccountNumber);
+        return bankAccountRepository.findByBankAccountNumber(bankAccountNumber);
     }
 
     @Override
     public BankAccount newBankAccount(User user, BankAccount bankAccount){
+
         pl.wolski.bank.models.BankAccount bankAccountInRepository =
                 bankAccountRepository.findTopByOrderByIdDesc();
 
@@ -65,12 +72,21 @@ public class BankAccountServiceImpl implements BankAccountService {
         bankAccount.setLock(zero);
         bankAccount.setBankAccountNumber(
                 bankAccountInRepository.getBankAccountNumber().add(new BigDecimal("1")));
-
         bankAccount.setUser(userInRepo);
+
+        if(bankAccount.getCurrency() == null){
+            bankAccount.setCurrency(currencyRepository.findByName("PLN"));
+        }
+
 
         bankAccountRepository.save(bankAccount);
 
         return bankAccount;
+    }
+
+    @Override
+    public  BankAccount findByUserAndCurrency(User user, Currency currency){
+        return bankAccountRepository.findByUserAndCurrency(user,currency);
     }
 
     @Override
@@ -87,7 +103,7 @@ public class BankAccountServiceImpl implements BankAccountService {
 
     @Override
     public List<BankAccount> findUserAccounts(User user){
-        return bankAccountRepository.findAllByUser(user);
+        return bankAccountRepository.findAllByUserOrderByCreationDate(user);
     }
 
     public void runThread(BigDecimal fromBankAccountNumber, BigDecimal value) {
