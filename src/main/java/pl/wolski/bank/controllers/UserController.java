@@ -77,6 +77,36 @@ public class UserController {
         return "loginForm";
     }
 
+    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
+    @GetMapping(path = "/user")
+    //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
+    public String user(Model model,
+                       Long id) {
+        User user = userService.findById(id);
+
+        model.addAttribute("user", user);
+
+        List<Transaction> transactions = transactionService.findUserTop5Transactions(
+                bankAccountService.getUserAccount(userService.findByUsername(user.getUsername())).getBankAccountNumber(),
+                bankAccountService.getUserAccount(userService.findByUsername(user.getUsername())).getBankAccountNumber());
+        model.addAttribute("transactions", transactions);
+        model.addAttribute("userAccounts", bankAccountService.findUserAccounts(user));
+
+
+        return "user";
+    }
+
+    @Secured("ROLE_ADMIN")
+    @GetMapping(path = "/users")
+    //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
+    public String users(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = auth.getPrincipal();
+
+
+        return "users";
+    }
+
     @ModelAttribute("notificationCounter")
     public int notificationCounter(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

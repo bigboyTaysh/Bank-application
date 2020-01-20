@@ -68,13 +68,18 @@
                                 </a>
                             </div>
                         </li>
+                        <li class="nav-item" sec:authorize="hasRole('ROLE_EMPLOYEE')">
+                            <a class="nav-link" th:classappend="${pageName eq 'users'}?'active'"
+                               th:href="@{/users}">
+                                Klienci
+                            </a>
+                        </li>
                         <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')">
                             <a class="nav-link" th:classappend="${pageName eq 'creditApplicationsList'}?'active'"
                                th:href="@{/creditApplicationsList}">
                                 Lista wniosków
                             </a>
                         </li>
-
                         <li sec:authorize="isAnonymous()"
                             class="nav-item"
                             th:class="${pageName eq 'logonForm'}? 'active'">
@@ -90,7 +95,7 @@
                             <div th:if="${notificationCounter == 0}">
                                 <span>Powiadomienia</span>
                             </div>
-                            <div th:if="${notificationCounter != 0}">
+                            <div th:if="${notificationCounter > 0}">
                                 <span>([[${notificationCounter}]]) Powiadomienia</span>
                             </div>
                         </a>

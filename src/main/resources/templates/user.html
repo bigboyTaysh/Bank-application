@@ -37,38 +37,68 @@
                 </tr>
                 <tr>
                     <td>
-                    </td>>
+                    </td>
                     <td>
                         [[${user.address.zipCode + ' ' + user.address.city}]]
                     </td>
                 </tr>
             </tbody>
         </table>
-
+        <br><br>
         <table class="table">
             <thead>
             <tbody>
                 <tr>
+                    <td></td>
+                    <td></td>
                     <td>
-                        [[${userAccount.accountType.name}]]
+                        Blokady
                     </td>
                     <td>
-                        <span th:style="${'color: red;'}"
-                              th:text="${'Blokady   ' + #numbers.formatDecimal(userAccount.lock,1,2)}"></span>
+                        Saldo
                     </td>
-                    <td>Dostępne środki</td>
+                    <td>
+                        Dostępne środki
+                    </td>
                 </tr>
-                <tr>
+                <tr th:each="userAccount : ${userAccounts}">
+                    <td>
+                        <div th:if="${userAccount.accountType.type.toString().equals('PAY_ACC_FOR_YOUNG')}">
+                            <span>KONTO DLA MŁODYCH</span>
+                        </div>
+                        <div th:if="${userAccount.accountType.type.toString().equals('PAY_ACC_FOR_ADULT')}">
+                            <span>STANDARDOWE KONTO</span>
+                        </div>
+                        <div th:if="${userAccount.accountType.type.toString().equals('FOR_CUR_ACC')}">
+                            <span>KONTO WALUTOWE</span>
+                        </div>
+                    </td>
                     <td>
                         [[${userAccount.bankAccountNumber}]]
                     </td>
                     <td>
-                        <span th:text="${'Saldo ' + #numbers.formatDecimal(userAccount.balance,1,2)}"></span>
+                        <span th:style="${'color: red;'}"
+                              th:text="${#numbers.formatDecimal(userAccount.lock,1,2) + ' ' + userAccount.currency.name}"></span>
                     </td>
                     <td>
-                        <span th:text="${#numbers.formatDecimal(userAccount.availableFounds,1,2)}"></span>
+                        <span th:text="${#numbers.formatDecimal(userAccount.balance,1,2) + ' ' + userAccount.currency.name}"></span>
                     </td>
-                </tr>
+                    <td>
+                        <span th:text="${#numbers.formatDecimal(userAccount.availableFounds,1,2) + ' ' + userAccount.currency.name}"></span>
+                    </td>
+                    <td>
+                        <a th:style="${'color: red;'}"
+                           th:href="@{/cashWithdrawal(id=${userAccount.id})}">
+                            Wypłata
+                        </a>
+                    </td>
+                    <td>
+                        <a th:style="${'color: green;'}"
+                           th:href="@{/cashPayment(id=${userAccount.id})}">
+                            Wpłata
+                        </a>
+                    </td>
+                <tr>
             </tbody>
         </table>
 
