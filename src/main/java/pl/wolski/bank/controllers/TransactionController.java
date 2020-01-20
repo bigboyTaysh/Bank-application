@@ -73,7 +73,8 @@ public class TransactionController {
         if(bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber()) != null){
             if((bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber())).getCurrency().getName()
                     .equals(transaction.getCurrency().getName())){
-                if(transactionService.doCashTransfer(user, transaction)){
+                if(transactionService.isTransferPossible(user, transaction)){
+                    transactionService.doCashTransfer(user, transaction);
                     model.addAttribute("message", "Pomyślnie wykonanano przelew");
                 } else {
                     model.addAttribute("message", "Brak środków na koncie");
@@ -82,7 +83,8 @@ public class TransactionController {
                 model.addAttribute("message", "Podaj poprawną walutę");
             }
         } else {
-            if(transactionService.doCashTransfer(user, transaction)){
+            if(transactionService.isTransferPossible(user, transaction)){
+                transactionService.doCashTransfer(user, transaction);
                 model.addAttribute("message", "Pomyślnie wykonanano przelew");
             } else {
                 model.addAttribute("message", "Nie udało się wykonać przelewu");
@@ -109,6 +111,28 @@ public class TransactionController {
     }
 
     @Secured("ROLE_EMPLOYEE")
+    @PostMapping(path = "/cashWithdrawal")
+    //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
+    public String cashWithdraw(Model model,
+                               @Valid @ModelAttribute("transaction") Transaction transaction) {
+        BankAccount bankAccount = bankAccountService.findByBankAccountNumber(transaction.getFromBankAccountNumber());
+
+        int compare = bankAccount.getAvailableFounds().compareTo(transaction.getValue().add(bankAccount.getAccountType().getCommission()));
+        if(compare == 0 || compare == 1){
+            transactionService.doCashWithdrawal(transaction);
+            model.addAttribute("message", "Pomyślnie wypłacono pieniądze");
+
+            return "actionMessage";
+        } else {
+            model.addAttribute("message", "Brak środków na koncie");
+            model.addAttribute("bankAccount", bankAccount);
+            model.addAttribute("transaction", new Transaction());
+
+            return "cashWithdrawalForm";
+        }
+    }
+
+    @Secured("ROLE_EMPLOYEE")
     @GetMapping(path = "/cashPayment")
     //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
     public String cashPayment(Model model,
@@ -117,6 +141,7 @@ public class TransactionController {
 
         model.addAttribute("bankAccount", bankAccount);
         model.addAttribute("transaction", new Transaction());
+        model.addAttribute("message", "");
 
 
         return "user";

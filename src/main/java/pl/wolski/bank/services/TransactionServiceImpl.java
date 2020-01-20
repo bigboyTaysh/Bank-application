@@ -42,12 +42,71 @@ public class TransactionServiceImpl implements TransactionService {
     private UserService userService;
 
     @Override
-    public void save(Transaction transaction){
+    public void save(Transaction transaction) {
         transactionRepository.save(transaction);
     }
 
     @Override
-    public boolean doCashTransfer(User user, Transaction transaction) {
+    public void doCashWithdrawal(Transaction transaction) {
+        BankAccount bankAccountFrom = bankAccountRepository.findByBankAccountNumber(transaction.getFromBankAccountNumber());
+
+        BigDecimal valueWithCommision = transaction.getValue().add(bankAccountFrom.getAccountType().getCommission());
+
+        bankAccountFrom.setAvailableFounds(bankAccountFrom.getAvailableFounds().subtract(valueWithCommision));
+        bankAccountFrom.setBalance(bankAccountFrom.getBalance().subtract(valueWithCommision));
+
+        User userFrom = userService.findByBankAccounts(bankAccountFrom);
+
+        Notification notification = new Notification();
+        Timestamp stamp = new Timestamp(System.currentTimeMillis());
+        Date date = new Date(stamp.getTime());
+        notification.setDate(date);
+
+        notification.setTitle("Obciążenie rachunku");
+        notification.setMessage("-" + valueWithCommision + transaction.getCurrency().getName()
+                + "\n Na rachunku " + bankAccountFrom.getBankAccountNumber());
+        notification.setUser(userFrom);
+        notification.setWasRead(false);
+
+        transaction.setBalanceAfterTransactionUserFrom(bankAccountFrom.getBalance());
+        transaction.setUserNameFrom(bankAccountFrom.getBankAccountNumber().toString());
+        TransactionType transactionType = transactionTypeRepository.findTransactionTypeByType(TransactionType.Types.CASH_WITHDRAWAL);
+        transaction.setTransactionType(transactionType);
+        transaction.setDate(date);
+        transaction.setTitle("Wypłata gotówki w oddziale");
+
+        notificationService.save(notification);
+        bankAccountRepository.save(bankAccountFrom);
+        transactionRepository.saveAndFlush(transaction);
+    }
+
+    @Override
+    public boolean isTransferPossible(User user, Transaction transaction) {
+        BankAccount bankAccountFrom = bankAccountRepository.findByBankAccountNumber(transaction.getFromBankAccountNumber());
+
+        BigDecimal availableFounds = bankAccountFrom.getAvailableFounds();
+        BigDecimal commission = bankAccountFrom.getAccountType().getCommission();
+        BigDecimal value = transaction.getValue();
+        BigDecimal valueExchange;
+
+        if (!transaction.getCurrency().getName().equals(bankAccountFrom.getCurrency().getName())) {
+            valueExchange = currencyService.currencyExchange(bankAccountFrom.getCurrency().getName(),
+                    transaction.getCurrency().getName(), value);
+        } else {
+            valueExchange = value;
+        }
+
+        int compare = availableFounds.compareTo(valueExchange.add(commission));
+
+        if (compare == 0 || compare == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public void doCashTransfer(User user, Transaction transaction) {
         BankAccount bankAccountTo = bankAccountRepository.findByBankAccountNumber(transaction.getToBankAccountNumber());
         BankAccount bankAccountFrom = bankAccountRepository.findByBankAccountNumber(transaction.getFromBankAccountNumber());
 
@@ -56,72 +115,63 @@ public class TransactionServiceImpl implements TransactionService {
         BigDecimal value = transaction.getValue();
         BigDecimal valueExchange;
 
-        if (!transaction.getCurrency().getName().equals(bankAccountFrom.getCurrency().getName())){
+        if (!transaction.getCurrency().getName().equals(bankAccountFrom.getCurrency().getName())) {
             valueExchange = currencyService.currencyExchange(bankAccountFrom.getCurrency().getName(),
                     transaction.getCurrency().getName(), value);
         } else {
             valueExchange = value;
         }
 
-        int compareTo = availableFounds.compareTo(valueExchange.add(commission));
-
         Timestamp stamp = new Timestamp(System.currentTimeMillis());
         Date date = new Date(stamp.getTime());
 
-        if(compareTo == 0 || compareTo == 1){
-            bankAccountFrom.setAvailableFounds(availableFounds.subtract(valueExchange.add(commission)));
+        bankAccountFrom.setAvailableFounds(availableFounds.subtract(valueExchange.add(commission)));
 
-            if(bankAccountTo == null){
+        if (bankAccountTo == null) {
 
-                bankAccountFrom.setLock(bankAccountFrom.getLock().add(valueExchange.add(commission)));
+            bankAccountFrom.setLock(bankAccountFrom.getLock().add(valueExchange.add(commission)));
 
-                bankAccountService.runThread(transaction.getFromBankAccountNumber(), valueExchange.add(commission));
-            } else {
-                bankAccountFrom.setBalance(bankAccountFrom.getBalance().subtract(valueExchange.add(commission)));
-
-                bankAccountTo.setBalance(bankAccountTo.getBalance().add(value));
-                bankAccountTo.setAvailableFounds(bankAccountTo.getAvailableFounds().add(value));
-                transaction.setBalanceAfterTransactionUserTo(bankAccountTo.getBalance());
-
-                User userTo = userService.findByBankAccounts(bankAccountTo);
-
-                Notification notification = new Notification();
-                notification.setDate(date);
-                notification.setTitle("Uznanie rachunku");
-                notification.setMessage("+" + value + transaction.getCurrency().getName()
-                        + "\n Na rachunku " + bankAccountTo.getBankAccountNumber());
-                notification.setUser(userTo);
-                notification.setWasRead(false);
-                notificationService.save(notification);
-            }
-
-            transaction.setBalanceAfterTransactionUserFrom(bankAccountFrom.getBalance());
-            transaction.setUserNameFrom(user.getFirstName() + " " + user.getLastName());
-            TransactionType transactionType = transactionTypeRepository.findTransactionTypeByType(TransactionType.Types.TRANSFER);
-            transaction.setTransactionType(transactionType);
-            transaction.setDate(date);
-
-            if(bankAccountTo != null){
-                bankAccountRepository.save(bankAccountTo);
-            }
-            bankAccountRepository.save(bankAccountFrom);
-            transactionRepository.saveAndFlush(transaction);
-
-            return true;
+            bankAccountService.runThread(transaction.getFromBankAccountNumber(), valueExchange.add(commission));
         } else {
-            log.info("Wynik porównania " + Integer.toString(compareTo));
+            bankAccountFrom.setBalance(bankAccountFrom.getBalance().subtract(valueExchange.add(commission)));
 
-            return false;
+            bankAccountTo.setBalance(bankAccountTo.getBalance().add(value));
+            bankAccountTo.setAvailableFounds(bankAccountTo.getAvailableFounds().add(value));
+            transaction.setBalanceAfterTransactionUserTo(bankAccountTo.getBalance());
+
+            User userTo = userService.findByBankAccounts(bankAccountTo);
+
+            Notification notification = new Notification();
+            notification.setDate(date);
+            notification.setTitle("Uznanie rachunku");
+            notification.setMessage("+" + value + transaction.getCurrency().getName()
+                    + "\n Na rachunku " + bankAccountTo.getBankAccountNumber());
+            notification.setUser(userTo);
+            notification.setWasRead(false);
+            notificationService.save(notification);
         }
+
+        transaction.setBalanceAfterTransactionUserFrom(bankAccountFrom.getBalance());
+        transaction.setUserNameFrom(user.getFirstName() + " " + user.getLastName());
+        TransactionType transactionType = transactionTypeRepository.findTransactionTypeByType(TransactionType.Types.TRANSFER);
+        transaction.setTransactionType(transactionType);
+        transaction.setDate(date);
+
+        if (bankAccountTo != null) {
+            bankAccountRepository.save(bankAccountTo);
+        }
+        bankAccountRepository.save(bankAccountFrom);
+        transactionRepository.saveAndFlush(transaction);
+
     }
 
     @Override
-    public List<Transaction> findUserTransactions(BigDecimal fromBankAccountNumber, BigDecimal toBankAccountNumber){
+    public List<Transaction> findUserTransactions(BigDecimal fromBankAccountNumber, BigDecimal toBankAccountNumber) {
         return transactionRepository.findByFromBankAccountNumberOrToBankAccountNumberOrderByDateDesc(fromBankAccountNumber, toBankAccountNumber);
     }
 
     @Override
-    public List<Transaction> findUserTop5Transactions(BigDecimal fromBankAccountNumber, BigDecimal toBankAccountNumber){
+    public List<Transaction> findUserTop5Transactions(BigDecimal fromBankAccountNumber, BigDecimal toBankAccountNumber) {
         return transactionRepository.findTop5ByFromBankAccountNumberOrToBankAccountNumberOrderByDateDesc(fromBankAccountNumber, toBankAccountNumber);
     }
 }
