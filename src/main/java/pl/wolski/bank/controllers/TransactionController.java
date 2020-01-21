@@ -50,7 +50,7 @@ public class TransactionController {
     public String transactionForm(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Object principal = auth.getPrincipal();
-        User user = userService.findByUsername(((UserDetails)principal).getUsername());
+        User user = userService.findByUsername(((UserDetails) principal).getUsername());
 
         model.addAttribute("user", user);
         model.addAttribute("transaction", new Transaction());
@@ -60,20 +60,20 @@ public class TransactionController {
 
     @PostMapping("/transaction")
     public String transaction(Model model,
-                               @Valid @ModelAttribute("transaction") Transaction transaction,
-                               BindingResult bindingResult) {
+                              @Valid @ModelAttribute("transaction") Transaction transaction,
+                              BindingResult bindingResult) {
 
 
         if (bindingResult.hasErrors()) {
             return "transactionForm";
         }
 
-        User user = (User)model.getAttribute("user");
+        User user = (User) model.getAttribute("user");
 
-        if(bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber()) != null){
-            if((bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber())).getCurrency().getName()
-                    .equals(transaction.getCurrency().getName())){
-                if(transactionService.isTransferPossible(user, transaction)){
+        if (bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber()) != null) {
+            if ((bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber())).getCurrency().getName()
+                    .equals(transaction.getCurrency().getName())) {
+                if (transactionService.isTransferPossible(user, transaction)) {
                     transactionService.doCashTransfer(user, transaction);
                     model.addAttribute("message", "Pomyślnie wykonanano przelew");
                 } else {
@@ -83,7 +83,7 @@ public class TransactionController {
                 model.addAttribute("message", "Podaj poprawną walutę");
             }
         } else {
-            if(transactionService.isTransferPossible(user, transaction)){
+            if (transactionService.isTransferPossible(user, transaction)) {
                 transactionService.doCashTransfer(user, transaction);
                 model.addAttribute("message", "Pomyślnie wykonanano przelew");
             } else {
@@ -98,10 +98,8 @@ public class TransactionController {
     @GetMapping(path = "/cashWithdrawal")
     //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
     public String cashWithdraw(Model model,
-                       String bankAccountNumber) {
+                               String bankAccountNumber) {
         BankAccount bankAccount = bankAccountService.findByBankAccountNumber(new BigDecimal(bankAccountNumber));
-
-        log.info("Znaleziono konto " + bankAccount.getBankAccountNumber());
 
         model.addAttribute("bankAccount", bankAccount);
         model.addAttribute("transaction", new Transaction());
@@ -111,18 +109,35 @@ public class TransactionController {
     }
 
     @Secured("ROLE_EMPLOYEE")
+    @GetMapping(path = "/cashPayment")
+    //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
+    public String cashPayment(Model model,
+                              BigDecimal bankAccountNumber) {
+        BankAccount bankAccount = bankAccountService.findByBankAccountNumber(bankAccountNumber);
+
+        model.addAttribute("bankAccount", bankAccount);
+        model.addAttribute("transaction", new Transaction());
+        model.addAttribute("message", "");
+
+
+        return "cashPaymentForm";
+    }
+
+    @Secured("ROLE_EMPLOYEE")
     @PostMapping(path = "/cashWithdrawal")
     //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
     public String cashWithdraw(Model model,
                                @Valid @ModelAttribute("transaction") Transaction transaction) {
         BankAccount bankAccount = bankAccountService.findByBankAccountNumber(transaction.getFromBankAccountNumber());
+        User user = userService.findByBankAccounts(bankAccount);
 
         int compare = bankAccount.getAvailableFounds().compareTo(transaction.getValue().add(bankAccount.getAccountType().getCommission()));
-        if(compare == 0 || compare == 1){
+        if (compare == 0 || compare == 1) {
             transactionService.doCashWithdrawal(transaction);
             model.addAttribute("message", "Pomyślnie wypłacono pieniądze");
+            model.addAttribute("id_user", user.getId());
 
-            return "actionMessage";
+            return "paymentActionMessage";
         } else {
             model.addAttribute("message", "Brak środków na koncie");
             model.addAttribute("bankAccount", bankAccount);
@@ -133,41 +148,40 @@ public class TransactionController {
     }
 
     @Secured("ROLE_EMPLOYEE")
-    @GetMapping(path = "/cashPayment")
+    @PostMapping(path = "/cashPayment")
     //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
     public String cashPayment(Model model,
-                       BigDecimal bankAccountNumber) {
-        BankAccount bankAccount = bankAccountService.findByBankAccountNumber(bankAccountNumber);
+                              @Valid @ModelAttribute("transaction") Transaction transaction) {
+        User user = userService.findByBankAccounts(bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber()));
 
-        model.addAttribute("bankAccount", bankAccount);
-        model.addAttribute("transaction", new Transaction());
-        model.addAttribute("message", "");
+        transactionService.doCashPayment(transaction);
+        model.addAttribute("message", "Pomyślnie wpłacono pieniądze");
+        model.addAttribute("id_user", user.getId());
 
-
-        return "user";
+        return "paymentActionMessage";
     }
 
     @ModelAttribute("notificationCounter")
-    public int notificationCounter(){
+    public int notificationCounter() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Object principal = auth.getPrincipal();
-        User user = userService.findByUsername(((UserDetails)principal).getUsername());
+        User user = userService.findByUsername(((UserDetails) principal).getUsername());
         List<Notification> notificationList = notificationService.findByUserAndWasRead(user, false);
         return notificationList.size();
     }
 
     @ModelAttribute("bankAccounts")
-    public List<BankAccount> loadBankAccounts(){
+    public List<BankAccount> loadBankAccounts() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Object principal = auth.getPrincipal();
-        User user = userService.findByUsername(((UserDetails)principal).getUsername());
+        User user = userService.findByUsername(((UserDetails) principal).getUsername());
         List<BankAccount> bankAccounts = bankAccountService.findUserAccounts(user);
         log.info("Ładowanie listy " + bankAccounts.size() + " kont bankowych ");
         return bankAccounts;
     }
 
     @ModelAttribute("currencyList")
-    public List<Currency> loadCurrency(){
+    public List<Currency> loadCurrency() {
         List<Currency> currencyList = currencyService.findAll();
         return currencyList;
     }

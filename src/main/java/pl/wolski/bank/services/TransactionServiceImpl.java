@@ -81,6 +81,40 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
+    public void doCashPayment(Transaction transaction) {
+        BankAccount bankAccountTo = bankAccountRepository.findByBankAccountNumber(transaction.getToBankAccountNumber());
+
+        BigDecimal value = transaction.getValue();
+
+        bankAccountTo.setAvailableFounds(bankAccountTo.getAvailableFounds().add(value));
+        bankAccountTo.setBalance(bankAccountTo.getBalance().add(value));
+
+        User userTo = userService.findByBankAccounts(bankAccountTo);
+
+        Notification notification = new Notification();
+        Timestamp stamp = new Timestamp(System.currentTimeMillis());
+        Date date = new Date(stamp.getTime());
+        notification.setDate(date);
+
+        notification.setTitle("Uznanie rachunku");
+        notification.setMessage("+" + value + transaction.getCurrency().getName()
+                + "\n Na rachunku " + bankAccountTo.getBankAccountNumber());
+        notification.setUser(userTo);
+        notification.setWasRead(false);
+
+        transaction.setBalanceAfterTransactionUserTo(bankAccountTo.getBalance());
+        transaction.setUserNameTo(bankAccountTo.getBankAccountNumber().toString());
+        TransactionType transactionType = transactionTypeRepository.findTransactionTypeByType(TransactionType.Types.CASH_PAYMENT);
+        transaction.setTransactionType(transactionType);
+        transaction.setDate(date);
+        transaction.setTitle("Wpłata gotówki w oddziale");
+
+        notificationService.save(notification);
+        bankAccountRepository.save(bankAccountTo);
+        transactionRepository.saveAndFlush(transaction);
+    }
+
+    @Override
     public boolean isTransferPossible(User user, Transaction transaction) {
         BankAccount bankAccountFrom = bankAccountRepository.findByBankAccountNumber(transaction.getFromBankAccountNumber());
 
