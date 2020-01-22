@@ -11,7 +11,7 @@
             <tbody>
                 <tr th:each="userAccount : ${userAccounts}">
                     <td>
-                        <a class="nav-link" href="#" onclick="document.getElementById('userBankAccount').submit()">
+                        <a class="nav-link" href="#" th:onclick="'document.getElementById(document.getElementById(\'' + ${userAccount.id} + '\').submit();'">
                             <div th:if="${userAccount.accountType.type.toString().equals('PAY_ACC_FOR_YOUNG')}">
                                 <span>KONTO DLA MŁODYCH</span>
                             </div>
@@ -22,7 +22,7 @@
                                 <span>KONTO WALUTOWE</span>
                             </div>
                         </a>
-                        <form th:action="@{/userBankAccount}" id="userBankAccount" method="post" style="display: none;">
+                        <form th:action="@{/userBankAccount}" th:id="${userAccount.id}" method="post" style="display: none;">
                             <input
                                     type="hidden"
                                     th:name="bankAccountNumber"

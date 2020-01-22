@@ -62,7 +62,7 @@ public class TransactionServiceImpl implements TransactionService {
         Date date = new Date(stamp.getTime());
         notification.setDate(date);
 
-        notification.setTitle("Obciążenie rachunku");
+        notification.setTitle("Wypłata gotówki");
         notification.setMessage("-" + valueWithCommision + transaction.getCurrency().getName()
                 + "\n Na rachunku " + bankAccountFrom.getBankAccountNumber());
         notification.setUser(userFrom);
@@ -96,7 +96,7 @@ public class TransactionServiceImpl implements TransactionService {
         Date date = new Date(stamp.getTime());
         notification.setDate(date);
 
-        notification.setTitle("Uznanie rachunku");
+        notification.setTitle("Wpłata gotówki");
         notification.setMessage("+" + value + transaction.getCurrency().getName()
                 + "\n Na rachunku " + bankAccountTo.getBankAccountNumber());
         notification.setUser(userTo);
