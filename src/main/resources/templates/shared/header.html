@@ -39,7 +39,7 @@
                             </div>
                         </li>
                         <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_USER')">
-                            <a th:classappend="${pageName eq 'creditApplication'}?'active'"
+                            <a th:classappend="${pageName eq 'bankAccounts'}?'active'"
                                class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLinkThree"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
                                 Rachunki
@@ -54,7 +54,7 @@
                             </div>
                         </li>
                         <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_USER')">
-                            <a th:classappend="${pageName eq 'creditApplication'}?'active'"
+                            <a th:classappend="${pageName eq 'credits'}?'active'"
                                class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLinkTwo"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
                                 Kredyty

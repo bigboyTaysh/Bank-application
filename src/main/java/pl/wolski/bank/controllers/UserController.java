@@ -53,7 +53,9 @@ public class UserController {
         Object principal = auth.getPrincipal();
         if (!(auth instanceof AnonymousAuthenticationToken)) {
             /* The user is logged in :slight_smile: */
-            List<Role> userRole = (userService.findRoleByUser(userService.findByUsername(((UserDetails) principal).getUsername())));
+            User user = userService.findByUsername(((UserDetails)principal).getUsername());
+
+            List<Role> userRole = (userService.findRoleByUser(user));
 
             boolean isAdmin = false;
 
@@ -66,10 +68,10 @@ public class UserController {
                 return "redirect:/creditApplicationsList";
             } else {
                 List<Transaction> transactions = transactionService.findUserTop5Transactions(
-                        bankAccountService.getUserAccount(userService.findByUsername(((UserDetails) principal).getUsername())).getBankAccountNumber(),
-                        bankAccountService.getUserAccount(userService.findByUsername(((UserDetails) principal).getUsername())).getBankAccountNumber());
+                        bankAccountService.getUserAccount(user).getBankAccountNumber(),
+                        bankAccountService.getUserAccount(user).getBankAccountNumber());
                 model.addAttribute("transactions", transactions);
-                model.addAttribute("userAccount", bankAccountService.getUserAccount(userService.findByUsername(((UserDetails) principal).getUsername())));
+                model.addAttribute("userAccount", bankAccountService.getUserAccount(user));
 
                 return "index";
             }

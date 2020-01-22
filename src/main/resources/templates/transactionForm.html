@@ -26,20 +26,26 @@
                                             th:value="${account.bankAccountNumber}">
                                         <div th:if="${account.accountType.type.toString().equals('PAY_ACC_FOR_YOUNG')}">
                                             <span>KONTO DLA MŁODYCH
-                                                [[${account.bankAccountNumber.toString() + ' ' +
-                                                account.availableFounds.toString()}]]
+                                                [[${account.bankAccountNumber.toString().substring(0, 4) + '...' +
+                                                account.bankAccountNumber.toString().substring(22, 26) + ' ' +
+                                                account.availableFounds.toString() + ' ' +
+                                                account.currency.name}]]
                                             </span>
                                         </div>
                                         <div th:if="${account.accountType.type.toString().equals('PAY_ACC_FOR_ADULT')}">
                                             <span>STANDARDOWE KONTO
-                                                [[${account.bankAccountNumber.toString() + ' ' +
-                                                account.availableFounds.toString()}]]
+                                                [[${account.bankAccountNumber.toString().substring(0, 4) + '...' +
+                                                account.bankAccountNumber.toString().substring(22, 26) + ' ' +
+                                                account.availableFounds.toString() + ' ' +
+                                                account.currency.name}]]
                                             </span>
                                         </div>
                                         <div th:if="${account.accountType.type.toString().equals('FOR_CUR_ACC')}">
                                             <span>KONTO WALUTOWE
-                                                [[${account.bankAccountNumber.toString() + ' ' +
-                                                account.availableFounds.toString()}]]
+                                                [[${account.bankAccountNumber.toString().substring(0, 4) + '...' +
+                                                account.bankAccountNumber.toString().substring(22, 26) + ' ' +
+                                                account.availableFounds.toString() + ' ' +
+                                                account.currency.name}]]
                                             </span>
                                         </div>
                                     </option>>

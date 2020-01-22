@@ -1,5 +1,8 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
     <head>
         <div th:replace="shared/header :: header-css"/>
         <title>Strona domowa</title>
@@ -87,13 +90,13 @@
                         <span th:text="${#numbers.formatDecimal(userAccount.availableFounds,1,2) + ' ' + userAccount.currency.name}"></span>
                     </td>
                     <td>
-                        <a th:style="${'color: red;'}"
+                        <a th:style="${'color: red;'}" sec:authorize="hasRole('ROLE_EMPLOYEE')"
                            th:href="@{/cashWithdrawal(bankAccountNumber=${userAccount.bankAccountNumber})}">
                             Wypłata
                         </a>
                     </td>
                     <td>
-                        <a th:style="${'color: green;'}"
+                        <a th:style="${'color: green;'}" sec:authorize="hasRole('ROLE_EMPLOYEE')"
                            th:href="@{/cashPayment(bankAccountNumber=${userAccount.bankAccountNumber})}">
                             Wpłata
                         </a>
