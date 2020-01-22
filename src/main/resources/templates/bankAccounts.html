@@ -11,7 +11,7 @@
             <tbody>
                 <tr th:each="userAccount : ${userAccounts}">
                     <td>
-                        <a class="nav-link" href="#" th:onclick="'document.getElementById(document.getElementById(\'' + ${userAccount.id} + '\').submit();'">
+                        <a class="nav-link" href="#" th:onclick="'document.getElementById(\'' + ${userAccount.id} + '\').submit();'">
                             <div th:if="${userAccount.accountType.type.toString().equals('PAY_ACC_FOR_YOUNG')}">
                                 <span>KONTO DLA MŁODYCH</span>
                             </div>
