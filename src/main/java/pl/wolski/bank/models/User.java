@@ -84,6 +84,10 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<Notification> notifications;
 
+    @OneToMany(mappedBy = "user")
+    private Set<RecurringPayment> recurringPayments;
+
+
     @AssertTrue
     private boolean isPasswordsEquals(){
         return password == null || passwordConfirm == null || password.equals(passwordConfirm);
