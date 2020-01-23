@@ -1,6 +1,13 @@
 package pl.wolski.bank.services;
 
 
+import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.repository.query.Param;
+import pl.wolski.bank.controllers.commands.UserFilter;
+import pl.wolski.bank.controllers.commands.UserSpecifications;
 import pl.wolski.bank.exceptions.UserNotFoundException;
 import pl.wolski.bank.models.BankAccount;
 import pl.wolski.bank.models.Role;
@@ -22,7 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
+@Log4j2
 @Service("userDetailsService")
 public class UserServiceImpl implements UserService {
 
@@ -99,6 +106,43 @@ public class UserServiceImpl implements UserService {
     public pl.wolski.bank.models.User findByBankAccounts(BankAccount bankAccount){
         return userRepository.findByBankAccounts(bankAccount);
     }
+
+    @Override
+    public Page<pl.wolski.bank.models.User> getAllUsers(UserFilter search, Pageable pageable, String type) {
+
+
+        Page page = userRepository.findAll(
+                Specification.where(
+                        UserSpecifications.findAll(type).and(
+                                UserSpecifications.findByPersonalIdentificationNumber(search.getPersonalIdentificationNumber()))
+                ), pageable);
+
+        return page;
+
+    }
+
+    @Override
+    public Page<pl.wolski.bank.models.User> getAllUsersByTypeAndPhrase(UserFilter search, Pageable pageable, String type) {
+
+
+        Page page = userRepository.findAll(
+                Specification.where(
+                        UserSpecifications.findByPhrase(search.getPhrase(), type).and(
+                                UserSpecifications.findByPersonalIdentificationNumber(search.getPersonalIdentificationNumber()))
+                ), pageable);
+
+        return page;
+
+    }
+    /*
+
+    @Override
+    public Page<pl.wolski.bank.models.User> findAllUsersUsingFilter(String phrase, String personalIdentificationNumber, Pageable pageable){
+        Page page = userRepository.findAllUsersUsingFilter(phrase, personalIdentificationNumber, pageable);
+        return page;
+    }
+
+     */
 
     @Override
     public List<Role> findRoleByUser(pl.wolski.bank.models.User user){

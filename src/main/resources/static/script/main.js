@@ -20,4 +20,15 @@ $(document).ready(function () {
             }
         return creditAmount / sum;
     }
+
+    $("form.search#search-users").submit(function () {
+        var pageableSize = document.querySelector("#main > div > div > nav > ul > li.page-item.active > a > span").firstChild.textContent;
+        var page = document.querySelector("#main > div > div > nav > ul.pagination.pagination-sm > li.page-item.active > a").textContent;
+
+
+        document.querySelector("#search-users > div:nth-child(1) > input[type=hidden]:nth-child(2)").value = pageableSize;
+        document.querySelector("#search-users > div:nth-child(1) > input[type=hidden]:nth-child(1)").value = 0;
+
+
+    });
 });

@@ -69,14 +69,14 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
             credit.setNumberOfMonths(creditApplication.getNumberOfMonths());
             credit.setNumberOfMonthsToTheEnd(creditApplication.getNumberOfMonths());
 
-            Date date = new Date(System.currentTimeMillis());
-            credit.setStartDate(date);
+            Date currDate = new Date(System.currentTimeMillis());
 
             Calendar cal = Calendar.getInstance();
-            cal.setTime(date);
+            cal.setTime(currDate);
             cal.add(Calendar.MONTH, creditApplication.getNumberOfMonths());
-            date = cal.getTime();
-            credit.setEndDate(date);
+            Date endDate = cal.getTime();
+            credit.setStartDate(currDate);
+            credit.setEndDate(endDate);
 
             credit.setIsPaidOff(false);
             credit.setCreditType(creditApplication.getCreditType());
@@ -89,7 +89,7 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
             bankAccount.setAvailableFounds(bankAccount.getAvailableFounds().add(creditApplication.getCreditAmount()));
 
             Notification notification = new Notification();
-            notification.setDate(date);
+            notification.setDate(currDate);
             notification.setTitle("Wniosek o kredyt zaakceptopowano");
             notification.setMessage("Uznanie: +" + creditApplication.getCreditAmount() + bankAccount.getCurrency().getName()
                     + "\n Na rachunku " + bankAccount.getBankAccountNumber());
