@@ -6,7 +6,9 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import pl.wolski.bank.controllers.commands.UserFilter;
 import pl.wolski.bank.models.*;
+import pl.wolski.bank.repositories.RoleRepository;
 import pl.wolski.bank.services.BankAccountService;
 import pl.wolski.bank.services.NotificationService;
 import pl.wolski.bank.services.TransactionService;
@@ -46,6 +48,9 @@ public class UserController {
     @Autowired
     private NotificationService notificationService;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     @GetMapping(path = "/index")
     //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
     public String home(Model model) {
@@ -58,14 +63,21 @@ public class UserController {
             List<Role> userRole = (userService.findRoleByUser(user));
 
             boolean isAdmin = false;
+            boolean isEmplo = false;
 
             for (Role role : userRole) {
-                if (role.getType() == Role.Types.ROLE_ADMIN || role.getType() == Role.Types.ROLE_EMPLOYEE)
+                if (role.getType() == Role.Types.ROLE_ADMIN){
                     isAdmin = true;
+                }
+                else if (role.getType() == Role.Types.ROLE_EMPLOYEE) {
+                    isEmplo = true;
+                }
             }
 
-            if (isAdmin == true) {
+            if (isAdmin) {
                 return "redirect:/creditApplicationsList";
+            } else if (isEmplo) {
+                return "redirect:/users";
             } else {
                 List<Transaction> transactions = transactionService.findUserTop5Transactions(
                         bankAccountService.getUserAccount(user).getBankAccountNumber(),
@@ -77,6 +89,15 @@ public class UserController {
             }
         }
         return "loginForm";
+    }
+
+    @ModelAttribute("searchCommand")
+    public UserFilter getSimpleSearch(){
+        log.info("Załadowano searchCommand");
+        UserFilter userFilter = new UserFilter();
+        userFilter.setPhrase("");
+        userFilter.setPersonalIdentificationNumber("");
+        return userFilter;
     }
 
     @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
@@ -98,13 +119,20 @@ public class UserController {
         return "user";
     }
 
-    @Secured({"ROLE_ADMIN","ROLE_EMPLOYEE"})
-    @GetMapping(path = "/users")
-    //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
-    public String users(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = auth.getPrincipal();
+    @Secured("ROLE_EMPLOYEE")
+    @GetMapping(value="/users")
+    public String showUserList(Model model, Pageable pageable, @Valid @ModelAttribute("searchCommand") UserFilter search){
+        String role = (roleRepository.findRoleByType(Role.Types.ROLE_USER)).getType().name();
+        model.addAttribute("userListPage", userService.getAllUsers(search, pageable, role));
 
+        return "users";
+    }
+
+    @Secured("ROLE_EMPLOYEE")
+    @PostMapping(value="/users")
+    public String showSearchUserList(Model model, Pageable pageable, @Valid @ModelAttribute("searchCommand") UserFilter search){
+        String role = (roleRepository.findRoleByType(Role.Types.ROLE_USER)).getType().name();
+        model.addAttribute("userListPage", userService.getAllUsersByTypeAndPhrase(search, pageable, role));
 
         return "users";
     }
