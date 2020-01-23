@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+    <head>
+        <div th:replace="shared/header :: header-css"/>
+        <title>Strona domowa</title>
+    </head>
+    <body>
+        <div th:replace="shared/header :: header('users')"/>
+        <div id="main" class="card-body">
+
+            <form th:method="GET" class="search" id="search-users" th:action="@{/users}" th:object="${searchCommand}">
+                <div class="row">
+                    <input type="hidden" name="page"/>
+                    <input type="hidden" name="size"/>
+                    <div class="form-group col-md-6">
+                        <input th:field="*{phrase}" placeholder="Fraza" class="form-control"
+                               th:classappend="${#fields.hasErrors('phrase')}?'is-invalid'"/>
+                        <div class="error text-danger" th:if="${#fields.hasErrors('phrase')}">
+                            <p th:each="err : ${#fields.errors('phrase')}" th:text="${err}"></p>
+                        </div>
+                    </div>
+
+                    <div class="form-group col-md-3">
+
+                        <input th:field="*{personalIdentificationNumber}" placeholder="PESEL" class="form-control"
+                               th:classappend="${#fields.hasErrors('personalIdentificationNumber')}?'is-invalid'"/>
+                        <div class="error text-danger" th:if="${#fields.hasErrors('personalIdentificationNumber')}">
+                            <p th:each="err : ${#fields.errors('personalIdentificationNumber')}" th:text="${err}"></p>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="form-group col-md-8"></div>
+
+                    <div class="form-group col-md-2">
+                        <a th:if="${searchCommand.isEmpty() eq false or #fields.hasErrors('*')}" th:href="@{users(all)}"
+                           class="btn btn-success">
+                            <span class="glyphicon glyphicon-refresh"></span> Pokaż wszystko
+                        </a>
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        <button type="submit" class="btn btn-info">
+                            <span class="glyphicon glyphicon-search"></span> Wyszukaj
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <div th:if="${userListPage.hasContent() eq true}">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Imię i nazwisko</th>
+                            <th>Data urodzenia</th>
+                            <th>PESEL</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="user : ${userListPage.content}">
+                            <td>
+                                <a th:href="@{/user(id=${user.id})}">
+                                    [[${user.firstName + ' ' + user.lastName}]]
+                                </a>
+                            </td>
+                            <td>
+                                [[${user.birthDate}]]
+                            </td>
+                            <td>
+                                [[${user.personalIdentificationNumber}]]
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+
+                <div th:replace="shared/pagination :: pager('users',${userListPage})"/>
+            </div>
+        </div>
+
+        <div th:replace="shared/footer :: footer"></div>
+    </body>
+</html>

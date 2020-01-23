@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -11,10 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import pl.wolski.bank.models.BankAccount;
 import pl.wolski.bank.models.Notification;
 import pl.wolski.bank.models.Transaction;
@@ -24,6 +22,7 @@ import pl.wolski.bank.services.NotificationService;
 import pl.wolski.bank.services.TransactionService;
 import pl.wolski.bank.services.UserService;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -59,6 +58,21 @@ public class UserBankAccountsController {
             return "bankAccounts";
         }
         return "loginForm";
+    }
+
+    @PostMapping(path = "/userBankAccount")
+    //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
+    public String userBankAccount(Model model,
+                                  @RequestParam(value = "bankAccountNumber", required = false) String bankAccountNumber) {
+
+        BigDecimal number = new BigDecimal(bankAccountNumber);
+        List<Transaction> transactions = transactionService.findUserTransactions(number,number);
+
+        model.addAttribute("transactions", transactions);
+        model.addAttribute("userAccount", bankAccountService.findByBankAccountNumber(number));
+
+
+        return "userBankAccount";
     }
 
     @ModelAttribute("notificationCounter")

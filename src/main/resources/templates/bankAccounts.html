@@ -11,38 +11,35 @@
             <tbody>
                 <tr th:each="userAccount : ${userAccounts}">
                     <td>
-                        <table class="table">
-                            <tr>
-                                <td>
-                                    <div th:if="${userAccount.accountType.type.toString().equals('PAY_ACC_FOR_YOUNG')}">
-                                        <span>KONTO DLA MŁODYCH</span>
-                                    </div>
-                                    <div th:if="${userAccount.accountType.type.toString().equals('PAY_ACC_FOR_ADULT')}">
-                                        <span>STANDARDOWE KONTO</span>
-                                    </div>
-                                    <div th:if="${userAccount.accountType.type.toString().equals('FOR_CUR_ACC')}">
-                                        <span>KONTO WALUTOWE</span>
-                                    </div>
-                                </td>
-                                <td>
-                        <span th:style="${'color: red;'}"
-                              th:text="${'Blokady   ' + #numbers.formatDecimal(userAccount.lock,1,2) + ' ' + userAccount.currency.name}"></span>
-                                </td>
-                                <td>Dostępne środki</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    [[${userAccount.bankAccountNumber}]]
-                                </td>
-                                <td>
-                                    <span th:text="${'Saldo ' + #numbers.formatDecimal(userAccount.balance,1,2) + ' ' + userAccount.currency.name}"></span>
-                                </td>
-                                <td>
-                                    <span th:text="${#numbers.formatDecimal(userAccount.availableFounds,1,2) + ' ' + userAccount.currency.name}"></span>
-                                </td>
-                            </tr>
-                        </table>
+                        <a class="nav-link" href="#" th:onclick="'document.getElementById(\'' + ${userAccount.id} + '\').submit();'">
+                            <div th:if="${userAccount.accountType.type.toString().equals('PAY_ACC_FOR_YOUNG')}">
+                                <span>KONTO DLA MŁODYCH</span>
+                            </div>
+                            <div th:if="${userAccount.accountType.type.toString().equals('PAY_ACC_FOR_ADULT')}">
+                                <span>STANDARDOWE KONTO</span>
+                            </div>
+                            <div th:if="${userAccount.accountType.type.toString().equals('FOR_CUR_ACC')}">
+                                <span>KONTO WALUTOWE</span>
+                            </div>
+                        </a>
+                        <form th:action="@{/userBankAccount}" th:id="${userAccount.id}" method="post" style="display: none;">
+                            <input
+                                    type="hidden"
+                                    th:name="bankAccountNumber"
+                                    th:value="${userAccount.bankAccountNumber}"/>
+                            <input
+                                    type="hidden"
+                                    th:name="${_csrf.parameterName}"
+                                    th:value="${_csrf.token}"/>
+                        </form>
+                    </td>
                     <td>
+                        [[${userAccount.bankAccountNumber}]]
+                    </td>
+                    <td>
+                        <span th:text="${#numbers.formatDecimal(userAccount.availableFounds,1,2) + ' ' + userAccount.currency.name}"></span>
+                    </td>
+                </tr>
                 <tr>
             </tbody>
         </table>

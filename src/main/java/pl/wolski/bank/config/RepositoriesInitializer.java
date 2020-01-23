@@ -54,7 +54,9 @@ public class RepositoriesInitializer {
             if (roleRepository.findAll().isEmpty() == true) {
                 try {
                     CreditType creditType = new CreditType("kredyt gotówkowy", 8.99, 0.0);
+                    CreditType creditType2 = new CreditType("kredyt hipoteczny", 2.99, 0.0);
                     creditTypeRepository.save(creditType);
+                    creditTypeRepository.save(creditType2);
 
                     Currency currency = new Currency();
                     currency.setName("PLN");
@@ -92,7 +94,9 @@ public class RepositoriesInitializer {
                     Role roleAdmin = roleRepository.save(new Role(Role.Types.ROLE_ADMIN));
                     Role roleEmployee = roleRepository.save(new Role(Role.Types.ROLE_EMPLOYEE));
 
-                    TransactionType transactionType = transactionTypeRepository.save(new TransactionType(TransactionType.Types.TRANSFER));
+                    transactionTypeRepository.save(new TransactionType(TransactionType.Types.TRANSFER));
+                    transactionTypeRepository.save(new TransactionType(TransactionType.Types.CASH_PAYMENT));
+                    transactionTypeRepository.save(new TransactionType(TransactionType.Types.CASH_WITHDRAWAL));
 
                     Address address = new Address("a","1","2","d"   , "e");
                     addressRepository.save(address);

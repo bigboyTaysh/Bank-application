@@ -1,6 +1,9 @@
 package pl.wolski.bank.services;
 
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import pl.wolski.bank.controllers.commands.UserFilter;
 import pl.wolski.bank.models.Address;
 import pl.wolski.bank.models.BankAccount;
 import pl.wolski.bank.models.Role;
@@ -26,4 +29,7 @@ public interface UserService extends UserDetailsService {
     boolean isUniquePersonalIdentificationNumber(BigDecimal personalIdentificationNumber);
 
     User findByBankAccounts(BankAccount bankAccount);
+
+    Page<User> getAllUsers(UserFilter search, Pageable pageable, String type);
+    Page<User> getAllUsersByTypeAndPhrase(UserFilter search, Pageable pageable, String type);
 }
