@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
     <head>
-
+        <div th:replace="shared/header :: header-css"/>
     </head>
 
     <body>
@@ -52,21 +52,16 @@
 
                 </ul>
 
-                <ul class="pagination" style="float: right" th:with="pageSizes = ${ {5,10,15} }">
+                <ul class="pagination" style="float: right" th:with="pageSizes = ${ {10,20,40} }">
                     <li class="page-item" th:each="size : ${pageSizes}" th:classappend="${page.size == size}?'active'"
                         th:with="pageUrl=${mainUrl}+'?page=0&size='+${size}"
                     >
-
                         <a class="page-link" th:href="${pageUrl}">
                             <span>[[${size}]]</span>
                         </a>
-
                     </li>
                 </ul>
             </nav>
-
-
         </div>
-
     </body>
 </html>

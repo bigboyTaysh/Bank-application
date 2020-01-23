@@ -11,8 +11,10 @@
         <div th:replace="shared/header :: header('users')"/>
         <div id="main" class="card-body">
 
-            <form th:method="POST" th:action="@{/users}" th:object="${searchCommand}">
+            <form th:method="GET" class="search" id="search-users" th:action="@{/users}" th:object="${searchCommand}">
                 <div class="row">
+                    <input type="hidden" name="page"/>
+                    <input type="hidden" name="size"/>
                     <div class="form-group col-md-6">
                         <input th:field="*{phrase}" placeholder="Fraza" class="form-control"
                                th:classappend="${#fields.hasErrors('phrase')}?'is-invalid'"/>
@@ -30,7 +32,6 @@
                         </div>
 
                     </div>
-
                 </div>
                 <div class="row">
 
@@ -55,18 +56,20 @@
                 <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th>Imię</th>
-                            <th>Nazwisko</th>
+                            <th>Imię i nazwisko</th>
+                            <th>Data urodzenia</th>
                             <th>PESEL</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="user : ${userListPage.content}">
                             <td>
-                                [[${user.firstName}]]
+                                <a th:href="@{/user(id=${user.id})}">
+                                    [[${user.firstName + ' ' + user.lastName}]]
+                                </a>
                             </td>
                             <td>
-                                [[${user.lastName}]]
+                                [[${user.birthDate}]]
                             </td>
                             <td>
                                 [[${user.personalIdentificationNumber}]]

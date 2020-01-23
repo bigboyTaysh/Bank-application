@@ -2,6 +2,7 @@ package pl.wolski.bank.controllers;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.repository.query.Param;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -119,14 +120,25 @@ public class UserController {
         return "user";
     }
 
+    @GetMapping(value="/users", params = {"all"})
+    public String resetUserList(@ModelAttribute("searchCommand") UserFilter search){
+        search.clear();
+        return "redirect:users";
+    }
+
+
     @Secured("ROLE_EMPLOYEE")
-    @GetMapping(value="/users")
-    public String showUserList(Model model, Pageable pageable, @Valid @ModelAttribute("searchCommand") UserFilter search){
+    @RequestMapping(value="/users", method = {RequestMethod.GET, RequestMethod.POST})
+    public String showUserList(Model model, @PageableDefault(value = 10) Pageable pageable, @Valid @ModelAttribute("searchCommand") UserFilter search){
         String role = (roleRepository.findRoleByType(Role.Types.ROLE_USER)).getType().name();
-        model.addAttribute("userListPage", userService.getAllUsers(search, pageable, role));
+        String pageableString = pageable.toString();
+        log.info("Pageable: " + pageableString);
+        model.addAttribute("userListPage", userService.getAllUsersByTypeAndPhrase(search, pageable, role));
 
         return "users";
     }
+
+    /*
 
     @Secured("ROLE_EMPLOYEE")
     @PostMapping(value="/users")
@@ -136,6 +148,8 @@ public class UserController {
 
         return "users";
     }
+
+     */
 
     @ModelAttribute("notificationCounter")
     public int notificationCounter(){

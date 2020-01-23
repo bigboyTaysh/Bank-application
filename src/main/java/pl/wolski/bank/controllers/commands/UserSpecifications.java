@@ -3,6 +3,7 @@ package pl.wolski.bank.controllers.commands;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.util.StringUtils;
 import pl.wolski.bank.models.User;
+import pl.wolski.bank.models.User_;
 
 import java.math.BigDecimal;
 
@@ -26,7 +27,10 @@ public class UserSpecifications {
                 String phraseLike = "%"+phrase.toUpperCase() +"%";
                 String typeLike = "%"+type.toUpperCase() +"%";
                 return cb.and(
-                        cb.like(cb.upper(root.get("firstName")), phraseLike),
+                        cb.or(
+                                cb.like(cb.upper(root.get(User_.firstName)), phraseLike),
+                                cb.like(cb.upper(root.get(User_.lastName)), phraseLike)
+                        ),
                         cb.equal(root.join("roles").get("type").as(String.class), type)
                 );
             }
