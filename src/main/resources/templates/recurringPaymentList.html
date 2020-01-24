@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <div th:replace="shared/header :: header-css"/>
+        <title>Strona domowa</title>
+    </head>
+    <body>
+        <div th:replace="shared/header :: header('home')"/>
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <td>
+                        Data
+                    </td>
+                    <td>
+                        Odbiorca/Nadawca/Tytuł
+                    </td>
+                    <td>
+                        Operacja
+                    </td>
+                    <td>
+                        Kwota
+                    </td>
+                    <td>
+                        Saldo
+                    </td>
+                </tr>
+                <tr th:each="recurringPayment : ${userRecurringPayments}">
+                    <td>
+                        <span th:text="${#dates.format(recurringPayment.startDate, 'dd-MM-yyyy')}"></span>
+                    </td>
+                    <td>
+                        <table>
+                            <tr>
+                                [[${recurringPayment.userNameTo}}]]
+                            </tr>
+                            <tr>
+                                [[${recurringPayment.title}]]
+                            </tr>
+                        </table>
+                    </td>
+                    <td>
+                        <span th:text="${#numbers.formatDecimal('-' + recurringPayment.value,1,2)  + ' ' + recurringPayment.currency.name}"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div th:replace="shared/footer :: footer"></div>
+    </body>
+</html>

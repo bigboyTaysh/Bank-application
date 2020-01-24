@@ -38,6 +38,11 @@
                                     Przelew
                                 </a>
                             </div>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" th:href="@{/recurringPayments}">
+                                    Płatności cykliczne
+                                </a>
+                            </div>
                         </li>
                         <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_USER')">
                             <a th:classappend="${pageName eq 'bankAccounts'}?'active'"

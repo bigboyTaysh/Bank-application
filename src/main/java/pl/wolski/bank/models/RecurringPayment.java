@@ -46,6 +46,10 @@ public class RecurringPayment {
     private Boolean isActive;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_urrency", nullable = false)
+    private Currency currency;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="id_user", nullable = false)
     private User user;
 }

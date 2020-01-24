@@ -46,6 +46,9 @@ public class TransactionController {
     @Autowired
     private NotificationService notificationService;
 
+    @Autowired
+    private RecurringPaymentService recurringPaymentService;
+
     @GetMapping("/transaction")
     public String transactionForm(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -162,6 +165,17 @@ public class TransactionController {
     }
 
     @Secured("ROLE_EMPLOYEE")
+    @GetMapping("/recurringPayments")
+    public String showRecurringPayments(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = auth.getPrincipal();
+
+        model.addAttribute("userRecurringPayments", recurringPaymentService.findAllUserRecurringPayment(userService.findByUsername(((UserDetails) principal).getUsername())));
+
+        return "recurringPaymentList";
+    }
+
+    @Secured("ROLE_EMPLOYEE")
     @GetMapping("/currencyExchangeForm")
     public String showCurrencyForm(Model model) {
 
@@ -174,6 +188,14 @@ public class TransactionController {
         model.addAttribute("message", "Pomyślnie dokonano wymiany walut");
 
         return "actionMessage";
+    }
+
+    @Secured("ROLE_EMPLOYEE")
+    @GetMapping("/recurringPaymentForm")
+    public String showRecurringPaymentForm(Model model) {
+        model.addAttribute("recurringPayment", new RecurringPayment());
+
+        return "recurringPaymentForm";
     }
 
     @ModelAttribute("notificationCounter")
