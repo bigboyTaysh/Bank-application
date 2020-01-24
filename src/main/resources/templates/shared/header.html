@@ -81,6 +81,12 @@
                                 Lista wniosków
                             </a>
                         </li>
+                        <li class="nav-item" sec:authorize="hasRole('ROLE_EMPLOYEE')">
+                            <a class="nav-link" th:classappend="${pageName eq 'currencyExchangeForm'}?'active'"
+                               th:href="@{/currencyExchangeForm}">
+                                Wymiana waluty
+                            </a>
+                        </li>
                         <li sec:authorize="isAnonymous()"
                             class="nav-item"
                             th:class="${pageName eq 'logonForm'}? 'active'">

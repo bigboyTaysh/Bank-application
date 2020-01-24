@@ -31,7 +31,7 @@ public class CurrencyServiceImpl implements CurrencyService {
 
     @Override
     public BigDecimal currencyExchange(String currencyFrom, String currencyTo, BigDecimal value){
-        return ((currencyRepository.findByName(currencyTo)) .getPurchase().multiply(value))
+        return ((currencyRepository.findByName(currencyTo)).getPurchase().multiply(value))
                 .divide(currencyRepository.findByName(currencyFrom).getSale());
     }
 

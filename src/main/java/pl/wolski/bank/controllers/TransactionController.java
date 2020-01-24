@@ -161,6 +161,21 @@ public class TransactionController {
         return "paymentActionMessage";
     }
 
+    @Secured("ROLE_EMPLOYEE")
+    @GetMapping("/currencyExchangeForm")
+    public String showCurrencyForm(Model model) {
+
+        return "currencyExchangeForm";
+    }
+
+    @Secured("ROLE_EMPLOYEE")
+    @PostMapping("/currencyExchangeForm")
+    public String showCurrencyExchangeMessage(Model model) {
+        model.addAttribute("message", "Pomyślnie dokonano wymiany walut");
+
+        return "actionMessage";
+    }
+
     @ModelAttribute("notificationCounter")
     public int notificationCounter() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();

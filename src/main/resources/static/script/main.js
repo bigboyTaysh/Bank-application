@@ -3,10 +3,43 @@ $(document).ready(function () {
         var creditAmount = $("input[name=creditAmount]").val();
         var months = $("select[name=numberOfMonths]").val();
         var creditRates = $("select[name=creditType]").find(':selected').data('rates');
-        console.log(creditRates);
 
         $("input[name=totalRepayment]").val((f(creditAmount, months, creditRates).valueOf() * months).toFixed(2));
         $("input[name=monthRepayment]").val((f(creditAmount, months, creditRates).valueOf()).toFixed(2));
+    });
+
+
+    if($("select[name=currencyFrom]").find(':selected').text()
+        .localeCompare($("select[name=currencyTo]").find(':selected').text()) == 0){
+        $(this).find(':input[type=submit]').prop('disabled', true);
+        $("#currencyExchangeMessage").text("Wybierz inną walutę!");
+        $("input[name=totalPayment]").val(0.00);
+    }
+
+    $("#currencyForm").bind("keyup change", function () {
+        //var currencyNameFrom = $("select[name=currencyFrom]").find(':selected').text(); // pobieram name
+        //var currencyNameTo = $("select[name=currencyTo]").find(':selected').text() // pobieram name
+
+        if($("select[name=currencyFrom]").find(':selected').text()
+            .localeCompare($("select[name=currencyTo]").find(':selected').text()) == 0){
+            $(this).find(':input[type=submit]').prop('disabled', true);
+            $("#currencyExchangeMessage").text("Wybierz inną walutę!");
+            $("input[name=totalPayment]").val(0.00);
+        } else {
+            //var value = $("input[name=value]").val();
+            //var currencyFrom = $("select[name=currencyFrom]").find(':selected').val(); // pobieram name
+            //var currencyTo = $("select[name=currencyTo]").find(':selected').val(); // pobieram name
+            $(this).find(':input[type=submit]').prop('disabled', false);
+            $("#currencyExchangeMessage").text("")
+
+            $("input[name=totalPayment]").val((f2(
+                $("input[name=value]").val(),
+                $("select[name=currencyFrom]").find(':selected').val(),
+                $("select[name=currencyTo]").find(':selected').val()
+            ).valueOf()).toFixed(2));
+        }
+
+
     });
 
     function f(creditAmount, months, creditRates) {
@@ -19,6 +52,10 @@ $(document).ready(function () {
                 sum = sum + Math.pow((1 + ((0.01 * creditRates)/numberOfInstallmentsPaidDuringTheYear)),0-i);
             }
         return creditAmount / sum;
+    }
+
+    function f2(value, currencyFrom, currencyTo) {
+        return (currencyFrom*value)/currencyTo;
     }
 
     $("form.search#search-users").submit(function () {
