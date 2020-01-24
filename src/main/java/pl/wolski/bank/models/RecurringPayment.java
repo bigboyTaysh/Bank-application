@@ -30,7 +30,6 @@ public class RecurringPayment {
     private BigDecimal toBankAccountNumber;
 
     private String userNameTo;
-    private String userNameFrom;
     private String title;
 
     private int numberOfMonths;
