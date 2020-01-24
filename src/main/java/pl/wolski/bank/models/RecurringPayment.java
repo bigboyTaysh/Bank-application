@@ -14,7 +14,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "recurring_payment")
+@Table(name = "recurring_payments")
 public class RecurringPayment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

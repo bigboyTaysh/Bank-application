@@ -5,7 +5,7 @@
         <title>Przelew</title>
     </head>
     <body>
-        <div th:replace="shared/header :: header('recurringPayment')"/>
+        <div th:replace="shared/header :: header('transaction')"/>
 
         <div class="container">
             <div class="row" style="margin-top:20px">
@@ -73,13 +73,13 @@
                         </div>
                         <div class="form-group">
                             <span>Data najbliższego zlecenia</span>
-                            <input type="date" th:field="*{startDate}"
+                            <input type="date" id="currentDate" th:field="*{startDate}"
                                    class="form-control" required="true"
                                    autofocus="true"/>
                         </div>
                         <div class="form-group">
                             <span>Data końca zlecenia</span>
-                            <input type="date" th:field="*{endDate}"
+                            <input type="date" id="currentDate2" th:field="*{endDate}"
                                    class="form-control" required="true"
                                    autofocus="true"/>
                         </div>

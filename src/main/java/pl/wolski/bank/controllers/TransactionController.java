@@ -165,17 +165,6 @@ public class TransactionController {
     }
 
     @Secured("ROLE_EMPLOYEE")
-    @GetMapping("/recurringPayments")
-    public String showRecurringPayments(Model model) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = auth.getPrincipal();
-
-        model.addAttribute("userRecurringPayments", recurringPaymentService.findAllUserRecurringPayment(userService.findByUsername(((UserDetails) principal).getUsername())));
-
-        return "recurringPaymentList";
-    }
-
-    @Secured("ROLE_EMPLOYEE")
     @GetMapping("/currencyExchangeForm")
     public String showCurrencyForm(Model model) {
 
@@ -190,7 +179,18 @@ public class TransactionController {
         return "actionMessage";
     }
 
-    @Secured("ROLE_EMPLOYEE")
+    @Secured("ROLE_USER")
+    @GetMapping("/recurringPayments")
+    public String showRecurringPayments(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = auth.getPrincipal();
+
+        model.addAttribute("userRecurringPayments", recurringPaymentService.findAllUserRecurringPayment(userService.findByUsername(((UserDetails) principal).getUsername())));
+
+        return "recurringPaymentList";
+    }
+
+    @Secured("ROLE_USER")
     @GetMapping("/recurringPaymentForm")
     public String showRecurringPaymentForm(Model model) {
         model.addAttribute("recurringPayment", new RecurringPayment());

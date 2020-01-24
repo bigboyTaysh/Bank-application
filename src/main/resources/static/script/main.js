@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    document.getElementById('currentDate').valueAsDate = new Date();
+    document.getElementById('currentDate2').valueAsDate = new Date();
+
     $("#creditApplication").bind("keyup change", function () {
         var creditAmount = $("input[name=creditAmount]").val();
         var months = $("select[name=numberOfMonths]").val();
@@ -11,7 +14,7 @@ $(document).ready(function () {
 
     if($("select[name=currencyFrom]").find(':selected').text()
         .localeCompare($("select[name=currencyTo]").find(':selected').text()) == 0){
-        $(this).find(':input[type=submit]').prop('disabled', true);
+        $("select[name=currencyFrom]").find(':input[type=submit]').prop('disabled', true);
         $("#currencyExchangeMessage").text("Wybierz inną walutę!");
         $("input[name=totalPayment]").val(0.00);
     }
