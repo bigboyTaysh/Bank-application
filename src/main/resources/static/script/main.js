@@ -1,6 +1,48 @@
 $(document).ready(function () {
-    document.getElementById('currentDate').valueAsDate = new Date();
-    document.getElementById('currentDate2').valueAsDate = new Date();
+    var now = new Date();
+    var day = ("0" + now.getDate()).slice(-2);
+    var month = ("0" + (now.getMonth() + 1)).slice(-2);
+    var today = now.getFullYear()+"-"+(month)+"-"+(day) ;
+    $("input[id=currentDate]").val(today);
+    $("input[id=currentDate2]").val(today);
+
+    if($("input[id=currentDate]").val() !== null && $("input[id=currentDate2]").val() !== null){
+        var date1 = formatDate($("input[id=currentDate]").val());
+        var date2 = formatDate($("input[id=currentDate2]").val());
+        var currentDate = formatDate(new Date());
+    }
+
+    if(date1 > currentDate || date1 === currentDate){
+        if(date1 < date2 || date1 === date2){
+            $("form[id=recurringPaymentForm]").find(':input[type=submit]').prop('disabled', false);
+        } else {
+            $("form[id=recurringPaymentForm]").find(':input[type=submit]').prop('disabled', true);
+        }
+    } else {
+        $("form[id=recurringPaymentForm]").find(':input[type=submit]').prop('disabled', true);
+    }
+
+    $("#recurringPaymentForm").bind("keyup change", function () {
+        //var date1 = $("input[name=currentDate]").val();
+        //var date2 = $("input[id=currentDate2]").val();
+        //console.log(date2);
+
+        var date1 = formatDate($("input[id=currentDate]").val());
+        var date2 = formatDate($("input[id=currentDate2]").val());
+        var currentDate = formatDate(new Date());
+
+        if(date1 > currentDate || date1 === currentDate){
+            if(date1 < date2 || date1 === date2){
+                $("form[id=recurringPaymentForm]").find(':input[type=submit]').prop('disabled', false);
+            } else {
+                $("form[id=recurringPaymentForm]").find(':input[type=submit]').prop('disabled', true);
+            }
+        } else {
+            $("form[id=recurringPaymentForm]").find(':input[type=submit]').prop('disabled', true);
+        }
+
+    });
+
 
     $("#creditApplication").bind("keyup change", function () {
         var creditAmount = $("input[name=creditAmount]").val();
@@ -45,6 +87,17 @@ $(document).ready(function () {
 
     });
 
+    $("form.search#search-users").submit(function () {
+        var pageableSize = document.querySelector("#main > div > div > nav > ul > li.page-item.active > a > span").firstChild.textContent;
+        var page = document.querySelector("#main > div > div > nav > ul.pagination.pagination-sm > li.page-item.active > a").textContent;
+
+
+        document.querySelector("#search-users > div:nth-child(1) > input[type=hidden]:nth-child(2)").value = pageableSize;
+        document.querySelector("#search-users > div:nth-child(1) > input[type=hidden]:nth-child(1)").value = 0;
+
+
+    });
+
     function f(creditAmount, months, creditRates) {
         let sum = 0.0;
         let commission = 1.0;
@@ -61,14 +114,18 @@ $(document).ready(function () {
         return (currencyFrom*value)/currencyTo;
     }
 
-    $("form.search#search-users").submit(function () {
-        var pageableSize = document.querySelector("#main > div > div > nav > ul > li.page-item.active > a > span").firstChild.textContent;
-        var page = document.querySelector("#main > div > div > nav > ul.pagination.pagination-sm > li.page-item.active > a").textContent;
 
+    function formatDate(date) {
+        var d = new Date(date),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
 
-        document.querySelector("#search-users > div:nth-child(1) > input[type=hidden]:nth-child(2)").value = pageableSize;
-        document.querySelector("#search-users > div:nth-child(1) > input[type=hidden]:nth-child(1)").value = 0;
+        if (month.length < 2)
+            month = '0' + month;
+        if (day.length < 2)
+            day = '0' + day;
 
-
-    });
+        return [year, month, day].join('-');
+    }
 });
