@@ -1,6 +1,7 @@
 package pl.wolski.bank.controllers;
 
 import lombok.extern.log4j.Log4j2;
+import org.hibernate.annotations.Parameter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
@@ -196,6 +197,14 @@ public class TransactionController {
         model.addAttribute("recurringPayment", new RecurringPayment());
 
         return "recurringPaymentForm";
+    }
+
+    @Secured("ROLE_USER")
+    @PostMapping("/recurringPaymentForm")
+    public String getRecurringPaymentForm(Model model,
+                                          @Valid @ModelAttribute("recurringPayment") RecurringPayment recurringPayment) {
+
+        return "redirect:/recurringPayments";
     }
 
     @ModelAttribute("notificationCounter")
