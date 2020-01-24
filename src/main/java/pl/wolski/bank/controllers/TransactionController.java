@@ -2,6 +2,7 @@ package pl.wolski.bank.controllers;
 
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.annotations.Parameter;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
@@ -158,6 +159,8 @@ public class TransactionController {
                               @Valid @ModelAttribute("transaction") Transaction transaction) {
         User user = userService.findByBankAccounts(bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber()));
 
+        //log.info("transaction", transaction.getDate().toString());
+
         transactionService.doCashPayment(transaction);
         model.addAttribute("message", "Pomyślnie wpłacono pieniądze");
         model.addAttribute("id_user", user.getId());
@@ -202,7 +205,9 @@ public class TransactionController {
     @Secured("ROLE_USER")
     @PostMapping("/recurringPaymentForm")
     public String getRecurringPaymentForm(Model model,
-                                          @Valid @ModelAttribute("recurringPayment") RecurringPayment recurringPayment) {
+                                          @Valid @ModelAttribute("recurringPayment") RecurringPayment recurringPayment) throws SchedulerException, InterruptedException {
+        log.info("dsad: ", recurringPayment.getStartDate().toString());
+        recurringPaymentService.save(recurringPayment);
 
         return "redirect:/recurringPayments";
     }
