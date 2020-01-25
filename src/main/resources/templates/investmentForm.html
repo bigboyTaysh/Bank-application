@@ -22,7 +22,7 @@
                 </div>
 
                 <div class="form-group">
-                    <input type="number" min="0" th:field="*{investmentAmount}"
+                    <input type="number" min="100" th:field="*{investmentAmount}"
                            class="form-control" placeholder="Wysokość Lokaty" required="true"
                            autofocus="true"/>
                 </div>
@@ -31,23 +31,11 @@
                 </div>
                 <div class="form-group">
                     <select th:field="*{numberOfMonths}" class="form-control">
-                        <option
-                                th:value="1"
-                                th:text="1"
-                        />
-                        <option th:each="month : ${#numbers.sequence(2, 11, 2)}"
+                        <option th:each="month : ${#numbers.sequence(12, 24, 6)}"
                                 th:value="${month}"
                                 th:text="${month}"
                         />
-                        <option th:each="month : ${#numbers.sequence(12, 32, 4)}"
-                                th:value="${month}"
-                                th:text="${month}"
-                        />
-                        <option th:each="month : ${#numbers.sequence(36, 114, 6)}"
-                                th:value="${month}"
-                                th:text="${month}"
-                        />
-                        <option th:each="month : ${#numbers.sequence(120, 240, 12)}"
+                        <option th:each="month : ${#numbers.sequence(36, 120, 12)}"
                                 th:value="${month}"
                                 th:text="${month}"
                         />
@@ -55,6 +43,7 @@
                 </div>
                 <div class="form-group">
                     <input type="text" th:field="*{totalRepayment}" class="form-control" readonly/>
+                    <span>PLN</span>
                 </div>
                 <div class="row">
                     <div class="col-xs-6 col-sm-6 col-md-6">
@@ -62,7 +51,7 @@
                                 type="hidden"
                                 th:name="${_csrf.parameterName}"
                                 th:value="${_csrf.token}"/>
-                        <input type="submit" class="btn btn-lg btn-primary btn-block" value="Złóż wniosek"/>
+                        <input type="submit" class="btn btn-lg btn-primary btn-block" value="Załóż lokatę"/>
                     </div>
                 </div>
             </form>

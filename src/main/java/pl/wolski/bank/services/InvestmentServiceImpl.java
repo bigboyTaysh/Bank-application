@@ -32,8 +32,13 @@ public class InvestmentServiceImpl implements InvestmentService {
     private InvestmentRepository investmentRepository;
 
     @Override
-    public void save(Investment investment, String username) {
+    public void save(Investment investment) {
 
+        investmentRepository.save(investment);
+    }
+
+    @Override
+    public void openInvestment(Investment investment, String username) {
         Timestamp stamp = new Timestamp(System.currentTimeMillis());
         Date date = new Date(stamp.getTime());
         investment.setStartDate(date);
@@ -45,29 +50,31 @@ public class InvestmentServiceImpl implements InvestmentService {
         Date endDate = cal.getTime();
         investment.setEndDate(endDate);
 
-        investmentRepository.saveAndFlush(investment);
-
-
-    }
-
-    @Override
-    public boolean cashCheck(String username, BigDecimal investmentAmount) {
-
         User user = userService.findByUsername(username);
-        List<BankAccount> bankAccount = bankAccountService.findUserAccounts(user);
+        BankAccount bankAccount = bankAccountService.getUserAccount(user);
 
-        for(int i=0; i<= bankAccount.size(); i++){
-            BigDecimal sum = bankAccount.get(i).getBalance();
-            if(sum.compareTo(investmentAmount) == -1){
-                return false;
-            }
-        }
+        bankAccount.setAvailableFounds(bankAccount.getAvailableFounds().subtract(investment.getInvestmentAmount()));
+        bankAccount.setBalance(bankAccount.getBalance().subtract(investment.getInvestmentAmount()));
 
-        return true;
+        bankAccountService.save(bankAccount);
+        investmentRepository.saveAndFlush(investment);
     }
 
     @Override
-    public List<Investment> findByUser(User user){
+    public boolean enableInvestment(String username, BigDecimal investmentAmount) {
+        User user = userService.findByUsername(username);
+        BankAccount bankAccount = bankAccountService.getUserAccount(user);
+        int compare = bankAccount.getAvailableFounds().compareTo(investmentAmount);
+
+        if (compare == 0 || compare == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public List<Investment> findByUser(User user) {
         return investmentRepository.findByUser(user);
     }
 

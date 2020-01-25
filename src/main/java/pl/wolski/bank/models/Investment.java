@@ -26,15 +26,7 @@ public class Investment {
     @Digits(integer = 17, fraction = 4)
     private BigDecimal totalRepayment;
 
-    @Digits(integer = 17, fraction = 4)
-    private BigDecimal currentRepayment; //////////////////
-
-    @Digits(integer = 17, fraction = 4)
-    private BigDecimal monthRepayment; //////////////////
-
     private int numberOfMonths;
-
-    private int numberOfMonthsToTheEnd;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
@@ -43,10 +35,6 @@ public class Investment {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Date endDate;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @Temporal(TemporalType.DATE)
-    private Date lastPayment; //////////////////
 
     private Boolean isPaidOff; //////////////////
 
