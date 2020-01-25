@@ -2,11 +2,9 @@ package pl.wolski.bank.services;
 
 
 import lombok.extern.log4j.Log4j2;
-import org.hibernate.validator.constraints.Currency;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.wolski.bank.models.*;
-import pl.wolski.bank.simulation.MyThread;
 import pl.wolski.bank.repositories.BankAccountRepository;
 import pl.wolski.bank.repositories.TransactionRepository;
 import pl.wolski.bank.repositories.TransactionTypeRepository;

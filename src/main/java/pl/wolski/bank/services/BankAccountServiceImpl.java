@@ -13,7 +13,6 @@ import pl.wolski.bank.repositories.AccountTypeRepository;
 import pl.wolski.bank.repositories.BankAccountRepository;
 import pl.wolski.bank.repositories.CurrencyRepository;
 import pl.wolski.bank.repositories.UserRepository;
-import pl.wolski.bank.simulation.MyThread;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;

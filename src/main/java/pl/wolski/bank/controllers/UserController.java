@@ -131,8 +131,6 @@ public class UserController {
     @RequestMapping(value="/users", method = {RequestMethod.GET, RequestMethod.POST})
     public String showUserList(Model model, @PageableDefault(value = 10) Pageable pageable, @Valid @ModelAttribute("searchCommand") UserFilter search){
         String role = (roleRepository.findRoleByType(Role.Types.ROLE_USER)).getType().name();
-        String pageableString = pageable.toString();
-        log.info("Pageable: " + pageableString);
         model.addAttribute("userListPage", userService.getAllUsersByTypeAndPhrase(search, pageable, role));
 
         return "users";
