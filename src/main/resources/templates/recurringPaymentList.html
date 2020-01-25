@@ -33,12 +33,9 @@
         <tbody>
             <tr th:each="recurringPayment : ${userRecurringPayments}">
                 <td>
-                    <span th:text="${#dates.format(recurringPayment.startDate, 'dd-MM-yyyy')}"></span>
-                </td>
-                <td>
                     <table>
                         <tr>
-                            [[${recurringPayment.userNameTo}}]]
+                            [[${recurringPayment.userNameTo}]]
                         </tr>
                         <tr>
                             [[${recurringPayment.title}]]
@@ -46,7 +43,13 @@
                     </table>
                 </td>
                 <td>
-                    <span th:text="${#numbers.formatDecimal('-' + recurringPayment.value,1,2)  + ' ' + recurringPayment.currency.name}"></span>
+                    <span th:text="${#dates.format(recurringPayment.startDate, 'dd-MM-yyyy')}"></span>
+                </td>
+                <td>
+                    <span th:text="${#dates.format(recurringPayment.endDate, 'dd-MM-yyyy')}"></span>
+                </td>
+                <td>
+                    <span th:text="${#numbers.formatDecimal(recurringPayment.value,1,2)  + ' ' + recurringPayment.currency.name}"></span>
                 </td>
             </tr>
         </tbody>

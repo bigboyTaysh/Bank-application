@@ -10,6 +10,10 @@ import java.util.List;
 
 public interface RecurringPaymentService {
 // Własne metody
-    void save(RecurringPayment recurringPayment) throws SchedulerException, InterruptedException;
+    void save(RecurringPayment recurringPayment);
+    void saveWithScheduler(User user, RecurringPayment recurringPayment) throws SchedulerException, InterruptedException;
     List<RecurringPayment> findAllUserRecurringPayment(User user);
+    boolean isRecurringPaymentPossible(User user, RecurringPayment recurringPayment);
+    RecurringPayment getRecurringPaymentById(Long id);
 }
+

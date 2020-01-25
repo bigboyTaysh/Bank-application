@@ -1,36 +1,45 @@
-package pl.wolski.bank.features;
+package pl.wolski.bank.services;
 
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import pl.wolski.bank.models.RecurringPayment;
 import pl.wolski.bank.models.Transaction;
-import pl.wolski.bank.services.TransactionService;
+import pl.wolski.bank.models.User;
+import pl.wolski.bank.repositories.RecurringPaymentRepository;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 import java.util.Calendar;
-import java.util.TimeZone;
 
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 
 @Log4j2
-@Component
-public class RecurringPaymentScheduler implements Job {
+@Service
+public class RecurringPaymentScheduler {
     @Autowired
     private TransactionService transactionService;
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+    @Autowired
+    private UserService userService;
 
-    @SneakyThrows
-    public void execute(JobExecutionContext context) throws JobExecutionException {
-        // Say Hello to the World and display the date /time
-        log.info("Hello World! - " + new Date());
-        //context.getScheduler().shutdown();
+    @Autowired
+    private RecurringPaymentService recurringPaymentService;
+
+    private int count = 0;
+
+    public void setTransactionService(TransactionService transactionService) {
+        this.transactionService = transactionService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public void setRecurringPaymentService(RecurringPaymentService recurringPaymentService) {
+        this.recurringPaymentService = recurringPaymentService;
     }
 
     public void startScheldue(RecurringPayment recurringPayment) throws InterruptedException, SchedulerException {
@@ -40,7 +49,7 @@ public class RecurringPaymentScheduler implements Job {
         SchedulerFactory sf = new StdSchedulerFactory();
         Scheduler sched = sf.getScheduler();
 
-        JobDetail job = JobBuilder.newJob(RecurringPaymentScheduler.class)
+        JobDetail job = JobBuilder.newJob(RecurringPaymentSchedulerJob.class)
                 .withIdentity("job1", "group1")
                 .build();
 
@@ -53,7 +62,7 @@ public class RecurringPaymentScheduler implements Job {
                 .withIdentity("trigger1", "group1")
                 .startAt(startDate)
                 .withSchedule(
-                        CronScheduleBuilder.cronSchedule("* * " + hour +" "+ day + " * ?")
+                        CronScheduleBuilder.cronSchedule("* * " + hour + " " + day + " * ?")
                                 .withMisfireHandlingInstructionDoNothing()
                 )
                 .endAt(endDate)
@@ -64,9 +73,11 @@ public class RecurringPaymentScheduler implements Job {
         sched.start();
     }
 
-    public void startScheldueSimulate(RecurringPayment recurringPayment) throws InterruptedException, SchedulerException {
+    public void startScheldueSimulate(User user, RecurringPayment recurringPayment) throws
+            InterruptedException, SchedulerException {
         Date startDate = recurringPayment.getStartDate();
         Date endDate = recurringPayment.getEndDate();
+
         Calendar cal1 = Calendar.getInstance(TimeZone.getTimeZone("Europe/Warsaw"));
         Calendar cal2 = Calendar.getInstance(TimeZone.getTimeZone("Europe/Warsaw"));
         cal1.setTime(startDate);
@@ -83,7 +94,7 @@ public class RecurringPaymentScheduler implements Job {
         int m1 = year1 * 12 + month1;
         int m2 = year2 * 12 + month2;
 
-        int r, howManyTimes, countOfMonths = recurringPayment.getNumberOfMonths();
+        int r, countOfMonths = recurringPayment.getNumberOfMonths(), howManyTimes;
         float pom;
 
         if (day1 > day2) {
@@ -92,29 +103,37 @@ public class RecurringPaymentScheduler implements Job {
             r = m2 - m1;
         }
 
-        pom = r/countOfMonths;
+        pom = r / countOfMonths;
 
-        if(pom < 1){
-            howManyTimes = 1;
+        if (pom < 1) {
+            howManyTimes = 0;
         } else {
-            howManyTimes = (int) Math.floor(pom) + 1;
+            howManyTimes = (int) Math.floor(pom);
         }
-
-        System.out.println("Ile razy: " + howManyTimes);
 
         SchedulerFactory sf = new StdSchedulerFactory();
         Scheduler sched = sf.getScheduler();
 
-        JobDetail job = JobBuilder.newJob(RecurringPaymentScheduler.class)
+        JobDataMap jobDataMap = new JobDataMap();
+        jobDataMap.put("howManyTimes", howManyTimes);
+        jobDataMap.put("idUser", user.getId());
+        jobDataMap.put("idRecurringPayment", recurringPayment.getId());
+        jobDataMap.put("userService", userService);
+        jobDataMap.put("transactionService", transactionService);
+        jobDataMap.put("recurringPaymentService", recurringPaymentService);
+
+        JobDetail job = JobBuilder.newJob(RecurringPaymentSchedulerJob.class)
                 .withIdentity("job1", "group1")
+                .usingJobData(jobDataMap)
                 .build();
+
 
         Date runTime = DateBuilder.evenMinuteDate(new Date());
 
         Trigger trigger = TriggerBuilder.newTrigger()
                 .withIdentity("trigger1", "group1")
                 .startAt(runTime)
-                .withSchedule(simpleSchedule().withIntervalInSeconds(5).withRepeatCount(howManyTimes-1)
+                .withSchedule(simpleSchedule().withIntervalInSeconds(5).withRepeatCount(howManyTimes)
                 )
                 .build();
 
