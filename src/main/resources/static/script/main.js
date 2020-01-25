@@ -12,6 +12,13 @@ $(document).ready(function () {
         var currentDate = formatDate(new Date());
     }
 
+
+    $("input[name=totalRepayment]").val((f3(
+        $("input[name=investmentAmount]").val(),
+        $("select[name=numberOfMonths]").val(),
+        $("select[name=investmentType]").find(':selected').data('rates')
+    ).valueOf()).toFixed(2));
+
     if(date1 > currentDate || date1 === currentDate){
         if(date1 < date2 || date1 === date2){
             $("form[id=recurringPaymentForm]").find(':input[type=submit]').prop('disabled', false);
@@ -71,9 +78,6 @@ $(document).ready(function () {
             $("#currencyExchangeMessage").text("Wybierz inną walutę!");
             $("input[name=totalPayment]").val(0.00);
         } else {
-            //var value = $("input[name=value]").val();
-            //var currencyFrom = $("select[name=currencyFrom]").find(':selected').val(); // pobieram name
-            //var currencyTo = $("select[name=currencyTo]").find(':selected').val(); // pobieram name
             $(this).find(':input[type=submit]').prop('disabled', false);
             $("#currencyExchangeMessage").text("")
 
@@ -94,8 +98,15 @@ $(document).ready(function () {
 
         document.querySelector("#search-users > div:nth-child(1) > input[type=hidden]:nth-child(2)").value = pageableSize;
         document.querySelector("#search-users > div:nth-child(1) > input[type=hidden]:nth-child(1)").value = 0;
+    });
+
+    $("#investment").bind("keyup change", function () {
+        var investmentAmount = $("input[name=investmentAmount]").val();
+        var months = $("select[name=numberOfMonths]").val();
+        var investmentsRates = $("select[name=investmentType]").find(':selected').data('rates');
 
 
+        $("input[name=totalRepayment]").val((f3(investmentAmount, months, investmentsRates).valueOf()).toFixed(2));
     });
 
     function f(creditAmount, months, creditRates) {
@@ -112,6 +123,24 @@ $(document).ready(function () {
 
     function f2(value, currencyFrom, currencyTo) {
         return (currencyFrom*value)/currencyTo;
+    }
+
+    function f3(investmentAmount, months, investmentsRates) {
+        let newDate = new Date();
+        let dateWithCountOfMonths = new Date(newDate.setMonth(newDate.getMonth()+months));
+
+        let differenceInTime = dateWithCountOfMonths.getTime() - newDate.getTime();
+        let differenceInDays = differenceInTime / (1000 * 3600 * 24)
+
+        let sum = 0.0;
+        let commission = 1.0;
+        let numberOfDays = differenceInDays;
+        let year = 360;
+        investmentAmount = investmentAmount * commission;
+
+        sum = (investmentAmount*numberOfDays*investmentsRates)/year;
+        sum = sum + investmentAmount;
+        return sum;
     }
 
 
