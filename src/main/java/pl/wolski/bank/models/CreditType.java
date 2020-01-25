@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -18,11 +19,11 @@ public class CreditType {
 
     private String name;
 
-    private Double creditRates;
+    private BigDecimal creditRates;
 
-    private Double commission;
+    private BigDecimal commission;
 
-    public CreditType(String name, double creditRates, double commission) {
+    public CreditType(String name, BigDecimal creditRates, BigDecimal commission) {
         this.name = name;
         this.creditRates = creditRates;
         this.commission = commission;

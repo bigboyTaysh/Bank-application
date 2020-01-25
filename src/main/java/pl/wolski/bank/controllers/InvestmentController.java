@@ -14,12 +14,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import pl.wolski.bank.models.Investment;
 import pl.wolski.bank.models.InvestmentType;
+import pl.wolski.bank.models.Notification;
+import pl.wolski.bank.models.User;
 import pl.wolski.bank.services.InvestmentService;
 import pl.wolski.bank.services.InvestmentTypeService;
 import pl.wolski.bank.services.NotificationService;
 import pl.wolski.bank.services.UserService;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
@@ -42,6 +45,7 @@ public class InvestmentController {
     @GetMapping("/investmentForm")
     public String showInvestmentForm(Model model) {
         model.addAttribute("investment", new Investment());
+
         return "investmentForm";
     }
 
@@ -52,12 +56,13 @@ public class InvestmentController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Object principal = auth.getPrincipal();
 
-        /*if (investmentService.cashCheck(((UserDetails)principal).getUsername(), investment.getInvestmentAmount()) == false){
-            model.addAttribute("message", "Brak kaski na koncie!");
-            return "actionMessage";
-        }*/
-        investmentService.save(investment,((UserDetails)principal).getUsername());
-        model.addAttribute("message", "Pomyślnie wypełniono wniosek!");
+        if (investmentService.enableInvestment(((UserDetails)principal).getUsername(), investment.getInvestmentAmount())){
+            investmentService.openInvestment(investment,((UserDetails)principal).getUsername());
+            model.addAttribute("message", "Pomyślnie założono lokatę!");
+        } else {
+            model.addAttribute("message", "Brak środków na koncie!");
+        }
+
 
         return "actionMessage";
     }
@@ -78,5 +83,15 @@ public class InvestmentController {
                 userService.findByUsername(((UserDetails)principal).getUsername())));
 
         return "userInvestments";
+    }
+
+    @ModelAttribute("notificationCounter")
+    public int notificationCounter(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = auth.getPrincipal();
+        User user = userService.findByUsername(((UserDetails)principal).getUsername());
+        List<Notification> notificationList = notificationService.findByUserAndWasRead(user, false);
+        log.info("Ładowanie listy " + notificationList.size() + " kont bankowych ");
+        return notificationList.size();
     }
 }
