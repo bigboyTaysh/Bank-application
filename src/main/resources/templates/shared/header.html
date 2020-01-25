@@ -72,6 +72,21 @@
                                 </a>
                             </div>
                         </li>
+                        <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_USER')">
+                            <a th:classappend="${pageName eq 'investments'}?'active'"
+                               class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLinkFour"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                                Lokaty
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkFour">
+                                <a class="dropdown-item" th:href="@{/investmentForm}">
+                                    Załóż lokatę
+                                </a>
+                                <a class="dropdown-item" th:href="@{/userInvestments}">
+                                    Moje lokaty
+                                </a>
+                            </div>
+                        </li>
                         <li class="nav-item" sec:authorize="hasRole('ROLE_EMPLOYEE')">
                             <a class="nav-link" th:classappend="${pageName eq 'users'}?'active'"
                                th:href="@{/users}">
