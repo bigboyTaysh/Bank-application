@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.wolski.bank.services.CurrencyService;
+import pl.wolski.bank.services.InvestmentTypeService;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -48,15 +49,24 @@ public class RepositoriesInitializer {
     @Autowired
     private CurrencyService currencyService;
 
+    @Autowired
+    private InvestmentTypeService investmentTypeService;
+
     @Bean
     InitializingBean init() {
         return () -> {
             if (roleRepository.findAll().isEmpty() == true) {
                 try {
-                    CreditType creditType = new CreditType("kredyt gotówkowy", 8.99, 0.0);
-                    CreditType creditType2 = new CreditType("kredyt hipoteczny", 2.99, 0.0);
+                    CreditType creditType = new CreditType("kredyt gotówkowy", new BigDecimal(8.99), new BigDecimal(0.0));
+                    CreditType creditType2 = new CreditType("kredyt hipoteczny", new BigDecimal(2.99), new BigDecimal(0.0));
                     creditTypeRepository.save(creditType);
                     creditTypeRepository.save(creditType2);
+
+                    InvestmentType investmentType = new InvestmentType("typ 1", new BigDecimal(2.0));
+                    InvestmentType investmentType2 = new InvestmentType("typ 2", new BigDecimal(4.0));
+                    investmentTypeService.save(investmentType);
+                    investmentTypeService.save(investmentType2);
+
 
                     Currency currency = new Currency();
                     currency.setName("PLN");

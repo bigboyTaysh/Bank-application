@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -18,13 +19,10 @@ public class InvestmentType {
 
     private String name;
 
-    private Double investmentRates;
+    private BigDecimal investmentRates;
 
-    private Double commission;
-
-    public InvestmentType(String name, double investmentRates, double commission) {
+    public InvestmentType(String name, BigDecimal investmentRates) {
         this.name = name;
         this.investmentRates = investmentRates;
-        this.commission = commission;
     }
 }

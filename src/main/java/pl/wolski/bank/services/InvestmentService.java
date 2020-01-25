@@ -8,11 +8,13 @@ import java.util.List;
 
 public interface InvestmentService {
     // Własne metody
-    void save(Investment investment, String username);
+    void save(Investment investment);
 
-    boolean cashCheck(String username, BigDecimal investmentAmount);
+    boolean enableInvestment(String username, BigDecimal investmentAmount);
 
     List<Investment> findByUser(User user);
 
     boolean payOffTheInvestment(Long id, BigDecimal monthRepayment, User user);
+
+    void openInvestment(Investment investment, String username);
 }
