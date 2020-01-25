@@ -110,20 +110,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<pl.wolski.bank.models.User> getAllUsers(UserFilter search, Pageable pageable, String type) {
 
-
         Page page = userRepository.findAll(
                 Specification.where(
                         UserSpecifications.findAll(type).and(
                                 UserSpecifications.findByPersonalIdentificationNumber(search.getPersonalIdentificationNumber()))
                 ), pageable);
-
         return page;
 
     }
 
     @Override
     public Page<pl.wolski.bank.models.User> getAllUsersByTypeAndPhrase(UserFilter search, Pageable pageable, String type) {
-
 
         Page page = userRepository.findAll(
                 Specification.where(
@@ -134,15 +131,6 @@ public class UserServiceImpl implements UserService {
         return page;
 
     }
-    /*
-
-    @Override
-    public Page<pl.wolski.bank.models.User> findAllUsersUsingFilter(String phrase, String personalIdentificationNumber, Pageable pageable){
-        Page page = userRepository.findAllUsersUsingFilter(phrase, personalIdentificationNumber, pageable);
-        return page;
-    }
-
-     */
 
     @Override
     public List<Role> findRoleByUser(pl.wolski.bank.models.User user){

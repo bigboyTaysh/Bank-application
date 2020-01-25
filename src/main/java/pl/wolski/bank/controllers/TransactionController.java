@@ -1,6 +1,8 @@
 package pl.wolski.bank.controllers;
 
 import lombok.extern.log4j.Log4j2;
+import org.hibernate.annotations.Parameter;
+import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
@@ -13,12 +15,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
+import pl.wolski.bank.exceptions.RecurringPaymentNotFoundException;
 import pl.wolski.bank.models.*;
 import pl.wolski.bank.services.*;
 
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 
 @Controller
@@ -46,6 +50,9 @@ public class TransactionController {
     @Autowired
     private NotificationService notificationService;
 
+    @Autowired
+    private RecurringPaymentService recurringPaymentService;
+
     @GetMapping("/transaction")
     public String transactionForm(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -62,8 +69,6 @@ public class TransactionController {
     public String transaction(Model model,
                               @Valid @ModelAttribute("transaction") Transaction transaction,
                               BindingResult bindingResult) {
-
-
         if (bindingResult.hasErrors()) {
             return "transactionForm";
         }
@@ -109,21 +114,6 @@ public class TransactionController {
     }
 
     @Secured("ROLE_EMPLOYEE")
-    @GetMapping(path = "/cashPayment")
-    //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
-    public String cashPayment(Model model,
-                              BigDecimal bankAccountNumber) {
-        BankAccount bankAccount = bankAccountService.findByBankAccountNumber(bankAccountNumber);
-
-        model.addAttribute("bankAccount", bankAccount);
-        model.addAttribute("transaction", new Transaction());
-        model.addAttribute("message", "");
-
-
-        return "cashPaymentForm";
-    }
-
-    @Secured("ROLE_EMPLOYEE")
     @PostMapping(path = "/cashWithdrawal")
     //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
     public String cashWithdraw(Model model,
@@ -159,6 +149,93 @@ public class TransactionController {
         model.addAttribute("id_user", user.getId());
 
         return "paymentActionMessage";
+    }
+
+    @Secured("ROLE_EMPLOYEE")
+    @GetMapping(path = "/cashPayment")
+    //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
+    public String cashPayment(Model model,
+                              BigDecimal bankAccountNumber) {
+        BankAccount bankAccount = bankAccountService.findByBankAccountNumber(bankAccountNumber);
+
+        model.addAttribute("bankAccount", bankAccount);
+        model.addAttribute("transaction", new Transaction());
+        model.addAttribute("message", "");
+
+
+        return "cashPaymentForm";
+    }
+
+    @Secured("ROLE_EMPLOYEE")
+    @GetMapping("/currencyExchangeForm")
+    public String showCurrencyForm(Model model) {
+
+        return "currencyExchangeForm";
+    }
+
+    @Secured("ROLE_EMPLOYEE")
+    @PostMapping("/currencyExchangeForm")
+    public String showCurrencyExchangeMessage(Model model) {
+        model.addAttribute("message", "Pomyślnie dokonano wymiany walut");
+
+        return "actionMessage";
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping("/recurringPayments")
+    public String showRecurringPayments(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = auth.getPrincipal();
+
+        model.addAttribute("userRecurringPayments", recurringPaymentService.findAllUserRecurringPayment(userService.findByUsername(((UserDetails) principal).getUsername())));
+
+        return "recurringPaymentList";
+    }
+
+    @Secured("ROLE_USER")
+    @GetMapping("/recurringPaymentForm")
+    public String showRecurringPaymentForm(Model model) {
+        model.addAttribute("recurringPayment", new RecurringPayment());
+
+        return "recurringPaymentForm";
+    }
+
+    @Secured("ROLE_USER")
+    @PostMapping("/recurringPaymentForm")
+    public String getRecurringPaymentForm(Model model,
+                                          @Valid @ModelAttribute("recurringPayment") RecurringPayment recurringPayment) throws SchedulerException, InterruptedException {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = auth.getPrincipal();
+        User user = userService.findByUsername(((UserDetails) principal).getUsername());
+
+        recurringPayment.setUser(user);
+        recurringPaymentService.save(recurringPayment);
+
+        RecurringPayment recurringPaymentInRepo = recurringPaymentService.getRecurringPaymentById(recurringPayment.getId());
+
+
+        if (bankAccountService.findByBankAccountNumber(recurringPaymentInRepo.getToBankAccountNumber()) != null) {
+            if ((bankAccountService.findByBankAccountNumber(recurringPaymentInRepo.getToBankAccountNumber())).getCurrency().getName()
+                    .equals(recurringPaymentInRepo.getCurrency().getName())) {
+                if (recurringPaymentService.isRecurringPaymentPossible(user, recurringPaymentInRepo)) {
+                    recurringPaymentService.saveWithScheduler(user, recurringPaymentInRepo);
+                    model.addAttribute("message", "Pomyślnie dodano zlecenie stałe");
+                } else {
+                    model.addAttribute("message", "Brak środków na koncie");
+                }
+            } else {
+                model.addAttribute("message", "Podaj poprawną walutę");
+            }
+        } else {
+            if (recurringPaymentService.isRecurringPaymentPossible(user, recurringPaymentInRepo)) {
+                recurringPaymentService.saveWithScheduler(user, recurringPaymentInRepo);
+                model.addAttribute("message", "Pomyślnie dodano zlecenie stałe");
+            } else {
+                model.addAttribute("message", "Nie udało się dodać zlecenie stałe");
+            }
+        }
+
+        return "actionMessage";
     }
 
     @ModelAttribute("notificationCounter")

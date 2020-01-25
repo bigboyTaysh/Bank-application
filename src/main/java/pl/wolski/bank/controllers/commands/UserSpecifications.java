@@ -12,7 +12,6 @@ public class UserSpecifications {
     {
         return (root, query, cb) -> {
             if(StringUtils.isEmpty(type) == false){
-                String typeLike = "%"+type.toUpperCase() +"%";
                 return cb.equal(root.join("roles").get("type").as(String.class), type
                 );
             }
@@ -25,7 +24,6 @@ public class UserSpecifications {
         return (root, query, cb) -> {
             if(StringUtils.isEmpty(phrase) == false && StringUtils.isEmpty(type) == false){
                 String phraseLike = "%"+phrase.toUpperCase() +"%";
-                String typeLike = "%"+type.toUpperCase() +"%";
                 return cb.and(
                         cb.or(
                                 cb.like(cb.upper(root.get(User_.firstName)), phraseLike),

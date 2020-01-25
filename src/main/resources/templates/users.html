@@ -11,7 +11,7 @@
         <div th:replace="shared/header :: header('users')"/>
         <div id="main" class="card-body">
 
-            <form th:method="GET" class="search" id="search-users" th:action="@{/users}" th:object="${searchCommand}">
+            <form th:method="POST" class="search" id="search-users" th:action="@{/users}" th:object="${searchCommand}">
                 <div class="row">
                     <input type="hidden" name="page"/>
                     <input type="hidden" name="size"/>

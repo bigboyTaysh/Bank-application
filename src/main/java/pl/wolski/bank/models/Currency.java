@@ -32,4 +32,7 @@ public class Currency {
 
     @OneToMany(mappedBy = "currency")
     private Set<Transaction> transactions;
+
+    @OneToMany(mappedBy = "currency")
+    private Set<RecurringPayment> recurringPayments;
 }

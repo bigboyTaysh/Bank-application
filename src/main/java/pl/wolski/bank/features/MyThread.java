@@ -1,17 +1,6 @@
-package pl.wolski.bank.simulation;
+package pl.wolski.bank.features;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
-import pl.wolski.bank.models.BankAccount;
-
-import pl.wolski.bank.repositories.BankAccountRepository;
-import pl.wolski.bank.services.BankAccountService;
-
-
-import javax.annotation.Resource;
-import java.math.BigDecimal;
-
-import java.util.concurrent.TimeUnit;
 
 @Log4j2
 public class MyThread {
