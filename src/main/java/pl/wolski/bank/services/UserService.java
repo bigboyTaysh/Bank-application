@@ -17,6 +17,7 @@ import java.util.Optional;
 public interface UserService extends UserDetailsService {
 // Własne metody
     void save(User user, Address address);
+    void save(User user);
 
     User findByUsername(String username);
 
@@ -32,4 +33,6 @@ public interface UserService extends UserDetailsService {
 
     Page<User> getAllUsers(UserFilter search, Pageable pageable, String type);
     Page<User> getAllUsersByTypeAndPhrase(UserFilter search, Pageable pageable, String type);
+
+    User getUserByConfirmationId(String confirmationId);
 }

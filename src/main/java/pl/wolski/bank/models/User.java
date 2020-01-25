@@ -61,6 +61,7 @@ public class User {
     @Transient//pole nie będzie odwzorowane w db
     private String passwordConfirm;
     private boolean enabled = false;
+    private String confirmationId;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
@@ -101,4 +102,5 @@ public class User {
         this.username = username;
         this.enabled = enabled;
     }
+
 }

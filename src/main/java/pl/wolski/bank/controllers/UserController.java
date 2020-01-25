@@ -92,6 +92,25 @@ public class UserController {
         return "loginForm";
     }
 
+    @RequestMapping("/confirm")
+    public String greeting(@RequestParam(value="id", required=true) String confirmationId, Model model) {
+
+        User user = userService.getUserByConfirmationId(confirmationId);
+        String message = "Nie udało się aktywować konta";
+
+        if(user!=null){
+            if(!user.isEnabled()){
+                user.setEnabled(true);
+                user.setConfirmationId(null);
+                userService.save(user);
+            }
+            message = user.getFirstName() + ", Twoje konto zostało aktywowane.";
+        }
+
+        model.addAttribute("message", message);
+        return "actionMessage";
+    }
+
     @ModelAttribute("searchCommand")
     public UserFilter getSimpleSearch(){
         log.info("Załadowano searchCommand");
@@ -153,10 +172,13 @@ public class UserController {
     public int notificationCounter(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Object principal = auth.getPrincipal();
-        User user = userService.findByUsername(((UserDetails)principal).getUsername());
-        List<Notification> notificationList = notificationService.findByUserAndWasRead(user, false);
-        log.info("Ładowanie listy " + notificationList.size() + " kont bankowych ");
-        return notificationList.size();
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
+            User user = userService.findByUsername(((UserDetails)principal).getUsername());
+            List<Notification> notificationList = notificationService.findByUserAndWasRead(user, false);
+            log.info("Ładowanie listy " + notificationList.size() + " kont bankowych ");
+            return notificationList.size();
+        }
+        return 0;
     }
 
     /*
