@@ -1,6 +1,7 @@
 package pl.wolski.bank.controllers;
 
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 import pl.wolski.bank.models.AccountType;
 import pl.wolski.bank.models.Address;
@@ -98,6 +99,68 @@ public class UserRegistrationFormController {
 
 
         model.addAttribute("message", "Zostałeś pomyślnie zarejestrowany");
+        return "actionMessage";
+    }
+
+    @GetMapping("/userRegistrationForm")
+    public String userRegistration(Model model) {
+        model.addAttribute("userAddress", new Address());
+        model.addAttribute("userCommand", new User());
+        model.addAttribute("message", "");
+
+        return "userRegistrationForm";
+    }
+
+    @Secured("ROLE_EMPLOYEE")
+    @PostMapping("/userRegistrationForm")
+    public String userRegistration(Model model,
+                               @Valid @ModelAttribute("userCommand") User userForm,
+                               @Valid @ModelAttribute("userAddress") Address userAddress,
+                               BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return "userRegistrationForm";
+        }
+
+        Timestamp stamp = new Timestamp(System.currentTimeMillis());
+        Date date = new Date(stamp.getTime());
+
+        Calendar a = Calendar.getInstance(), b = Calendar.getInstance();
+        a.setTime(userForm.getBirthDate());
+        b.setTime(date);
+
+        int diff = b.get(Calendar.YEAR) - a.get(Calendar.YEAR);
+        if (a.get(Calendar.MONTH) > b.get(Calendar.MONTH) ||
+                (a.get(Calendar.MONTH) == b.get(Calendar.MONTH) &&
+                        a.get(Calendar.DATE) > b.get(Calendar.DATE))) {
+            diff--;
+        }
+
+        diff = diff;
+        log.info("Wiek: " + diff);
+
+
+        BankAccount bankAccount = new BankAccount();
+
+        if(diff >= 16 && diff <=26){
+            bankAccount.setAccountType(
+                    accountTypeService.findAccountTypeByType(AccountType.Types.PAY_ACC_FOR_YOUNG));
+            userService.saveFromEmployee(userForm, addressService.findExistAddress(userAddress));
+            bankAccountService.newBankAccount(userForm, bankAccount);
+
+        } else if (diff >= 26 && diff <= 150 ) {
+            bankAccount.setAccountType(
+                    accountTypeService.findAccountTypeByType(AccountType.Types.PAY_ACC_FOR_ADULT));
+            userService.saveFromEmployee(userForm, addressService.findExistAddress(userAddress));
+            bankAccountService.newBankAccount(userForm, bankAccount);
+
+        } else {
+            model.addAttribute("message", "Nieprawidłowa data");
+            return "registrationForm";
+        }
+
+
+        model.addAttribute("message", "Pomyślnie zarejestrowano");
         return "actionMessage";
     }
 

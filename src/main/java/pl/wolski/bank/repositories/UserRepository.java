@@ -24,4 +24,7 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     User findByBankAccounts(BankAccount bankAccount);
 
     Page<User> findAll(Specification specifications, Pageable pageable);
+
+    User getUserByConfirmationId(String confirmationId);
+    User getUserByEmail(String email);
 }

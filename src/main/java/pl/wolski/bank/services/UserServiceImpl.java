@@ -45,6 +45,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private AddressRepository addressRepository;
 
+    @Autowired
+    EmailService emailService;
+
     @Override
     //bez adnotacji @Transactional sesja jest zamykana po wywołaniu findByUsername, co uniemożliwia dociągnięcie ról, mimo fetch=EAGER.
     //ponadto, musi być włączone zarządzanie transakcjami @EnableTransactionManagement
@@ -82,20 +85,54 @@ public class UserServiceImpl implements UserService {
         user.setPasswordConfirm(null);//wyzerowanie jest potrzebne ze względu na walidację adnotacjami hibernate
         user.setAddress(address);
 
-        SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date(System.currentTimeMillis());
         user.setJoinDate(date);
+
+        user.setConfirmationId(user.createConfirmationID());
+        emailService.send(user.getEmail(),
+                "Wolsk WB Account Confirmation Link",
+                user.getConfirmationId(),
+                user.getFirstName() + " " + user.getLastName());
 
         userRepository.saveAndFlush(user);
     }
 
     @Override
-    public pl.wolski.bank.models.User findByUsername(String username){
+    public void saveFromEmployee(pl.wolski.bank.models.User user, pl.wolski.bank.models.Address address) {
+
+        Role userRole = roleRepository.findRoleByType(Role.Types.ROLE_USER);
+
+        List roles = Arrays.asList(userRole);
+        user.setRoles(new HashSet<>(roles));
+
+        user.setAddress(address);
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date(System.currentTimeMillis());
+        user.setJoinDate(date);
+
+        user.setConfirmationId(user.createConfirmationID());
+        emailService.newPassword(user.getEmail(),
+                "Wolsk WB Account New Password",
+                user.getConfirmationId(),
+                user.getFirstName() + " " + user.getLastName());
+
+        userRepository.saveAndFlush(user);
+    }
+
+    @Override
+    public void save(pl.wolski.bank.models.User user) {
+        userRepository.saveAndFlush(user);
+    }
+
+    @Override
+    public pl.wolski.bank.models.User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
     @Override
-    public pl.wolski.bank.models.User findById(Long id){
+    public pl.wolski.bank.models.User findById(Long id) {
         Optional<pl.wolski.bank.models.User> optionalUser = userRepository.findById(id);
         pl.wolski.bank.models.User user = optionalUser.orElseThrow(() -> new UserNotFoundException(id));
 
@@ -103,7 +140,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public pl.wolski.bank.models.User findByBankAccounts(BankAccount bankAccount){
+    public pl.wolski.bank.models.User findByBankAccounts(BankAccount bankAccount) {
         return userRepository.findByBankAccounts(bankAccount);
     }
 
@@ -133,7 +170,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Role> findRoleByUser(pl.wolski.bank.models.User user){
+    public pl.wolski.bank.models.User getUserByConfirmationId(String confirmationId){
+        return userRepository.getUserByConfirmationId(confirmationId);
+    }
+
+    @Override
+    public pl.wolski.bank.models.User getUserByEmail(String email){
+        return userRepository.getUserByEmail(email);
+    }
+
+    @Override
+    public List<Role> findRoleByUser(pl.wolski.bank.models.User user) {
         return roleRepository.findByUsers(user);
     }
 
@@ -151,4 +198,6 @@ public class UserServiceImpl implements UserService {
     public boolean isUniquePersonalIdentificationNumber(BigDecimal personalIdentificationNumber) {
         return userRepository.findByPersonalIdentificationNumber(personalIdentificationNumber) == null;
     }
+
+
 }
