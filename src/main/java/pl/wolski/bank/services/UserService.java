@@ -36,4 +36,5 @@ public interface UserService extends UserDetailsService {
     Page<User> getAllUsersByTypeAndPhrase(UserFilter search, Pageable pageable, String type);
 
     User getUserByConfirmationId(String confirmationId);
+    User getUserByEmail(String email);
 }

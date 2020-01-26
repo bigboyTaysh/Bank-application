@@ -26,4 +26,5 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
     Page<User> findAll(Specification specifications, Pageable pageable);
 
     User getUserByConfirmationId(String confirmationId);
+    User getUserByEmail(String email);
 }

@@ -11,10 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.wolski.bank.controllers.commands.UserFilter;
 import pl.wolski.bank.models.*;
 import pl.wolski.bank.repositories.RoleRepository;
-import pl.wolski.bank.services.BankAccountService;
-import pl.wolski.bank.services.NotificationService;
-import pl.wolski.bank.services.TransactionService;
-import pl.wolski.bank.services.UserService;
+import pl.wolski.bank.services.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +34,9 @@ import java.util.Optional;
 @Controller
 @SessionAttributes(names = {"user", "userAccount"})
 public class UserController {
+
+    @Autowired
+    EmailService emailService;
 
     @Autowired
     private UserService userService;
@@ -122,7 +122,7 @@ public class UserController {
         String message = "Nie udało się nadać nowego hasła";
 
         if(user!=null){
-            if(!user.isEnabled()){
+            if(!user.isEnabled() || !user.getPassword().isEmpty()){
                 model.addAttribute("confirmationId", confirmationId);
                 model.addAttribute("message", "");
                 userService.save(user);
@@ -136,7 +136,7 @@ public class UserController {
 
     @PostMapping("/newPassword")
     public String newPassword(Model model,
-                              @RequestParam(value="password") String password,
+                              @RequestParam(value="password", required = true) String password,
                               @RequestParam(value="passwordConfirm", required=true) String passwordConfirm,
                               @RequestParam(value="confirmationId") String confirmationId) {
 
@@ -144,9 +144,13 @@ public class UserController {
         String message = "Nie udało się ustawić hasła";
 
         if(user!=null){
+            if(!user.getPassword().isEmpty()){
+                user.setPassword(null);
+            }
             if(password.equals(passwordConfirm)){
-                if(!user.isEnabled()){
+                if(!user.isEnabled() || user.getPassword() == null){
                     user.setEnabled(true);
+                    user.setConfirmationId(null);
                     user.setPassword(password);
                     user.setPasswordConfirm(passwordConfirm);
                     user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -164,6 +168,33 @@ public class UserController {
         }
 
         model.addAttribute("message", message);
+        return "actionMessage";
+    }
+
+    @GetMapping("/passwordReset")
+    public String passwordReset(Model model) {
+
+        return "passwordReset";
+    }
+
+    @PostMapping("/passwordReset")
+    public String passwordReset(Model model,
+                                @RequestParam(value="email", required = true) String email) {
+
+        User user = userService.getUserByEmail(email);
+
+        if(user!=null){
+            user.setConfirmationId(user.createConfirmationID());
+            emailService.newPassword(user.getEmail(),
+                    "Wolsk WB Account New Password",
+                    user.getConfirmationId(),
+                    user.getFirstName() + " " + user.getLastName());
+            userService.save(user);
+            model.addAttribute("message", "Wysłano link resetujący hasło");
+        } else {
+            model.addAttribute("message", "Nie znaleziono użytkownika");
+        }
+
         return "actionMessage";
     }
 

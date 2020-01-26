@@ -175,6 +175,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public pl.wolski.bank.models.User getUserByEmail(String email){
+        return userRepository.getUserByEmail(email);
+    }
+
+    @Override
     public List<Role> findRoleByUser(pl.wolski.bank.models.User user) {
         return roleRepository.findByUsers(user);
     }
