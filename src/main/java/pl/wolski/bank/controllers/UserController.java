@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import pl.wolski.bank.controllers.commands.UserFilter;
 import pl.wolski.bank.models.*;
 import pl.wolski.bank.repositories.RoleRepository;
@@ -51,6 +52,9 @@ public class UserController {
 
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping(path = "/index")
     //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
@@ -105,6 +109,58 @@ public class UserController {
                 userService.save(user);
             }
             message = user.getFirstName() + ", Twoje konto zostało aktywowane.";
+        }
+
+        model.addAttribute("message", message);
+        return "actionMessage";
+    }
+
+    @GetMapping("/newPassword")
+    public String newPassword(String confirmationId, Model model) {
+
+        User user = userService.getUserByConfirmationId(confirmationId);
+        String message = "Nie udało się nadać nowego hasła";
+
+        if(user!=null){
+            if(!user.isEnabled()){
+                model.addAttribute("confirmationId", confirmationId);
+                model.addAttribute("message", "");
+                userService.save(user);
+                return "setPassword";
+            }
+        }
+
+        model.addAttribute("message", message);
+        return "actionMessage";
+    }
+
+    @PostMapping("/newPassword")
+    public String newPassword(Model model,
+                              @RequestParam(value="password") String password,
+                              @RequestParam(value="passwordConfirm", required=true) String passwordConfirm,
+                              @RequestParam(value="confirmationId") String confirmationId) {
+
+        User user = userService.getUserByConfirmationId(confirmationId);
+        String message = "Nie udało się ustawić hasła";
+
+        if(user!=null){
+            if(password.equals(passwordConfirm)){
+                if(!user.isEnabled()){
+                    user.setEnabled(true);
+                    user.setPassword(password);
+                    user.setPasswordConfirm(passwordConfirm);
+                    user.setPassword(passwordEncoder.encode(user.getPassword()));
+                    user.setPasswordConfirm(null);//wyzerowanie jest potrzebne ze względu na walidację adnotacjami hibernate
+                    userService.save(user);
+                }
+                message = user.getFirstName() + ", pomyślnie zapisano hasło.";
+            } else {
+                model.addAttribute("message", "Hasła muszą być takie same!");
+                model.addAttribute("confirmationId", confirmationId);
+                userService.save(user);
+                return "setPassword";
+            }
+
         }
 
         model.addAttribute("message", message);

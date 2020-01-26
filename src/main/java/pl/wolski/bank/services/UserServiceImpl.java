@@ -89,9 +89,32 @@ public class UserServiceImpl implements UserService {
         Date date = new Date(System.currentTimeMillis());
         user.setJoinDate(date);
 
-        user.setConfirmationId(createConfirmationID());
+        user.setConfirmationId(user.createConfirmationID());
         emailService.send(user.getEmail(),
                 "Wolsk WB Account Confirmation Link",
+                user.getConfirmationId(),
+                user.getFirstName() + " " + user.getLastName());
+
+        userRepository.saveAndFlush(user);
+    }
+
+    @Override
+    public void saveFromEmployee(pl.wolski.bank.models.User user, pl.wolski.bank.models.Address address) {
+
+        Role userRole = roleRepository.findRoleByType(Role.Types.ROLE_USER);
+
+        List roles = Arrays.asList(userRole);
+        user.setRoles(new HashSet<>(roles));
+
+        user.setAddress(address);
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = new Date(System.currentTimeMillis());
+        user.setJoinDate(date);
+
+        user.setConfirmationId(user.createConfirmationID());
+        emailService.newPassword(user.getEmail(),
+                "Wolsk WB Account New Password",
                 user.getConfirmationId(),
                 user.getFirstName() + " " + user.getLastName());
 
@@ -171,7 +194,5 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByPersonalIdentificationNumber(personalIdentificationNumber) == null;
     }
 
-    private String createConfirmationID() {
-        return java.util.UUID.randomUUID().toString();
-    }
+
 }

@@ -17,6 +17,7 @@ import java.util.Optional;
 public interface UserService extends UserDetailsService {
 // Własne metody
     void save(User user, Address address);
+    void saveFromEmployee(User user, Address address);
     void save(User user);
 
     User findByUsername(String username);

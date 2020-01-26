@@ -60,6 +60,7 @@ public class User {
 
     @Transient//pole nie będzie odwzorowane w db
     private String passwordConfirm;
+
     private boolean enabled = false;
     private String confirmationId;
 
@@ -103,4 +104,7 @@ public class User {
         this.enabled = enabled;
     }
 
+    public String createConfirmationID() {
+        return java.util.UUID.randomUUID().toString();
+    }
 }

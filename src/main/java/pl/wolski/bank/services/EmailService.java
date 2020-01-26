@@ -37,4 +37,28 @@ public class EmailService {
         }
         javaMailSender.send(mail);
     }
+
+    public void newPassword(String to, String title, String contents, String user) {
+
+        MimeMessage mail = javaMailSender.createMimeMessage();
+
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(mail, true);
+            helper.setTo(to);
+            helper.setReplyTo(to);
+            helper.setFrom("wolskiworldwidebank@gmail.com");
+            helper.setSubject(title);
+            helper.setText("<html>" +
+                    " <body>" +
+                    "<h1>Witaj " + user + "!</h1> " +
+                    "<span>Ustaw nowe hasło: </span> " +
+                    "<a href='http://127.0.0.1:8080/newPassword?confirmationId=" + contents + "' >Kliknij tutaj</a>" +
+                    "</body>" +
+                    "</html>",true);
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        } finally {
+        }
+        javaMailSender.send(mail);
+    }
 }
