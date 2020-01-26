@@ -60,7 +60,9 @@ public class User {
 
     @Transient//pole nie będzie odwzorowane w db
     private String passwordConfirm;
+
     private boolean enabled = false;
+    private String confirmationId;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
@@ -100,5 +102,9 @@ public class User {
     public User(String username, boolean enabled){
         this.username = username;
         this.enabled = enabled;
+    }
+
+    public String createConfirmationID() {
+        return java.util.UUID.randomUUID().toString();
     }
 }
