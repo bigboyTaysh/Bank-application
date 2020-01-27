@@ -144,10 +144,7 @@ public class TransactionController {
     @PostMapping(path = "/cashPayment")
     //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
     public String cashPayment(Model model,
-                              @Valid @ModelAttribute("transaction") Transaction transaction, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "cashWithdrawalForm";
-        }
+                              @Valid @ModelAttribute("transaction") Transaction transaction) {
         User user = userService.findByBankAccounts(bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber()));
 
         transactionService.doCashPayment(transaction);

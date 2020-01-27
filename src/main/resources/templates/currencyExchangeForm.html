@@ -31,9 +31,6 @@
                     <input name="value" type="number" min="0"
                            class="form-control" placeholder="Wartość" required="true"
                            autofocus="true"/>
-                    <div class="error text-danger" th:if="${#fields.hasErrors('value')}">
-                        <p th:each="err : ${#fields.errors('value')}" th:text="${err}"></p>
-                    </div>
                 </div>
 
                 <div class="form-group">

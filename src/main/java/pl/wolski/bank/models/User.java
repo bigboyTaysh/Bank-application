@@ -43,8 +43,8 @@ public class User {
     @Size(min = 4, max = 36)
     private String lastName;
 
-    @NotBlank
-    @Size(min = 1, max = 11)
+    @DecimalMin(value = "10000000000")
+    @DecimalMax(value = "99999999999")
     @Digits(integer=11, fraction=0)
     @UniquePersonalIdentificationNumber
     private BigDecimal personalIdentificationNumber;

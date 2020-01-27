@@ -47,8 +47,16 @@ $(document).ready(function () {
     $("#creditApplication").bind("keyup change", function () {
         let creditAmount = $("input[name=creditAmount]").val();
         let months = $("select[name=numberOfMonths]").val();
-        let creditRates = $("select[name=creditType]").find(':selected').data('rates');
-        let commission = $("select[name=creditType]").find(':selected').data('commission');
+        let myDataArray = $("select[name=creditType]").find(':selected').data();
+
+        //alert(myDataArray["country"]);
+        //alert(myDataArray["city"]);
+        //let creditRates = $("select[name=creditType]").find(':selected').data('rates');
+        //let commission = $("select[name=creditType]").find(':selected').data('commission');
+        let creditRates = myDataArray["rates"];
+        let commission = myDataArray["commission"];
+        console.log(commission);
+
 
         $("input[name=totalRepayment]").val((f(creditAmount, months, creditRates, commission).valueOf() * months).toFixed(2));
         $("input[name=monthRepayment]").val((f(creditAmount, months, creditRates, commission).valueOf()).toFixed(2));
@@ -112,7 +120,7 @@ $(document).ready(function () {
     function f(creditAmount, months, creditRates, commission) {
         let sum = 0.0;
         let numberOfInstallmentsPaidDuringTheYear = 12;
-        creditAmount = creditAmount * commission;
+        creditAmount = parseFloat(creditAmount) + (creditAmount * commission);
 
         for (let i = 1; i <= months; i++) {
             sum = sum + Math.pow((1 + ((0.01 * creditRates) / numberOfInstallmentsPaidDuringTheYear)), 0 - i);

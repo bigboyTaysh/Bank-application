@@ -14,7 +14,7 @@
                         <div class="form-group">
                             <select th:field="*{creditType}" class="form-control">
                                 <option th:each="type : ${creditTypes}"
-                                        th:attr="data-rates=${type.creditRates}"
+                                        th:attr="data-rates=${type.creditRates}, data-commission=${type.commission}"
                                         th:value="${type.id}"
                                         th:text=" ${type.name + ' - '+ type.creditRates + '%'}"
                                 />
@@ -22,7 +22,7 @@
                         </div>
 
                         <div class="form-group">
-                            <input type="number" min="0" th:field="*{creditAmount}"
+                            <input type="number" min="1" th:field="*{creditAmount}"
                                    class="form-control" placeholder="Wysokość kredytu" required="true"
                                    autofocus="true"/>
                             <div class="error text-danger" th:if="${#fields.hasErrors('creditAmount')}">

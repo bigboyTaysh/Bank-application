@@ -28,9 +28,9 @@ public class RecurringPayment {
     @Digits(integer = 26, fraction = 0)
     private BigDecimal fromBankAccountNumber;
 
-    @NotBlank
     @NotNull
-    @Size(min = 26, max = 26)
+    @DecimalMin(value = "10000000000000000000000000")
+    @DecimalMax(value = "99999999999999999999999999")
     @Digits(integer = 26, fraction = 0)
     private BigDecimal toBankAccountNumber;
 

@@ -53,11 +53,14 @@ public class UserRegistrationFormController {
     @PostMapping("/registrationForm.html")
     public String registration(Model model,
                                @Valid @ModelAttribute("userCommand") User userForm,
+                               BindingResult bindingResult,
                                @Valid @ModelAttribute("userAddress") Address userAddress,
-                               BindingResult bindingResult) {
+                               BindingResult bindingResult2) {
 
         if (bindingResult.hasErrors()) {
-            return "registrationForm";
+            return "userRegistrationForm";
+        } else if (bindingResult2.hasErrors()){
+            return "userRegistrationForm";
         }
 
         Timestamp stamp = new Timestamp(System.currentTimeMillis());
