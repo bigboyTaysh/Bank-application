@@ -21,6 +21,9 @@
                     Data zakończenia
                 </td>
                 <td>
+                    Cykl (miesiące)
+                </td>
+                <td>
                     Kwota
                 </td>
                 <td>
@@ -47,6 +50,9 @@
                 </td>
                 <td>
                     <span th:text="${#dates.format(recurringPayment.endDate, 'dd-MM-yyyy')}"></span>
+                </td>
+                <td>
+                    [[${recurringPayment.numberOfMonths}]]
                 </td>
                 <td>
                     <span th:text="${#numbers.formatDecimal(recurringPayment.value,1,2)  + ' ' + recurringPayment.currency.name}"></span>
