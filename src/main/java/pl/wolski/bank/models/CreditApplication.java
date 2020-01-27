@@ -7,6 +7,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -20,21 +23,30 @@ public class CreditApplication {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @PositiveOrZero
     @Digits(integer = 17, fraction = 4)
     private BigDecimal creditAmount;
 
+    @NotNull
+    @PositiveOrZero
     @Digits(integer = 17, fraction = 4)
     private BigDecimal totalRepayment;
 
+    @NotNull
+    @PositiveOrZero
     @Digits(integer = 17, fraction = 4)
     private BigDecimal monthRepayment;
 
+    @NotNull
+    @PositiveOrZero
     private int numberOfMonths;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_credit_type", nullable = false)
     private CreditType creditType;
 
+    @Past
     //@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     //@Temporal(TemporalType.DATE)
     private Date dateOfSubmissionOfTheApplication;

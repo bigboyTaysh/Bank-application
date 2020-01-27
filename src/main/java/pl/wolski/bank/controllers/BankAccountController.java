@@ -50,6 +50,9 @@ public class BankAccountController {
     public String newUserBankAccount(Model model,
                               @Valid @ModelAttribute("newBankAccount") BankAccount bankAccount,
                               BindingResult bindingResult){
+        if(bindingResult.hasErrors()){
+            return "newUserBankAccountForm";
+        }
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Object principal = auth.getPrincipal();
         User user = userService.findByUsername(((UserDetails)principal).getUsername());
