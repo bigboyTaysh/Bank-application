@@ -15,6 +15,7 @@
                         <fieldset>
                             <h1>Przelew</h1>
                             <div class="form-group">
+                                <span style="color: red;">[[${message}]]</span>
                                 <select th:field="*{fromBankAccountNumber}" class="form-control">
                                     <option th:each="account : ${bankAccounts}"
                                             th:value="${account.bankAccountNumber}">
