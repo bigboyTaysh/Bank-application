@@ -61,6 +61,8 @@ public class TransactionController {
 
         model.addAttribute("user", user);
         model.addAttribute("transaction", new Transaction());
+        model.addAttribute("message", "");
+
 
         return "transactionForm";
     }
@@ -75,9 +77,16 @@ public class TransactionController {
 
         User user = (User) model.getAttribute("user");
 
-        if (bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber()) != null) {
-            if ((bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber())).getCurrency().getName()
-                    .equals(transaction.getCurrency().getName())) {
+        BankAccount bankAccountTo = bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber());
+        BankAccount bankAccountFrom = bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber());
+
+        if(bankAccountTo.getBankAccountNumber().equals(bankAccountFrom.getBankAccountNumber())){
+            model.addAttribute("message", "Nie możesz przelać na te samo konto");
+            return "transactionForm";
+        }
+
+        if (bankAccountTo != null) {
+            if ((bankAccountTo.getCurrency().getName().equals(transaction.getCurrency().getName()))) {
                 if (transactionService.isTransferPossible(user, transaction)) {
                     transactionService.doCashTransfer(user, transaction);
                     model.addAttribute("message", "Pomyślnie wykonanano przelew");
@@ -199,7 +208,7 @@ public class TransactionController {
     @GetMapping("/recurringPaymentForm")
     public String showRecurringPaymentForm(Model model) {
         model.addAttribute("recurringPayment", new RecurringPayment());
-
+        model.addAttribute("message", "");
         return "recurringPaymentForm";
     }
 
@@ -214,6 +223,16 @@ public class TransactionController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Object principal = auth.getPrincipal();
         User user = userService.findByUsername(((UserDetails) principal).getUsername());
+
+        BankAccount bankAccountTo = bankAccountService.findByBankAccountNumber(recurringPayment.getToBankAccountNumber());
+        BankAccount bankAccountFrom = bankAccountService.findByBankAccountNumber(recurringPayment.getFromBankAccountNumber());
+
+        if(bankAccountTo != null){
+            if(bankAccountTo.getBankAccountNumber().equals(bankAccountFrom.getBankAccountNumber())){
+                model.addAttribute("message", "Nie możesz przelać na te samo konto");
+                return "recurringPaymentForm";
+            }
+        }
 
         recurringPayment.setUser(user);
         recurringPaymentService.save(recurringPayment);

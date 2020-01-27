@@ -12,6 +12,7 @@
             <link rel="stylesheet" type="text/css"
                   href="css/main.css"/>
             <script src="script/main.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         </div>
     </head>
     <body>
@@ -30,7 +31,7 @@
                         <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_USER')">
                             <a th:classappend="${pageName eq 'transaction'}?'active'" th:href="@{/transaction}"
                                class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Transakcje
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -45,7 +46,7 @@
                         <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_USER')">
                             <a th:classappend="${pageName eq 'bankAccounts'}?'active'"
                                class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLinkThree"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Rachunki
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkThree">
@@ -60,7 +61,7 @@
                         <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_USER')">
                             <a th:classappend="${pageName eq 'credits'}?'active'"
                                class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLinkTwo"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Kredyty
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkTwo">
@@ -75,7 +76,7 @@
                         <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_USER')">
                             <a th:classappend="${pageName eq 'investments'}?'active'"
                                class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLinkFour"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Lokaty
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkFour">
@@ -114,20 +115,20 @@
                         <li sec:authorize="isAnonymous()"
                             class="nav-item"
                             th:class="${pageName eq 'logonForm'}? 'active'">
-                            <a class="nav-link" th:classappend="${pageName eq 'loginForm'}?'active'" th:href="@{/login}">Zaloguj
+                            <a class="nav-link" th:classappend="${pageName eq 'loginForm'}?'active'"
+                               th:href="@{/login}">Zaloguj
                                 się</a>
                         </li>
                     </ul>
                 </div>
 
-                <ul class="nav-tabs navbar-nav ml-md-auto bg-dark">
+                <ul class="nav-tabs navbar-nav ml-md-auto bg-dark ml-auto nav-flex-icons">
                     <li class="nav-item" sec:authorize="hasRole('ROLE_USER')">
-                        <a class="nav-link" th:classappend="${pageName eq 'notifications'}?'active'" th:href="@{/notifications}">
-                            <div th:if="${notificationCounter == 0}">
-                                <span>Powiadomienia</span>
-                            </div>
-                            <div th:if="${notificationCounter > 0}">
-                                <span>([[${notificationCounter}]]) Powiadomienia</span>
+                        <a class="nav-link" th:classappend="${pageName eq 'notifications'}?'active'"
+                           th:href="@{/notifications}">
+                            <span th:if="${notificationCounter == 0}"></span>
+                            <span class="badge badge-danger" th:if="${notificationCounter > 0}">[[${notificationCounter}]]</span>
+                            <i style="width: 24px; height: 20px;" class="fa fa-envelope-o" aria-hidden="true"></i>
                             </div>
                         </a>
                     </li>
