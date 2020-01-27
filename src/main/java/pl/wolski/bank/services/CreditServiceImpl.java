@@ -15,6 +15,7 @@ import pl.wolski.bank.repositories.CreditRepository;
 import pl.wolski.bank.repositories.UserRepository;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -48,7 +49,8 @@ public class CreditServiceImpl implements CreditService {
         Optional<Credit> optionalCredit = creditRepository.findById(id);
         Credit credit = optionalCredit.orElseThrow(() -> new CreditNotFoundException(id));
         int numberOfMonthsToTheEnd = credit.getNumberOfMonthsToTheEnd();
-        int monthsToSubtraction = (monthRepayment.divide(credit.getMonthRepayment())).intValueExact();
+        MathContext mc = new MathContext(5);
+        int monthsToSubtraction = (monthRepayment.divide(credit.getMonthRepayment(), mc)).intValueExact();
 
         BankAccount bankAccount = bankAccountService.getUserAccount(userService.findByUsername(user.getUsername()));
 
