@@ -36,13 +36,6 @@ public class CreditController {
     @Autowired
     private NotificationService notificationService;
 
-    @GetMapping("/creditApplication")
-    public String creditForm(Model model) {
-        model.addAttribute("creditApplication", new CreditApplication());
-
-        return "creditApplicationForm";
-    }
-
     @GetMapping("/userCredits")
     public String userCredits(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -83,10 +76,20 @@ public class CreditController {
         return "creditApplicationsList";
     }
 
+    @GetMapping("/creditApplication")
+    public String creditForm(Model model) {
+        model.addAttribute("creditApplication", new CreditApplication());
+
+        return "creditApplicationForm";
+    }
+
     @PostMapping("/creditApplication")
     public String creditForm(Model model,
                               @Valid @ModelAttribute("creditApplication") CreditApplication creditApplication,
                              BindingResult bindingResult){
+        if (bindingResult.hasErrors()){
+            return "creditApplicationForm";
+        }
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Object principal = auth.getPrincipal();
 

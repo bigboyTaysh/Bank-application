@@ -53,6 +53,11 @@ public class InvestmentController {
     public String investmentForm(Model model,
                              @Valid @ModelAttribute("investment") Investment investment,
                              BindingResult bindingResult){
+
+        if (bindingResult.hasErrors()){
+            return "investmentForm";
+        }
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Object principal = auth.getPrincipal();
 

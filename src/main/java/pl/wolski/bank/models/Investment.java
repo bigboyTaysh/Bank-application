@@ -7,6 +7,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
+import javax.validation.constraints.PositiveOrZero;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -20,23 +23,31 @@ public class Investment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @PositiveOrZero
     @Digits(integer = 17, fraction = 4)
     private BigDecimal investmentAmount;
 
+    @NotNull
+    @PositiveOrZero
     @Digits(integer = 17, fraction = 4)
     private BigDecimal totalRepayment;
 
+    @NotNull
+    @PositiveOrZero
     private int numberOfMonths;
 
+    @Past
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Date startDate;
 
+    @Past
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Date endDate;
 
-    private Boolean isPaidOff; //////////////////
+    private Boolean isPaidOff;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_investment_type", nullable = true)

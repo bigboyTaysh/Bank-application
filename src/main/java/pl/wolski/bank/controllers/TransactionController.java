@@ -117,7 +117,10 @@ public class TransactionController {
     @PostMapping(path = "/cashWithdrawal")
     //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
     public String cashWithdraw(Model model,
-                               @Valid @ModelAttribute("transaction") Transaction transaction) {
+                               @Valid @ModelAttribute("transaction") Transaction transaction, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "cashWithdrawalForm";
+        }
         BankAccount bankAccount = bankAccountService.findByBankAccountNumber(transaction.getFromBankAccountNumber());
         User user = userService.findByBankAccounts(bankAccount);
 
@@ -141,7 +144,10 @@ public class TransactionController {
     @PostMapping(path = "/cashPayment")
     //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
     public String cashPayment(Model model,
-                              @Valid @ModelAttribute("transaction") Transaction transaction) {
+                              @Valid @ModelAttribute("transaction") Transaction transaction, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "cashWithdrawalForm";
+        }
         User user = userService.findByBankAccounts(bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber()));
 
         transactionService.doCashPayment(transaction);
@@ -203,7 +209,11 @@ public class TransactionController {
     @Secured("ROLE_USER")
     @PostMapping("/recurringPaymentForm")
     public String getRecurringPaymentForm(Model model,
-                                          @Valid @ModelAttribute("recurringPayment") RecurringPayment recurringPayment) throws SchedulerException, InterruptedException {
+                                          @Valid @ModelAttribute("recurringPayment") RecurringPayment recurringPayment, BindingResult bindingResult) throws SchedulerException, InterruptedException {
+        if (bindingResult.hasErrors()) {
+            return "recurringPaymentForm";
+        }
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Object principal = auth.getPrincipal();
         User user = userService.findByUsername(((UserDetails) principal).getUsername());

@@ -115,10 +115,13 @@ public class UserRegistrationFormController {
     @PostMapping("/userRegistrationForm")
     public String userRegistration(Model model,
                                @Valid @ModelAttribute("userCommand") User userForm,
+                                   BindingResult bindingResult,
                                @Valid @ModelAttribute("userAddress") Address userAddress,
-                               BindingResult bindingResult) {
+                               BindingResult bindingResult2) {
 
         if (bindingResult.hasErrors()) {
+            return "userRegistrationForm";
+        } else if (bindingResult2.hasErrors()){
             return "userRegistrationForm";
         }
 

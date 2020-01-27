@@ -10,10 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.Digits;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
@@ -29,30 +26,44 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     @Size(min = 4, max = 36)
     @UniqueUsername
     private String username;
 
+    @NotBlank
+    @Size(min = 4, max = 36)
     private String password;
 
+    @NotBlank
     @Size(min = 4, max = 36)
     private String firstName;
 
+    @NotBlank
     @Size(min = 4, max = 36)
     private String lastName;
 
+    @NotBlank
+    @Size(min = 1, max = 11)
     @Digits(integer=11, fraction=0)
     @UniquePersonalIdentificationNumber
     private BigDecimal personalIdentificationNumber;
 
+    @NotBlank
     @Email
     @UniqueEmail
     private String email;
+
+    @NotBlank
+    @NotNull
+    @Size(min = 4, max = 36)
     private String phone;
+
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Date birthDate;
+
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
