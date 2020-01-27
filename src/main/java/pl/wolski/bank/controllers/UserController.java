@@ -36,7 +36,7 @@ import java.util.Optional;
 public class UserController {
 
     @Autowired
-    EmailService emailService;
+    private EmailService emailService;
 
     @Autowired
     private UserService userService;

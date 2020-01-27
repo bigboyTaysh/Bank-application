@@ -37,12 +37,10 @@ public class Investment {
     @PositiveOrZero
     private int numberOfMonths;
 
-    @Past
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Date startDate;
 
-    @Past
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Temporal(TemporalType.DATE)
     private Date endDate;

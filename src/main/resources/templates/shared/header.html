@@ -80,11 +80,11 @@
                                 Lokaty
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkFour">
-                                <a class="dropdown-item" th:href="@{/investmentForm}">
-                                    Załóż lokatę
-                                </a>
                                 <a class="dropdown-item" th:href="@{/userInvestments}">
                                     Moje lokaty
+                                </a>
+                                <a class="dropdown-item" th:href="@{/investmentForm}">
+                                    Załóż lokatę
                                 </a>
                             </div>
                         </li>
@@ -128,7 +128,7 @@
                            th:href="@{/notifications}">
                             <span th:if="${notificationCounter == 0}"></span>
                             <span class="badge badge-danger" th:if="${notificationCounter > 0}">[[${notificationCounter}]]</span>
-                            <i style="width: 24px; height: 20px;" class="fa fa-envelope-o" aria-hidden="true"></i>
+                            <i class="fa fa-envelope-o" aria-hidden="true"></i>
                             </div>
                         </a>
                     </li>

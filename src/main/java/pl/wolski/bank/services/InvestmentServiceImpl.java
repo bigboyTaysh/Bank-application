@@ -49,6 +49,7 @@ public class InvestmentServiceImpl implements InvestmentService {
         cal.add(Calendar.MONTH, investment.getNumberOfMonths());
         Date endDate = cal.getTime();
         investment.setEndDate(endDate);
+        investment.setIsPaidOff(false);
 
         User user = userService.findByUsername(username);
         BankAccount bankAccount = bankAccountService.getUserAccount(user);

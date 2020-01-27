@@ -1,58 +1,66 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <div th:replace="shared/header :: header-css"/>
-    <title>Lista lokat</title>
-</head>
-<body>
-<div th:replace="shared/header :: header('investments')"/>
-<table class="table table-striped" style="width: 90%;">
-    <tbody>
-    <tr>
-        <td>
-            Kwota lokaty
-        </td>
-        <td>
-            Całkowita kwota
-        </td>
-        <td>
-            Okres trwania(miesiące)
-        </td>
-        <td>
-            Data założenia lokaty
-        </td>
-        <td>
-            Przewidywany czas zakończenia lokaty
-        </td>
-        <td>
-            Typ lokaty
-        </td>
-        <td>
-            Status
-        </td>
-    </tr>
-    <tr th:each="userInvestment : ${userInvestments}">
-        <td>
-            [[${userInvestment.investmentAmount}]]
-        </td>
-        <td>
-            [[${userInvestment.totalRepayment}]]
-        </td>
-        <td>
-            [[${userInvestment.numberOfMonths}]]
-        </td>
-        <td>
-            <span th:text="${#dates.format(userInvestment.startDate, 'dd-MM-yyyy')}"></span>
-        </td>
-        <td>
-            <span th:text="${#dates.format(userInvestment.endDate, 'dd-MM-yyyy')}"></span>
-        </td>
-        <td>
-            [[${userInvestment.investmentType.name}]]
-        </td>
-    </tr>
-    </tbody>
-</table>
-<div th:replace="shared/footer :: footer"></div>
-</body>
+    <head>
+        <div th:replace="shared/header :: header-css"/>
+        <title>Lista lokat</title>
+    </head>
+    <body>
+        <div th:replace="shared/header :: header('investments')"/>
+        <table class="table table-striped" style="width: 90%;">
+            <tbody>
+                <tr>
+                    <td>
+                        Kwota lokaty
+                    </td>
+                    <td>
+                        Całkowita kwota
+                    </td>
+                    <td>
+                        Okres trwania(miesiące)
+                    </td>
+                    <td>
+                        Data założenia lokaty
+                    </td>
+                    <td>
+                        Przewidywany czas zakończenia lokaty
+                    </td>
+                    <td>
+                        Typ lokaty
+                    </td>
+                    <td>
+                        Status
+                    </td>
+                </tr>
+                <tr th:each="userInvestment : ${userInvestments}">
+                    <td>
+                        [[${userInvestment.investmentAmount}]]
+                    </td>
+                    <td>
+                        [[${userInvestment.totalRepayment}]]
+                    </td>
+                    <td>
+                        [[${userInvestment.numberOfMonths}]]
+                    </td>
+                    <td>
+                        <span th:text="${#dates.format(userInvestment.startDate, 'dd-MM-yyyy')}"></span>
+                    </td>
+                    <td>
+                        <span th:text="${#dates.format(userInvestment.endDate, 'dd-MM-yyyy')}"></span>
+                    </td>
+                    <td>
+                        [[${userInvestment.investmentType.name}]]
+                    </td>
+                    <td>
+                        <div th:unless="${userInvestment.isPaidOff == null}">
+                            <div th:switch="${userInvestment.isPaidOff}">
+                                <p th:case="true">Niekatywna</p>
+                                <p th:case="false">Aktywna</p>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div th:replace="shared/footer :: footer"></div>
+    </body>
 </html>
