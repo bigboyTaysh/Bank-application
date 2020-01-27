@@ -112,8 +112,8 @@ public class TransactionController {
     @GetMapping(path = "/cashWithdrawal")
     //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
     public String cashWithdraw(Model model,
-                               String bankAccountNumber) {
-        BankAccount bankAccount = bankAccountService.findByBankAccountNumber(new BigDecimal(bankAccountNumber));
+                               BigDecimal bankAccountNumber) {
+        BankAccount bankAccount = bankAccountService.findByBankAccountNumber(bankAccountNumber);
 
         model.addAttribute("bankAccount", bankAccount);
         model.addAttribute("transaction", new Transaction());
@@ -150,20 +150,6 @@ public class TransactionController {
     }
 
     @Secured("ROLE_EMPLOYEE")
-    @PostMapping(path = "/cashPayment")
-    //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
-    public String cashPayment(Model model,
-                              @Valid @ModelAttribute("transaction") Transaction transaction) {
-        User user = userService.findByBankAccounts(bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber()));
-
-        transactionService.doCashPayment(transaction);
-        model.addAttribute("message", "Pomyślnie wpłacono pieniądze");
-        model.addAttribute("id_user", user.getId());
-
-        return "paymentActionMessage";
-    }
-
-    @Secured("ROLE_EMPLOYEE")
     @GetMapping(path = "/cashPayment")
     //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
     public String cashPayment(Model model,
@@ -176,6 +162,20 @@ public class TransactionController {
 
 
         return "cashPaymentForm";
+    }
+
+    @Secured("ROLE_EMPLOYEE")
+    @PostMapping(path = "/cashPayment")
+    //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
+    public String cashPayment(Model model,
+                              @Valid @ModelAttribute("transaction") Transaction transaction) {
+        User user = userService.findByBankAccounts(bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber()));
+
+        transactionService.doCashPayment(transaction);
+        model.addAttribute("message", "Pomyślnie wpłacono pieniądze");
+        model.addAttribute("id_user", user.getId());
+
+        return "paymentActionMessage";
     }
 
     @Secured("ROLE_EMPLOYEE")
@@ -215,7 +215,8 @@ public class TransactionController {
     @Secured("ROLE_USER")
     @PostMapping("/recurringPaymentForm")
     public String getRecurringPaymentForm(Model model,
-                                          @Valid @ModelAttribute("recurringPayment") RecurringPayment recurringPayment, BindingResult bindingResult) throws SchedulerException, InterruptedException {
+                                          @Valid @ModelAttribute("recurringPayment") RecurringPayment recurringPayment,
+                                          BindingResult bindingResult) throws SchedulerException, InterruptedException {
         if (bindingResult.hasErrors()) {
             return "recurringPaymentForm";
         }

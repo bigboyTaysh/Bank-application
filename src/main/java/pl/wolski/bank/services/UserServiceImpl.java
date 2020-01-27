@@ -43,10 +43,7 @@ public class UserServiceImpl implements UserService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private AddressRepository addressRepository;
-
-    @Autowired
-    EmailService emailService;
+    private EmailService emailService;
 
     @Override
     //bez adnotacji @Transactional sesja jest zamykana po wywołaniu findByUsername, co uniemożliwia dociągnięcie ról, mimo fetch=EAGER.
