@@ -107,7 +107,7 @@ public class CreditController {
         return creditTypes;
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
     @RequestMapping(value = "/acceptApplication", method = RequestMethod.GET)
     public String acceptApplication(Model model, Long id) {
         creditApplicationService.updateCreditApplicationStatus(id, true);
@@ -115,7 +115,7 @@ public class CreditController {
         return "redirect:/creditApplicationsList";
     }
 
-    @Secured("ROLE_ADMIN")
+    @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
     @RequestMapping(value = "/discardApplication", method = RequestMethod.GET)
     public String discardApplication(Model model, Long id) {
         creditApplicationService.updateCreditApplicationStatus(id, false);

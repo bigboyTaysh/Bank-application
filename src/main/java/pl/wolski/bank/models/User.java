@@ -2,6 +2,7 @@ package pl.wolski.bank.models;
 
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.NumberFormat;
 import pl.wolski.bank.annotations.UniqueEmail;
 import pl.wolski.bank.annotations.UniquePersonalIdentificationNumber;
 import pl.wolski.bank.annotations.UniqueUsername;
@@ -43,6 +44,7 @@ public class User {
     @Size(min = 4, max = 36)
     private String lastName;
 
+    @NumberFormat
     @DecimalMin(value = "10000000000")
     @DecimalMax(value = "99999999999")
     @Digits(integer=11, fraction=0)

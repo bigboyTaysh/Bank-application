@@ -52,6 +52,7 @@ public class NotificationController {
         return "notifications";
     }
 
+    /*
     @ModelAttribute("notificationCounter")
     public int notificationCounter(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -61,6 +62,8 @@ public class NotificationController {
         log.info("Ładowanie listy " + notificationList.size() + " kont bankowych ");
         return notificationList.size();
     }
+
+     */
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {//Rejestrujemy edytory właściwości
