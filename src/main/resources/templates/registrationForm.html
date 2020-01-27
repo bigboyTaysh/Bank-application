@@ -25,11 +25,17 @@
                                 <input type="text" th:field="*{username}"
                                        class="form-control" placeholder="nazwa użytkownika" required="true"
                                        autofocus="true"/>
+                                <div class="error text-danger" th:if="${#fields.hasErrors('username')}">
+                                    <p th:each="err : ${#fields.errors('username')}" th:text="${err}"></p>
+                                </div>
                             </div>
 
                             <div class="form-group">
                                 <input type="password" th:field="*{password}"
                                        class="form-control" placeholder="hasło" required="true" autofocus="true"/>
+                                <div class="error text-danger" th:if="${#fields.hasErrors('password')}">
+                                    <p th:each="err : ${#fields.errors('password')}" th:text="${err}"></p>
+                                </div>
                             </div>
 
                             <div class="form-group">
@@ -42,30 +48,45 @@
                                 <input type="text" th:field="*{firstName}"
                                        class="form-control" placeholder="imię" required="true"
                                        autofocus="true"/>
+                                <div class="error text-danger" th:if="${#fields.hasErrors('firstName')}">
+                                    <p th:each="err : ${#fields.errors('firstName')}" th:text="${err}"></p>
+                                </div>
                             </div>
 
                             <div class="form-group">
                                 <input type="text" th:field="*{lastName}"
                                        class="form-control" placeholder="nazwisko" required="true"
                                        autofocus="true"/>
+                                <div class="error text-danger" th:if="${#fields.hasErrors('lastName')}">
+                                    <p th:each="err : ${#fields.errors('lastName')}" th:text="${err}"></p>
+                                </div>
                             </div>
 
                             <div class="form-group">
                                 <input type="number" th:field="*{personalIdentificationNumber}"
                                        class="form-control" placeholder="PESEL" required="true"
                                        autofocus="true"/>
+                                <div class="error text-danger" th:if="${#fields.hasErrors('personalIdentificationNumber')}">
+                                    <p th:each="err : ${#fields.errors('personalIdentificationNumber')}" th:text="${err}"></p>
+                                </div>
                             </div>
 
                             <div class="form-group">
                                 <input type="email" th:field="*{email}"
                                        class="form-control" placeholder="email" required="true"
                                        autofocus="true"/>
+                                <div class="error text-danger" th:if="${#fields.hasErrors('email')}">
+                                    <p th:each="err : ${#fields.errors('email')}" th:text="${err}"></p>
+                                </div>
                             </div>
 
                             <div class="form-group">
                                 <input type="number" th:field="*{phone}"
                                        class="form-control" placeholder="numer telefonu" required="true"
                                        autofocus="true"/>
+                                <div class="error text-danger" th:if="${#fields.hasErrors('phone')}">
+                                    <p th:each="err : ${#fields.errors('phone')}" th:text="${err}"></p>
+                                </div>
                             </div>
 
                             <div class="form-group">
@@ -79,12 +100,18 @@
                                     <input type="text" th:field="*{street}"
                                            class="form-control" placeholder="ulica" required="true"
                                            autofocus="true"/>
+                                    <div class="error text-danger" th:if="${#fields.hasErrors('street')}">
+                                        <p th:each="err : ${#fields.errors('street')}" th:text="${err}"></p>
+                                    </div>
                                 </div>
 
                                 <div class="form-group">
                                     <input type="text" th:field="*{houseNumber}"
                                            class="form-control" placeholder="numer domu" required="true"
                                            autofocus="true"/>
+                                    <div class="error text-danger" th:if="${#fields.hasErrors('houseNumber')}">
+                                        <p th:each="err : ${#fields.errors('houseNumber')}" th:text="${err}"></p>
+                                    </div>
                                 </div>
 
                                 <div class="form-group">
@@ -97,12 +124,18 @@
                                     <input type="text" th:field="*{city}"
                                            class="form-control" placeholder="miasto" required="true"
                                            autofocus="true"/>
+                                    <div class="error text-danger" th:if="${#fields.hasErrors('city')}">
+                                        <p th:each="err : ${#fields.errors('city')}" th:text="${err}"></p>
+                                    </div>
                                 </div>
 
                                 <div class="form-group">
                                     <input type="text" th:field="*{zipCode}"
                                            class="form-control" placeholder="kod pocztowy" required="true"
                                            autofocus="true"/>
+                                    <div class="error text-danger" th:if="${#fields.hasErrors('zipCode')}">
+                                        <p th:each="err : ${#fields.errors('zipCode')}" th:text="${err}"></p>
+                                    </div>
                                 </div>
                             </div>
 

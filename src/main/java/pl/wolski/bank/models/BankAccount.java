@@ -6,7 +6,7 @@ import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.Digits;
+import javax.validation.constraints.*;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Set;
@@ -30,9 +30,12 @@ public class BankAccount {
     @Digits(integer = 17, fraction = 4)
     private BigDecimal lock;
 
+    @DecimalMin(value = "10000000000000000000000000")
+    @DecimalMax(value = "99999999999999999999999999")
     @Digits(integer = 26, fraction = 0)
     private BigDecimal bankAccountNumber;
 
+    @Past
     //@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     //@Temporal(TemporalType.DATE)
     private Date creationDate;

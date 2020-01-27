@@ -29,13 +29,16 @@
                             </div>
                             <div class="form-group">
                                 <span>
-                                    Dostepne środki [[${bankAccount.availableFounds}]] [[${bankAccount.currency.name}]]
+                                    Dostepne środki [[${bankAccount.availableFounds.toString().substring(0, bankAccount.availableFounds.toString().length() - 2)}]] [[${bankAccount.currency.name}]]
                                 </span>
                             </div>
                             <div class="form-group">
                                 <input type="number" step="0.01" th:min="0.01" th:field="*{value}"
                                        class="form-control" placeholder="Kwota" required="true"
                                        autofocus="true"/>
+                                <div class="error text-danger" th:if="${#fields.hasErrors('value')}">
+                                    <p th:each="err : ${#fields.errors('value')}" th:text="${err}"></p>
+                                </div>
                             </div>
                             <div class="form-group">
                                 <span>
