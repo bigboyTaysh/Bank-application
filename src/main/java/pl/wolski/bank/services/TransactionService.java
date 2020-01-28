@@ -18,4 +18,5 @@ public interface TransactionService {
 
     List<Transaction> findUserTop5Transactions(BigDecimal fromBankAccountNumber, BigDecimal toBankAccountNumber);
     List<Transaction> findUserTransactions(BigDecimal fromBankAccountNumber, BigDecimal toBankAccountNumber);
+    Transaction findById(Long id);
 }

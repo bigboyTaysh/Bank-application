@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8"/>
+        <script media="all" src="webjars/jquery/3.3.1/jquery.min.js"></script>
+        <script media="all" src="webjars/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <link media="all" rel="stylesheet" type="text/css"
+              href="webjars/bootstrap-material-design/4.1.2/dist/css/bootstrap-material-design.css"/>
+        <link rel="stylesheet" type="text/css" media="all"
+              href="css/main.css"/>
+        <script media="all" src="script/main.js"></script>
+        <link rel="stylesheet" media="all"
+              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+        <title>Potwierdzenie</title>
+    </head>
+    <body>
+        <h1 style="text-align: center; margin-top: 5%">
+            Wolski Worldwide Bank
+        </h1>
+        <table class="table">
+            <tr>
+                <td>
+                    Właściciel:
+                </td>
+                <td>
+                    [[${user.firstName + " " + user.lastName}]]
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Data wydruku:
+                </td>
+                <td>
+                    <span th:text="${#dates.format(date, 'dd-MM-yyyy HH:mm')}"></span>
+                </td>
+            </tr>
+        </table>
+
+        <table class="table">
+            <tr>
+                <td>
+                    Numer rachunku:
+                </td>
+                <td>
+                    [[${userAccount.bankAccountNumber}]]
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Data transakcji:
+                </td>
+                <td>
+                    <span th:text="${#dates.format(transaction.date, 'dd-MM-yyyy')}"></span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Odbiorca/Nadawca/Tytuł:
+                </td>
+                <td>
+                    <table>
+                        <tr>
+                            <div th:if="${transaction.transactionType.type.toString().equals('TRANSFER')}">
+                                <div th:if="${transaction.fromBankAccountNumber.toString().equals(userAccount.bankAccountNumber.toString())}">
+                                    <span>[[${transaction.userNameTo}]]</span>
+                                </div>
+                                <div th:if="${transaction.toBankAccountNumber.toString().equals(userAccount.bankAccountNumber.toString())}">
+                                    <span>[[${transaction.userNameFrom}]]</span>
+                                </div>
+                            </div>
+                            <div th:if="${transaction.transactionType.type.toString().equals('CASH_WITHDRAWAL')}">
+                                <div th:if="${userAccount.accountType.type.toString().equals('PAY_ACC_FOR_YOUNG')}">
+                                            <span>KONTO DLA MŁODYCH
+                                                [[${userAccount.bankAccountNumber.toString().substring(0, 4) + '...' +
+                                                userAccount.bankAccountNumber.toString().substring(22, 26)}]]
+                                            </span>
+                                </div>
+                                <div th:if="${userAccount.accountType.type.toString().equals('PAY_ACC_FOR_ADULT')}">
+                                            <span>STANDARDOWE KONTO
+                                                [[${userAccount.bankAccountNumber.toString().substring(0, 4) + '...' +
+                                                account.bankAccountNumber.toString().substring(22, 26)}]]
+                                            </span>
+                                </div>
+                                <div th:if="${userAccount.accountType.type.toString().equals('FOR_CUR_ACC')}">
+                                            <span>KONTO WALUTOWE
+                                                [[${userAccount.bankAccountNumber.toString().substring(0, 4) + '...' +
+                                                userAccount.bankAccountNumber.toString().substring(22, 26)}]]
+                                            </span>
+                                </div>
+                            </div>
+                            <div th:if="${transaction.transactionType.type.toString().equals('CASH_PAYMENT')}">
+                                <div th:if="${userAccount.accountType.type.toString().equals('PAY_ACC_FOR_YOUNG')}">
+                                            <span>KONTO DLA MŁODYCH
+                                                [[${userAccount.bankAccountNumber.toString().substring(0, 4) + '...' +
+                                                userAccount.bankAccountNumber.toString().substring(22, 26)}]]
+                                            </span>
+                                </div>
+                                <div th:if="${userAccount.accountType.type.toString().equals('PAY_ACC_FOR_ADULT')}">
+                                            <span>STANDARDOWE KONTO
+                                                [[${userAccount.bankAccountNumber.toString().substring(0, 4) + '...' +
+                                                account.bankAccountNumber.toString().substring(22, 26)}]]
+                                            </span>
+                                </div>
+                                <div th:if="${userAccount.accountType.type.toString().equals('FOR_CUR_ACC')}">
+                                            <span>KONTO WALUTOWE
+                                                [[${userAccount.bankAccountNumber.toString().substring(0, 4) + '...' +
+                                                userAccount.bankAccountNumber.toString().substring(22, 26)}]]
+                                            </span>
+                                </div>
+                            </div>
+                        </tr>
+                        <tr>
+                            [[${transaction.title}]]
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Operacja:
+                </td>
+                <td>
+                    <div th:if="${transaction.transactionType.type.toString().equals('TRANSFER')}">
+                        Przelew gotówkowy
+                    </div>
+                    <div th:if="${transaction.transactionType.type.toString().equals('CASH_WITHDRAWAL')}">
+                        Wypłata gotówki
+                    </div>
+                    <div th:if="${transaction.transactionType.type.toString().equals('CASH_PAYMENT')}">
+                        Wpłata gotówki
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Kwota:
+                </td>
+                <td>
+                    <div th:if="${transaction.transactionType.type.toString().equals('TRANSFER')}">
+                        <div th:if="${transaction.fromBankAccountNumber.toString().equals(userAccount.bankAccountNumber.toString())}">
+                            <span th:text="${#numbers.formatDecimal('-' + transaction.value,1,2)  + ' ' + transaction.currency.name}"></span>
+                        </div>
+                        <div th:if="${transaction.toBankAccountNumber.toString().equals(userAccount.bankAccountNumber.toString())}">
+                            <span th:text="${#numbers.formatDecimal(transaction.value,1,2)  + ' ' + transaction.currency.name}"></span>
+                        </div>
+                    </div>
+                    <div th:if="${transaction.transactionType.type.toString().equals('CASH_WITHDRAWAL')}">
+                        <span th:text="${#numbers.formatDecimal('-' + transaction.value,1,2)  + ' ' + transaction.currency.name}"></span>
+                    </div>
+                    <div th:if="${transaction.transactionType.type.toString().equals('CASH_PAYMENT')}">
+                        <span th:text="${#numbers.formatDecimal(transaction.value,1,2)  + ' ' + transaction.currency.name}"></span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Saldo:
+                </td>
+                <td>
+                    <div th:if="${transaction.transactionType.type.toString().equals('TRANSFER')}">
+                        <div th:if="${transaction.fromBankAccountNumber.toString().equals(userAccount.bankAccountNumber.toString())}">
+                            <span th:text="${#numbers.formatDecimal(transaction.balanceAfterTransactionUserFrom,1,2)  + ' ' + transaction.currency.name}"></span>
+                        </div>
+                        <div th:if="${transaction.toBankAccountNumber.toString().equals(userAccount.bankAccountNumber.toString())}">
+                            <span th:text="${#numbers.formatDecimal(transaction.balanceAfterTransactionUserTo,1,2)  + ' ' + transaction.currency.name}"></span>
+                        </div>
+                    </div>
+                    <div th:if="${transaction.transactionType.type.toString().equals('CASH_WITHDRAWAL')}">
+                        <span th:text="${#numbers.formatDecimal(transaction.balanceAfterTransactionUserFrom,1,2)  + ' ' + transaction.currency.name}"></span>
+                    </div>
+                    <div th:if="${transaction.transactionType.type.toString().equals('CASH_PAYMENT')}">
+                        <span th:text="${#numbers.formatDecimal(transaction.balanceAfterTransactionUserTo,1,2)  + ' ' + transaction.currency.name}"></span>
+                    </div>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>

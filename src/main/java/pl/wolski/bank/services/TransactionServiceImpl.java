@@ -4,6 +4,8 @@ package pl.wolski.bank.services;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.wolski.bank.exceptions.TransactionNotFoundException;
+import pl.wolski.bank.exceptions.UserNotFoundException;
 import pl.wolski.bank.models.*;
 import pl.wolski.bank.repositories.BankAccountRepository;
 import pl.wolski.bank.repositories.TransactionRepository;
@@ -13,6 +15,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Log4j2
 @Service
@@ -206,5 +209,13 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public List<Transaction> findUserTop5Transactions(BigDecimal fromBankAccountNumber, BigDecimal toBankAccountNumber) {
         return transactionRepository.findTop5ByFromBankAccountNumberOrToBankAccountNumberOrderByDateDesc(fromBankAccountNumber, toBankAccountNumber);
+    }
+
+    @Override
+    public Transaction findById(Long id) {
+        Optional<Transaction> optionalTransaction = transactionRepository.findById(id);
+        Transaction transaction = optionalTransaction.orElseThrow(() -> new TransactionNotFoundException(id));
+
+        return transaction;
     }
 }

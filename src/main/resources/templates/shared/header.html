@@ -12,149 +12,147 @@
             <link rel="stylesheet" type="text/css"
                   href="css/main.css"/>
             <script src="script/main.js"></script>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+            <link rel="stylesheet"
+                  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
         </div>
     </head>
-    <body>
 
-        <body class="card-header">
+    <body class="card-header">
 
-            <nav id="header" th:fragment="header(pageName)"
-                 class="navbar navbar-expand bg-dark flex-column flex-md-row">
-                <div class="navbar-nav-scroll">
-                    <ul class="nav nav-tabs bg-dark">
-                        <li class="nav-item" sec:authorize="hasRole('ROLE_USER')">
-                            <a class="nav-link" th:classappend="${pageName eq 'home'}?'active'" th:href="@{/index}">
-                                Strona główna
-                            </a>
-                        </li>
-                        <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_USER')">
-                            <a th:classappend="${pageName eq 'transaction'}?'active'" th:href="@{/transaction}"
-                               class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Transakcje
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <a class="dropdown-item" th:href="@{/transaction}">
-                                    Przelew
-                                </a>
-                                <a class="dropdown-item" th:href="@{/recurringPayments}">
-                                    Płatności cykliczne
-                                </a>
-                            </div>
-                        </li>
-                        <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_USER')">
-                            <a th:classappend="${pageName eq 'bankAccounts'}?'active'"
-                               class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLinkThree"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Rachunki
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkThree">
-                                <a class="dropdown-item" th:href="@{/bankAccounts}">
-                                    Moje rachunki
-                                </a>
-                                <a class="dropdown-item" th:href="@{/newUserBankAccount}">
-                                    Załóż konto walutowe
-                                </a>
-                            </div>
-                        </li>
-                        <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_USER')">
-                            <a th:classappend="${pageName eq 'credits'}?'active'"
-                               class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLinkTwo"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Kredyty
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkTwo">
-                                <a class="dropdown-item" th:href="@{/userCredits}">
-                                    Moje kredyty
-                                </a>
-                                <a class="dropdown-item" th:href="@{/creditApplication}">
-                                    Złóż wniosek
-                                </a>
-                                <a class="dropdown-item" th:href="@{/userCreditApplicationsList}">
-                                    Moje wnioski
-                                </a>
-                            </div>
-                        </li>
-                        <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_USER')">
-                            <a th:classappend="${pageName eq 'investments'}?'active'"
-                               class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLinkFour"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Lokaty
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkFour">
-                                <a class="dropdown-item" th:href="@{/userInvestments}">
-                                    Moje lokaty
-                                </a>
-                                <a class="dropdown-item" th:href="@{/investmentForm}">
-                                    Załóż lokatę
-                                </a>
-                            </div>
-                        </li>
-                        <li class="nav-item" sec:authorize="hasRole('ROLE_EMPLOYEE')">
-                            <a class="nav-link" th:classappend="${pageName eq 'users'}?'active'"
-                               th:href="@{/users}">
-                                Klienci
-                            </a>
-                        </li>
-                        <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')">
-                            <a class="nav-link" th:classappend="${pageName eq 'creditApplicationsList'}?'active'"
-                               th:href="@{/creditApplicationsList}">
-                                Lista wniosków
-                            </a>
-                        </li>
-                        <li class="nav-item" sec:authorize="hasRole('ROLE_EMPLOYEE')">
-                            <a class="nav-link" th:classappend="${pageName eq 'currencyExchangeForm'}?'active'"
-                               th:href="@{/currencyExchangeForm}">
-                                Wymiana waluty
-                            </a>
-                        </li>
-                        <li class="nav-item" sec:authorize="hasRole('ROLE_EMPLOYEE')">
-                            <a class="nav-link" th:classappend="${pageName eq 'registration'}?'active'"
-                               th:href="@{/userRegistrationForm}">
-                                Zarejestruj użytkownika
-                            </a>
-                        </li>
-                        <li sec:authorize="isAnonymous()"
-                            class="nav-item"
-                            th:class="${pageName eq 'logonForm'}? 'active'">
-                            <a class="nav-link" th:classappend="${pageName eq 'loginForm'}?'active'"
-                               th:href="@{/login}">Zaloguj
-                                się</a>
-                        </li>
-                    </ul>
-                </div>
-
-                <ul class="nav-tabs navbar-nav ml-md-auto bg-dark ml-auto nav-flex-icons">
+        <nav id="header" th:fragment="header(pageName)"
+             class="navbar navbar-expand bg-dark flex-column flex-md-row">
+            <div class="navbar-nav-scroll">
+                <ul class="nav nav-tabs bg-dark">
                     <li class="nav-item" sec:authorize="hasRole('ROLE_USER')">
-                        <a class="nav-link" th:classappend="${pageName eq 'notifications'}?'active'"
-                           th:href="@{/notifications}">
-                            <span th:if="${notificationCounter == 0}"></span>
-                            <span class="badge badge-danger" th:if="${notificationCounter > 0}">[[${notificationCounter}]]</span>
-                            <i class="fa fa-envelope-o" aria-hidden="true"></i>
-                            </div>
+                        <a class="nav-link" th:classappend="${pageName eq 'home'}?'active'" th:href="@{/index}">
+                            Strona główna
                         </a>
                     </li>
-
-                    <label style="color:yellow; margin-top: 20px;" sec:authorize="isAuthenticated()">
-                        Witaj <span sec:authentication="name"/>!
-                    </label>
-
-                    <li class="nav-item" sec:authorize="isAuthenticated()">
-                        <a class="nav-link" href="#" onclick="document.getElementById('logout').submit()">Wyloguj
+                    <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_USER')">
+                        <a th:classappend="${pageName eq 'transaction'}?'active'" th:href="@{/transaction}"
+                           class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Transakcje
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item" th:href="@{/transaction}">
+                                Przelew
+                            </a>
+                            <a class="dropdown-item" th:href="@{/recurringPayments}">
+                                Płatności cykliczne
+                            </a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_USER')">
+                        <a th:classappend="${pageName eq 'bankAccounts'}?'active'"
+                           class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLinkThree"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Rachunki
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkThree">
+                            <a class="dropdown-item" th:href="@{/bankAccounts}">
+                                Moje rachunki
+                            </a>
+                            <a class="dropdown-item" th:href="@{/newUserBankAccount}">
+                                Załóż konto walutowe
+                            </a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_USER')">
+                        <a th:classappend="${pageName eq 'credits'}?'active'"
+                           class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLinkTwo"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Kredyty
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkTwo">
+                            <a class="dropdown-item" th:href="@{/userCredits}">
+                                Moje kredyty
+                            </a>
+                            <a class="dropdown-item" th:href="@{/creditApplication}">
+                                Złóż wniosek
+                            </a>
+                            <a class="dropdown-item" th:href="@{/userCreditApplicationsList}">
+                                Moje wnioski
+                            </a>
+                        </div>
+                    </li>
+                    <li class="nav-item dropdown" sec:authorize="hasRole('ROLE_USER')">
+                        <a th:classappend="${pageName eq 'investments'}?'active'"
+                           class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLinkFour"
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Lokaty
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkFour">
+                            <a class="dropdown-item" th:href="@{/userInvestments}">
+                                Moje lokaty
+                            </a>
+                            <a class="dropdown-item" th:href="@{/investmentForm}">
+                                Załóż lokatę
+                            </a>
+                        </div>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('ROLE_EMPLOYEE')">
+                        <a class="nav-link" th:classappend="${pageName eq 'users'}?'active'"
+                           th:href="@{/users}">
+                            Klienci
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_EMPLOYEE')">
+                        <a class="nav-link" th:classappend="${pageName eq 'creditApplicationsList'}?'active'"
+                           th:href="@{/creditApplicationsList}">
+                            Lista wniosków
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('ROLE_EMPLOYEE')">
+                        <a class="nav-link" th:classappend="${pageName eq 'currencyExchangeForm'}?'active'"
+                           th:href="@{/currencyExchangeForm}">
+                            Wymiana waluty
+                        </a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasRole('ROLE_EMPLOYEE')">
+                        <a class="nav-link" th:classappend="${pageName eq 'registration'}?'active'"
+                           th:href="@{/userRegistrationForm}">
+                            Zarejestruj użytkownika
+                        </a>
+                    </li>
+                    <li sec:authorize="isAnonymous()"
+                        class="nav-item"
+                        th:class="${pageName eq 'logonForm'}? 'active'">
+                        <a class="nav-link" th:classappend="${pageName eq 'loginForm'}?'active'"
+                           th:href="@{/login}">Zaloguj
                             się</a>
-                        <form th:action="@{/logout}" id="logout" method="post" style="display: none;">
-                            <input
-                                    type="hidden"
-                                    th:name="${_csrf.parameterName}"
-                                    th:value="${_csrf.token}"/>
-                        </form>
                     </li>
                 </ul>
-            </nav>
+            </div>
 
+            <ul class="nav-tabs navbar-nav ml-md-auto bg-dark ml-auto nav-flex-icons">
+                <li class="nav-item" sec:authorize="hasRole('ROLE_USER')">
+                    <a class="nav-link" th:classappend="${pageName eq 'notifications'}?'active'"
+                       th:href="@{/notifications}">
+                        <span th:if="${notificationCounter == 0}"></span>
+                        <span class="badge badge-danger"
+                              th:if="${notificationCounter > 0}">[[${notificationCounter}]]</span>
+                        <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                        </div>
+                    </a>
+                </li>
 
-        </body>
+                <label style="color:yellow; margin-top: 20px;" sec:authorize="isAuthenticated()">
+                    Witaj <span sec:authentication="name"/>!
+                </label>
+
+                <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <a class="nav-link" href="#" onclick="document.getElementById('logout').submit()">Wyloguj
+                        się</a>
+                    <form th:action="@{/logout}" id="logout" method="post" style="display: none;">
+                        <input
+                                type="hidden"
+                                th:name="${_csrf.parameterName}"
+                                th:value="${_csrf.token}"/>
+                    </form>
+                </li>
+            </ul>
+        </nav>
 
 
     </body>
