@@ -108,7 +108,7 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
             notification.setDate(currDate);
             notification.setTitle("Wniosek o kredyt zaakceptopowano");
             int size = creditApplication.getCreditAmount().toString().length();
-            notification.setMessage("Uznanie: +" + (creditApplication.getCreditAmount().toString().substring(0, size-2)) + " " +  bankAccount.getCurrency().getName()
+            notification.setMessage("Uznanie: +" + creditApplication.getCreditAmount().toString().substring(0, size-2) + " " +  bankAccount.getCurrency().getName()
                     + "\n Na rachunku " + bankAccount.getBankAccountNumber());
             notification.setUser(user);
             notification.setWasRead(false);
