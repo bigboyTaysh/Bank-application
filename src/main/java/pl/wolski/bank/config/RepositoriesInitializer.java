@@ -108,7 +108,7 @@ public class RepositoriesInitializer {
                     transactionTypeRepository.save(new TransactionType(TransactionType.Types.CASH_PAYMENT));
                     transactionTypeRepository.save(new TransactionType(TransactionType.Types.CASH_WITHDRAWAL));
 
-                    Address address = new Address("a","1","2","d"   , "e");
+                    Address address = new Address("aasdad","12","2","ddsadsa"   , "08-125");
                     addressRepository.save(address);
 
                     User user = new User("user", true);
@@ -121,28 +121,40 @@ public class RepositoriesInitializer {
                     user2.setEmail("email1@wp.pl");
                     user2.setFirstName("Patryk");
                     user2.setLastName("Wolak");
-                    user2.setPersonalIdentificationNumber(new BigDecimal("123456789"));
+                    user2.setPersonalIdentificationNumber(new BigDecimal("12345678912"));
                     Calendar calendar = Calendar.getInstance();
                     calendar.set(1997, 6, 18);
                     user2.setBirthDate(calendar.getTime());
                     user2.setAddress(address);
+                    user2.setPhone("123456789");
+                    userRepository.save(user2);
+
+                    bankAccount.setUser(user2);
+                    bankAccountRepository.save(bankAccount);
 
                     User admin = new User("admin", true);
                     admin.setRoles(new HashSet<>(Arrays.asList(roleAdmin)));
-                    admin.setPassword(passwordEncoder.encode("admin"));
+                    admin.setPassword(passwordEncoder.encode("admina"));
+                    admin.setPhone("123456789");
+                    admin.setLastName("Last");
+                    admin.setEmail("email@email.pl");
+                    admin.setFirstName("First");
 
                     User emplo = new User("emplo", true);
                     emplo.setRoles(new HashSet<>(Arrays.asList(roleEmployee)));
-                    emplo.setPassword(passwordEncoder.encode("emplo"));
+                    emplo.setPassword(passwordEncoder.encode("employ"));
+                    emplo.setPhone("123456789");
+                    emplo.setLastName("Last");
+                    emplo.setEmail("email@email.pl");
+                    emplo.setFirstName("First");
 
                     User test = new User("useradmin", true);
                     test.setRoles(new HashSet<>(Arrays.asList(roleAdmin, roleUser)));
                     test.setPassword(passwordEncoder.encode("useradmin"));
-
-                    userRepository.save(user);
-                    userRepository.save(user2);
-                    bankAccount.setUser(user2);
-                    bankAccountRepository.save(bankAccount);
+                    test.setPhone("123456789");
+                    test.setLastName("Last");
+                    test.setEmail("email@email.pl");
+                    test.setFirstName("First");
 
                     userRepository.save(emplo);
                     userRepository.save(admin);
