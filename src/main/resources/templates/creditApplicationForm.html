@@ -10,7 +10,7 @@
         <div class="container">
             <div class="row" style="margin-top:20px">
                 <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
-                    <form th:method="POST" th:object="${creditApplication}" id="creditApplication">
+                    <form th:method="POST" th:object="${creditApplication}" id="creditApplication" enctype="multipart/form-data">
                         <div class="form-group">
                             <select th:field="*{creditType}" class="form-control">
                                 <option th:each="type : ${creditTypes}"
@@ -64,6 +64,10 @@
                         </div>
                         <div class="form-group">
                             <input type="text" th:field="*{monthRepayment}" class="form-control" readonly/>
+                        </div>
+                        <div class="form-group">
+                            <span>Dodaj skan dowodu osobistego</span>
+                            <input type="file" name="file" required value="Add attachment" accept="image/jpeg"/>
                         </div>
                         <div class="row">
                             <div class="col-xs-6 col-sm-6 col-md-6">

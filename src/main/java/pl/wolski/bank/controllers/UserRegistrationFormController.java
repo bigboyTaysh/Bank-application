@@ -18,6 +18,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
@@ -63,23 +67,7 @@ public class UserRegistrationFormController {
             return "userRegistrationForm";
         }
 
-        Timestamp stamp = new Timestamp(System.currentTimeMillis());
-        Date date = new Date(stamp.getTime());
-
-        Calendar a = Calendar.getInstance(), b = Calendar.getInstance();
-        a.setTime(userForm.getBirthDate());
-        b.setTime(date);
-
-        int diff = b.get(Calendar.YEAR) - a.get(Calendar.YEAR);
-        if (a.get(Calendar.MONTH) > b.get(Calendar.MONTH) ||
-                (a.get(Calendar.MONTH) == b.get(Calendar.MONTH) &&
-                        a.get(Calendar.DATE) > b.get(Calendar.DATE))) {
-            diff--;
-        }
-
-        diff = diff;
-        log.info("Wiek: " + diff);
-
+        int diff = diff(userForm.getBirthDate());
 
         BankAccount bankAccount = new BankAccount();
 
@@ -100,6 +88,7 @@ public class UserRegistrationFormController {
             return "registrationForm";
         }
 
+        createDirectory(userForm.getUsername());
 
         model.addAttribute("message", "Zostałeś pomyślnie zarejestrowany");
         return "actionMessage";
@@ -128,23 +117,7 @@ public class UserRegistrationFormController {
             return "userRegistrationForm";
         }
 
-        Timestamp stamp = new Timestamp(System.currentTimeMillis());
-        Date date = new Date(stamp.getTime());
-
-        Calendar a = Calendar.getInstance(), b = Calendar.getInstance();
-        a.setTime(userForm.getBirthDate());
-        b.setTime(date);
-
-        int diff = b.get(Calendar.YEAR) - a.get(Calendar.YEAR);
-        if (a.get(Calendar.MONTH) > b.get(Calendar.MONTH) ||
-                (a.get(Calendar.MONTH) == b.get(Calendar.MONTH) &&
-                        a.get(Calendar.DATE) > b.get(Calendar.DATE))) {
-            diff--;
-        }
-
-        diff = diff;
-        log.info("Wiek: " + diff);
-
+        int diff = diff(userForm.getBirthDate());
 
         BankAccount bankAccount = new BankAccount();
 
@@ -165,6 +138,7 @@ public class UserRegistrationFormController {
             return "registrationForm";
         }
 
+        createDirectory(userForm.getUsername());
 
         model.addAttribute("message", "Pomyślnie zarejestrowano");
         return "actionMessage";
@@ -185,5 +159,35 @@ public class UserRegistrationFormController {
         binder.setDisallowedFields("enabled", "roles");
     }
 
+    private int diff(Date birthDate){
+        Timestamp stamp = new Timestamp(System.currentTimeMillis());
+        Date date = new Date(stamp.getTime());
 
+        Calendar a = Calendar.getInstance(), b = Calendar.getInstance();
+        a.setTime(birthDate);
+        b.setTime(date);
+
+        int diff = b.get(Calendar.YEAR) - a.get(Calendar.YEAR);
+        if (a.get(Calendar.MONTH) > b.get(Calendar.MONTH) ||
+                (a.get(Calendar.MONTH) == b.get(Calendar.MONTH) &&
+                        a.get(Calendar.DATE) > b.get(Calendar.DATE))) {
+            diff--;
+        }
+
+        log.info("Wiek: " + diff);
+        return diff;
+    }
+
+    private void createDirectory(String username){
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        String UPLOADED_FOLDER = s + "\\src\\main\\resources\\static\\images\\" + username;
+
+        try {
+            Path path = Paths.get(UPLOADED_FOLDER);
+            Files.createDirectory(path);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

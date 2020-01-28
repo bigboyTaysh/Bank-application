@@ -40,7 +40,7 @@
                         Status wniosku
                     </td>
                 </tr>
-                <tr th:each="creditApplication : ${creditApplicationsList}">
+                <tr>
                     <td>
                         <a th:href="@{/user(id=${creditApplication.user.id})}">
                             [[${creditApplication.user.firstName + ' ' + creditApplication.user.lastName}]]
@@ -88,14 +88,10 @@
                             </div>
                         </div>
                     </td>
-                    <td>
-                        <a th:href="@{/creditApplicationId(id=${creditApplication.id})}">
-                            Szczegóły
-                        </a>
-                    </td>
                 </tr>
             </tbody>
         </table>
+        <img th:src="${'images/' + username + '/' + creditApplication.id + '.jpg'}">
         <div th:replace="shared/footer :: footer"></div>
 
     </body>

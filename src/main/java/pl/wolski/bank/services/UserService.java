@@ -4,10 +4,7 @@ package pl.wolski.bank.services;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import pl.wolski.bank.controllers.commands.UserFilter;
-import pl.wolski.bank.models.Address;
-import pl.wolski.bank.models.BankAccount;
-import pl.wolski.bank.models.Role;
-import pl.wolski.bank.models.User;
+import pl.wolski.bank.models.*;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 import java.math.BigDecimal;
@@ -37,4 +34,6 @@ public interface UserService extends UserDetailsService {
 
     User getUserByConfirmationId(String confirmationId);
     User getUserByEmail(String email);
+
+    User getUserByCreditApplication(CreditApplication creditApplication);
 }

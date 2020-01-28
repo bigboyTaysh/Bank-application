@@ -23,13 +23,4 @@ public class TransactionTypeServiceImpl implements TransactionTypeService {
         transactionTypeRepository.saveAndFlush(transactionType);
     }
 
-    @Override
-    public List<TransactionType> getAllTypes() {
-        return transactionTypeRepository.findAll();
-    }
-
-    @Override
-    public TransactionType findByType(TransactionType.Types types){
-        return transactionTypeRepository.findTransactionTypeByType(types);
-    }
 }

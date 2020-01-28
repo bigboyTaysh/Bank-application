@@ -1,6 +1,36 @@
+html{ height:100%; }
+body{ min-height:100%; padding:0; margin:0; position:relative; }
+header{ height:50px; background:lightcyan; }
+footer{ background: #424242 ; }
+
 .table {
     margin-left: auto;
     margin-right: auto;
     width: 80%;
     text-align: center;
+}
+
+img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 500px;
+    height: 500px;
+    margin-top: -250px; /* Half the height */
+    margin-left: -250px; /* Half the width */
+
+    vertical-align: middle;
+    text-align: center;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    text-align: center;
+}
+
+footer span{
+    color: #FFFFFF;
 }

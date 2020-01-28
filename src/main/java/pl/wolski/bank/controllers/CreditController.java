@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import pl.wolski.bank.models.*;
 import pl.wolski.bank.services.*;
 
@@ -67,6 +68,14 @@ public class CreditController {
         return "actionMessage";
     }
 
+    @Secured({"ROLE_USER"})
+    @GetMapping("/creditApplicationsList")
+    public String userCreditApplicationsList(Model model) {
+        model.addAttribute("creditApplicationsList", creditApplicationService.findAll());
+
+        return "creditApplicationsList";
+    }
+
 
     @Secured({"ROLE_ADMIN", "ROLE_EMPLOYEE"})
     @GetMapping("/creditApplicationsList")
@@ -74,6 +83,19 @@ public class CreditController {
         model.addAttribute("creditApplicationsList", creditApplicationService.findAll());
 
         return "creditApplicationsList";
+    }
+
+    @Secured("ROLE_EMPLOYEE")
+    @GetMapping("/creditApplicationId")
+    public String creditForm(Model model,
+                             Long id) {
+        CreditApplication creditApplication = creditApplicationService.getById(id);
+        User user = userService.getUserByCreditApplication(creditApplication);
+
+        model.addAttribute("username", user.getUsername());
+        model.addAttribute("creditApplication", creditApplication);
+
+        return "creditApplication";
     }
 
     @GetMapping("/creditApplication")
@@ -86,14 +108,15 @@ public class CreditController {
     @PostMapping("/creditApplication")
     public String creditForm(Model model,
                               @Valid @ModelAttribute("creditApplication") CreditApplication creditApplication,
-                             BindingResult bindingResult){
+                             BindingResult bindingResult,
+                             @RequestParam("file") MultipartFile file){
         if (bindingResult.hasErrors()){
             return "creditApplicationForm";
         }
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Object principal = auth.getPrincipal();
 
-        creditApplicationService.save(creditApplication, ((UserDetails)principal).getUsername());
+        creditApplicationService.save(creditApplication, ((UserDetails)principal).getUsername(), file);
 
         model.addAttribute("message", "Pomyślnie wypełniono wniosek!");
 

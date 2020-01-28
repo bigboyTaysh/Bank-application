@@ -55,11 +55,17 @@ $(document).ready(function () {
         //let commission = $("select[name=creditType]").find(':selected').data('commission');
         let creditRates = myDataArray["rates"];
         let commission = myDataArray["commission"];
-        console.log(commission);
+
+        if(creditAmount !== ""){
+            $("input[name=totalRepayment]").val((f(creditAmount, months, creditRates, commission).valueOf() * months).toFixed(2));
+            $("input[name=monthRepayment]").val((f(creditAmount, months, creditRates, commission).valueOf()).toFixed(2));
+        } else {
+            $("input[name=totalRepayment]").val(0.00);
+            $("input[name=monthRepayment]").val(0.00);
+        }
 
 
-        $("input[name=totalRepayment]").val((f(creditAmount, months, creditRates, commission).valueOf() * months).toFixed(2));
-        $("input[name=monthRepayment]").val((f(creditAmount, months, creditRates, commission).valueOf()).toFixed(2));
+
     });
 
 

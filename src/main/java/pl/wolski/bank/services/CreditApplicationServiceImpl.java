@@ -3,13 +3,18 @@ package pl.wolski.bank.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import pl.wolski.bank.exceptions.UserNotFoundException;
 import pl.wolski.bank.models.*;
 import pl.wolski.bank.repositories.CreditApplicationRepository;
 import pl.wolski.bank.repositories.CreditRepository;
 import pl.wolski.bank.repositories.CreditTypeRepository;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
@@ -36,15 +41,26 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
     private NotificationService notificationService;
 
     @Override
-    public void save(CreditApplication creditApplication, String username) {
+    public void save(CreditApplication creditApplication, String username, MultipartFile file) {
         Timestamp stamp = new Timestamp(System.currentTimeMillis());
         Date date = new Date(stamp.getTime());
         creditApplication.setDateOfSubmissionOfTheApplication(date);
 
         creditApplication.setUser(userService.findByUsername(username));
 
-
         creditApplicationRepository.saveAndFlush(creditApplication);
+
+        Path currentRelativePath = Paths.get("");
+        String s = currentRelativePath.toAbsolutePath().toString();
+        String UPLOADED_FOLDER = s + "\\src\\main\\resources\\static\\images\\" + username + "\\";
+        try {
+            // Get the file and save it somewhere
+            byte[] bytes = file.getBytes();
+            Path path = Paths.get(UPLOADED_FOLDER + creditApplication.getId() + ".jpg");
+            Files.write(path, bytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -101,6 +117,18 @@ public class CreditApplicationServiceImpl implements CreditApplicationService {
             bankAccountService.save(bankAccount);
             creditRepository.save(credit);
         }
+    }
+
+    @Override
+    public CreditApplication getById(Long id){
+        Optional<CreditApplication> optionalCreditApplication = creditApplicationRepository.findById(id);
+        CreditApplication creditApplication = optionalCreditApplication.orElseThrow(() -> new UserNotFoundException(id));
+        return creditApplication;
+    }
+
+    @Override
+    public List<CreditApplication> findAllByUser(User user){
+        return creditApplicationRepository.findAllByUserOrderByDateOfSubmissionOfTheApplication(user);
     }
 
 }

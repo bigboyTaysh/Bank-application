@@ -10,6 +10,7 @@ import pl.wolski.bank.controllers.commands.UserFilter;
 import pl.wolski.bank.controllers.commands.UserSpecifications;
 import pl.wolski.bank.exceptions.UserNotFoundException;
 import pl.wolski.bank.models.BankAccount;
+import pl.wolski.bank.models.CreditApplication;
 import pl.wolski.bank.models.Role;
 import pl.wolski.bank.repositories.AddressRepository;
 import pl.wolski.bank.repositories.RoleRepository;
@@ -169,6 +170,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public pl.wolski.bank.models.User getUserByConfirmationId(String confirmationId){
         return userRepository.getUserByConfirmationId(confirmationId);
+    }
+
+    @Override
+    public pl.wolski.bank.models.User getUserByCreditApplication(CreditApplication creditApplication){
+        return userRepository.getByCreditApplications(creditApplication);
     }
 
     @Override

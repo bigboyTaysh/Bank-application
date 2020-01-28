@@ -6,6 +6,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import pl.wolski.bank.controllers.commands.UserSpecifications;
 import pl.wolski.bank.models.BankAccount;
+import pl.wolski.bank.models.CreditApplication;
 import pl.wolski.bank.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -27,4 +28,6 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     User getUserByConfirmationId(String confirmationId);
     User getUserByEmail(String email);
+
+    User getByCreditApplications(CreditApplication creditApplication);
 }
