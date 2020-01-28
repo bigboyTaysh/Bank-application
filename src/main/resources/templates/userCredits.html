@@ -45,16 +45,17 @@
                 </tr>
                 <tr th:each="userCredit : ${userCredits}">
                     <td>
-                        [[${userCredit.creditAmount}]]
+                        <span th:text="${#numbers.formatDecimal(userCredit.creditAmount, 0, 2)}" />
+
                     </td>
                     <td>
-                        [[${userCredit.totalRepayment}]]
+                        <span th:text="${#numbers.formatDecimal(userCredit.totalRepayment, 0, 2)}" />
                     </td>
                     <td>
-                        [[${userCredit.currentRepayment}]]
+                        <span th:text="${#numbers.formatDecimal(userCredit.currentRepayment, 1, 2)}" />
                     </td>
                     <td>
-                        [[${userCredit.monthRepayment}]]
+                        <span th:text="${#numbers.formatDecimal(userCredit.monthRepayment, 0, 2)}" />
                     </td>
                     <td>
                         [[${userCredit.numberOfMonths}]]

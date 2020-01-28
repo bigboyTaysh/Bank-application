@@ -61,7 +61,7 @@ public class TransactionServiceImpl implements TransactionService {
         notification.setDate(date);
 
         notification.setTitle("Wypłata gotówki");
-        notification.setMessage("-" + valueWithCommision + transaction.getCurrency().getName()
+        notification.setMessage("-" + valueWithCommision + " " + transaction.getCurrency().getName()
                 + "\n Na rachunku " + bankAccountFrom.getBankAccountNumber());
         notification.setUser(userFrom);
         notification.setWasRead(false);

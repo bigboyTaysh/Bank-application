@@ -69,11 +69,14 @@ public class CreditController {
     }
 
     @Secured({"ROLE_USER"})
-    @GetMapping("/creditApplicationsList")
+    @GetMapping("/userCreditApplicationsList")
     public String userCreditApplicationsList(Model model) {
-        model.addAttribute("creditApplicationsList", creditApplicationService.findAll());
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = auth.getPrincipal();
+        User user = userService.findByUsername(((UserDetails) principal).getUsername());
+        model.addAttribute("creditApplicationsList", creditApplicationService.findAllByUser(user));
 
-        return "creditApplicationsList";
+        return "userCreditApplicationsList";
     }
 
 

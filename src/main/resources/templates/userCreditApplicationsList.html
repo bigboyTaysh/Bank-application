@@ -10,9 +10,6 @@
             <tbody>
                 <tr>
                     <td>
-                        Imię Nazwisko
-                    </td>
-                    <td>
                         Data złożenia wniosku
                     </td>
                     <td>
@@ -42,18 +39,13 @@
                 </tr>
                 <tr th:each="creditApplication : ${creditApplicationsList}">
                     <td>
-                        <a th:href="@{/user(id=${creditApplication.user.id})}">
-                            [[${creditApplication.user.firstName + ' ' + creditApplication.user.lastName}]]
-                        </a>
-                    </td>
-                    <td>
                         [[${creditApplication.dateOfSubmissionOfTheApplication}]]
                     </td>
                     <td>
-                        [[${creditApplication.creditAmount}]]
+                        <span th:text="${#numbers.formatDecimal(creditApplication.creditAmount, 0, 2)}" />
                     </td>
                     <td>
-                        [[${creditApplication.totalRepayment}]]
+                        <span th:text="${#numbers.formatDecimal(creditApplication.totalRepayment, 0, 2)}" />
                     </td>
                     <td>
                         [[${creditApplication.numberOfMonths}]]
@@ -68,30 +60,21 @@
                         [[${creditApplication.creditType.commission}]]
                     </td>
                     <td>
-                        [[${creditApplication.monthRepayment}]]
+                        <span th:text="${#numbers.formatDecimal(creditApplication.monthRepayment, 0, 2)}" />
+
                     </td>
                     <td>
                         <div th:if="${creditApplication.accepted == null}">
-                            <a th:style="${'color: green;'}"
-                               th:href="@{/acceptApplication(id=${creditApplication.id})}">
-                                Akceptuj
-                            </a>
-                            <a th:style="${'color: red;'}"
-                               th:href="@{/discardApplication(id=${creditApplication.id})}">
-                                Odrzuć
-                            </a>
+                            <span style="color: orange">
+                                Nie podjęto decyzji
+                            </span>
                         </div>
                         <div th:unless="${creditApplication.accepted == null}">
                             <div th:switch="${creditApplication.accepted}">
-                                <p th:case="true">Potwierdzono</p>
-                                <p th:case="false">Odrzucono</p>
+                                <p style="color: green" th:case="true">Potwierdzono</p>
+                                <p style="color: red" th:case="false">Odrzucono</p>
                             </div>
                         </div>
-                    </td>
-                    <td>
-                        <a th:href="@{/creditApplicationId(id=${creditApplication.id})}">
-                            Szczegóły
-                        </a>
                     </td>
                 </tr>
             </tbody>
