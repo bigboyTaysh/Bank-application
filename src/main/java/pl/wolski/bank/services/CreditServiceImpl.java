@@ -59,6 +59,7 @@ public class CreditServiceImpl implements CreditService {
             bankAccount.setAvailableFounds(bankAccount.getAvailableFounds().subtract(monthRepayment));
             bankAccount.setBalance(bankAccount.getBalance().subtract(monthRepayment));
             credit.setNumberOfMonthsToTheEnd(numberOfMonthsToTheEnd - monthsToSubtraction);
+            credit.setCurrentRepayment(credit.getCurrentRepayment().add(monthRepayment));
             Date date = new Date(System.currentTimeMillis());
             credit.setLastPayment(date);
 
