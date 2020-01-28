@@ -14,4 +14,8 @@ public interface NotificationService {
     List<Notification> findByUserAndWasRead(User user, boolean wasRead);
 
     List<Notification> getAllUserNotification(User user);
+
+    void delete(Notification notification);
+
+    Notification getById(Long id);
 }

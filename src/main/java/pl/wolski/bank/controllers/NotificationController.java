@@ -3,23 +3,23 @@ package pl.wolski.bank.controllers;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import pl.wolski.bank.models.*;
 import pl.wolski.bank.services.BankAccountService;
 import pl.wolski.bank.services.NotificationService;
 import pl.wolski.bank.services.TransactionService;
 import pl.wolski.bank.services.UserService;
 
+import javax.validation.Valid;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -46,6 +46,22 @@ public class NotificationController {
             notification.setWasRead(true);
             notificationService.save(notification);
         }
+
+        model.addAttribute("notifications", notificationService.getAllUserNotification(userService.findByUsername(user.getUsername())));
+
+        return "notifications";
+    }
+
+    @Secured("ROLE_USER")
+    @PostMapping(path = "/deleteNotification")
+    //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
+    public String deleteNotification(Model model,
+                               @Valid @ModelAttribute("notification") Long id) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = auth.getPrincipal();
+        User user = userService.findByUsername(((UserDetails)principal).getUsername());
+
+        notificationService.delete(notificationService.getById(id));
 
         model.addAttribute("notifications", notificationService.getAllUserNotification(userService.findByUsername(user.getUsername())));
 
