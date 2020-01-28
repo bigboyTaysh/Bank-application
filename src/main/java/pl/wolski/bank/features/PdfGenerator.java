@@ -51,9 +51,11 @@ public class PdfGenerator {
             ITextRenderer renderer = new ITextRenderer();
             renderer.setDocumentFromString(processedHtml);
             renderer.layout();
-            renderer.createPDF(os);
+            renderer.createPDF(os,false);
             renderer.finishPDF();
             log.info("wygenerowano pdf!");
+        } catch (IOException x){
+
         } finally {
             if (os != null) {
                 try {

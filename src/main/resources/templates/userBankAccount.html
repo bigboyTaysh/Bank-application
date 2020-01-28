@@ -186,6 +186,26 @@
                                     th:value="${_csrf.token}"/>
                         </form>
                     </td>
+                    <td>
+                        <form th:action="@{/confirmationSend}" th:id="${'send:' + transaction.id}" method="post" >
+                            <input th:type="email" required th:name="email"/>
+                            <input
+                                    type="hidden"
+                                    th:name="id"
+                                    th:value="${transaction.id}"/>
+                            <input
+                                    type="hidden"
+                                    th:name="userAccount"
+                                    th:value="${userAccount.bankAccountNumber}"/>
+                            <input
+                                    type="hidden"
+                                    th:name="${_csrf.parameterName}"
+                                    th:value="${_csrf.token}"/>
+                        </form>
+                        <a href="#" th:onclick="'document.getElementById(\'send:' + ${transaction.id} + '\').submit();'">
+                            <span>Wyślij potwierdzenie na adres email</span>
+                        </a>
+                    </td>
                 </tr>
             </tbody>
         </table>
