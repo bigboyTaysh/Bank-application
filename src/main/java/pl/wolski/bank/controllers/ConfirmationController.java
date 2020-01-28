@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -168,5 +169,18 @@ public class ConfirmationController {
                 .contentType(MediaType.parseMediaType("application/octet-stream"))
                 .body(resource);
 
+    }
+
+    @ModelAttribute("notificationCounter")
+    public int notificationCounter(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = auth.getPrincipal();
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
+            User user = userService.findByUsername(((UserDetails)principal).getUsername());
+            List<Notification> notificationList = notificationService.findByUserAndWasRead(user, false);
+            log.info("Ładowanie listy " + notificationList.size() + " kont bankowych ");
+            return notificationList.size();
+        }
+        return 0;
     }
 }
