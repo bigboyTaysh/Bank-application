@@ -57,10 +57,15 @@ public class UserRegistrationFormController {
                                @Valid @ModelAttribute("userAddress") Address userAddress,
                                BindingResult bindingResult2) {
 
+        if(!userForm.getPassword().equals(userForm.getPasswordConfirm())){
+            model.addAttribute("message", "Hasła muszą być takie same");
+            return "registrationForm";
+
+        }
         if (bindingResult.hasErrors()) {
-            return "userRegistrationForm";
+            return "registrationForm";
         } else if (bindingResult2.hasErrors()){
-            return "userRegistrationForm";
+            return "registrationForm";
         }
 
         Timestamp stamp = new Timestamp(System.currentTimeMillis());

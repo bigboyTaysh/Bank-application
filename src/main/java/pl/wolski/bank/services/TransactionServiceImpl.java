@@ -93,9 +93,8 @@ public class TransactionServiceImpl implements TransactionService {
         Timestamp stamp = new Timestamp(System.currentTimeMillis());
         Date date = new Date(stamp.getTime());
         notification.setDate(date);
-
         notification.setTitle("Wpłata gotówki");
-        notification.setMessage("+" + value + transaction.getCurrency().getName()
+        notification.setMessage("+" + value + " " +  transaction.getCurrency().getName()
                 + "\n Na rachunku " + bankAccountTo.getBankAccountNumber());
         notification.setUser(userTo);
         notification.setWasRead(false);

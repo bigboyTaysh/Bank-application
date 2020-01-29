@@ -78,11 +78,13 @@ public class TransactionController {
         User user = (User) model.getAttribute("user");
 
         BankAccount bankAccountTo = bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber());
-        BankAccount bankAccountFrom = bankAccountService.findByBankAccountNumber(transaction.getToBankAccountNumber());
+        BankAccount bankAccountFrom = bankAccountService.findByBankAccountNumber(transaction.getFromBankAccountNumber());
 
-        if(bankAccountTo.getBankAccountNumber().equals(bankAccountFrom.getBankAccountNumber())){
-            model.addAttribute("message", "Nie możesz przelać na te samo konto");
-            return "transactionForm";
+        if(bankAccountTo != null){
+            if(bankAccountTo.getBankAccountNumber().equals(bankAccountFrom.getBankAccountNumber())){
+                model.addAttribute("message", "Nie możesz przelać na te samo konto");
+                return "transactionForm";
+            }
         }
 
         if (bankAccountTo != null) {

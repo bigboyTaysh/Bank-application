@@ -3,9 +3,14 @@ package pl.wolski.bank.controllers;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.log4j.Log4j2;
+import org.junit.Before;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -16,13 +21,24 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
+import org.springframework.web.context.WebApplicationContext;
+import pl.wolski.bank.BankApplication;
+import pl.wolski.bank.config.beans.WebMvcConfigurerImpl;
+import pl.wolski.bank.models.Address;
+import pl.wolski.bank.models.Role;
+import pl.wolski.bank.models.User;
+import pl.wolski.bank.repositories.AddressRepository;
 import pl.wolski.bank.repositories.RoleRepository;
 import pl.wolski.bank.services.*;
 import org.springframework.test.web.servlet.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.HashSet;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -31,13 +47,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
+@Log4j2
 @SpringBootTest
 @AutoConfigureMockMvc
+@AutoConfigureDataJpa
 class UserControllerTest {
     @Autowired
     private EmailService emailService;
 
-    @Autowired
+    @MockBean
     private UserService userService;
 
     @Autowired
@@ -49,7 +67,7 @@ class UserControllerTest {
     @Autowired
     private NotificationService notificationService;
 
-    @Autowired
+    @MockBean
     private RoleRepository roleRepository;
 
     @Autowired
@@ -59,24 +77,26 @@ class UserControllerTest {
     private UserController userController;
 
     @MockBean
+    private AddressRepository addressRepository;
+
+    @MockBean
     private Model model;
 
     @Autowired
-    private MockMvc mockMvc;
+    private WebApplicationContext webApplicationContext;
 
+    @Autowired
+    private static MockMvc mockMvc;
+
+
+    @Before
     public void setup() {
-        this.mockMvc = standaloneSetup(new UserController()).build();
+
+
     }
 
     @Test
     void home() {
-    }
-
-    public <T> T mapFromJson(String json, Class<T> clazz)
-            throws JsonParseException, JsonMappingException, IOException {
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(json, clazz);
     }
 
     @Test
@@ -106,11 +126,37 @@ class UserControllerTest {
     }
 
     @Test
-    void testNewPassword() {
+    void testNewPassword() throws Exception {
+        mockMvc = MockMvcBuilders.standaloneSetup(new UserController(this.userService)).build();
+
+        String uri = "/newPassword";
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(uri)
+                .param("password", "password")
+                .param("passwordConfirm", "wrongpassword")
+                .param("confirmationId", "")
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(model().attribute("message", "Nie udało się ustawić hasła"))
+                .andExpect(view().name("actionMessage"))
+                .andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
     }
 
     @Test
-    void passwordReset() {
+    void passwordReset() throws Exception {
+        mockMvc = MockMvcBuilders.standaloneSetup(new UserController(this.userService)).build();
+
+        String uri = "/passwordReset";
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(uri)
+                .param("email", "email1@wp.pl")
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(model().attribute("message", "Nie znaleziono użytkownika"))
+                .andExpect(view().name("actionMessage"))
+                .andReturn();
+
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
     }
 
     @Test

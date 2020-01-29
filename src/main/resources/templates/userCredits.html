@@ -120,7 +120,7 @@
                                 <form method="POST">
                                     <input type="hidden" name="id" th:value="${userCredit.id}" />
                                     <div class="form-group">
-                                        <input type="text" name="credit" th:value="${userCredit.totalRepayment}"
+                                        <input type="text" name="credit" th:value="${userCredit.totalRepayment - userCredit.currentRepayment}"
                                                class="form-control" readonly
                                                autofocus="true"/>
                                     </div>

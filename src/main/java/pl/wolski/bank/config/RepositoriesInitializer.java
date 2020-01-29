@@ -62,8 +62,8 @@ public class RepositoriesInitializer {
                     creditTypeRepository.save(creditType);
                     creditTypeRepository.save(creditType2);
 
-                    InvestmentType investmentType = new InvestmentType("typ 1", new BigDecimal(2.0));
-                    InvestmentType investmentType2 = new InvestmentType("typ 2", new BigDecimal(4.0));
+                    InvestmentType investmentType = new InvestmentType("lokata terminowa", new BigDecimal(2.0));
+                    InvestmentType investmentType2 = new InvestmentType("e-lokata", new BigDecimal(4.0));
                     investmentTypeService.save(investmentType);
                     investmentTypeService.save(investmentType2);
 
@@ -78,6 +78,18 @@ public class RepositoriesInitializer {
                     currency2.setName("EUR");
                     currency2.setPurchase(new BigDecimal("4.295"));
                     currency2.setSale(new BigDecimal("4.2533"));
+                    currencyService.save(currency2);
+
+                    Currency currency3 = new Currency();
+                    currency2.setName("CHF");
+                    currency2.setPurchase(new BigDecimal("  3.9804"));
+                    currency2.setSale(new BigDecimal("4.0005"));
+                    currencyService.save(currency2);
+
+                    Currency currency4 = new Currency();
+                    currency2.setName("USD");
+                    currency2.setPurchase(new BigDecimal("3.8805"));
+                    currency2.setSale(new BigDecimal(" 3.8997"));
                     currencyService.save(currency2);
 
                     AccountType accountType = new AccountType(AccountType.Types.PAY_ACC_FOR_ADULT);
@@ -127,6 +139,7 @@ public class RepositoriesInitializer {
                     user2.setBirthDate(calendar.getTime());
                     user2.setAddress(address);
                     user2.setPhone("123456789");
+                    user2.setConfirmationId("testid");
                     userRepository.save(user2);
 
                     bankAccount.setUser(user2);

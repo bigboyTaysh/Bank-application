@@ -56,6 +56,10 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
     @GetMapping(path = "/index")
     //@RequestMapping(path = "/index", method = {RequestMethod.GET, RequestMethod.POST})
     public String home(Model model) {
@@ -161,7 +165,6 @@ public class UserController {
             } else {
                 model.addAttribute("message", "Hasła muszą być takie same!");
                 model.addAttribute("confirmationId", confirmationId);
-                userService.save(user);
                 return "setPassword";
             }
 
@@ -258,12 +261,15 @@ public class UserController {
     @ModelAttribute("notificationCounter")
     public int notificationCounter(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = auth.getPrincipal();
-        if (!(auth instanceof AnonymousAuthenticationToken)) {
-            User user = userService.findByUsername(((UserDetails)principal).getUsername());
-            List<Notification> notificationList = notificationService.findByUserAndWasRead(user, false);
-            log.info("Ładowanie listy " + notificationList.size() + " kont bankowych ");
-            return notificationList.size();
+        Object principal;
+        if(auth != null){
+            principal = auth.getPrincipal();
+            if (!(auth instanceof AnonymousAuthenticationToken)) {
+                User user = userService.findByUsername(((UserDetails)principal).getUsername());
+                List<Notification> notificationList = notificationService.findByUserAndWasRead(user, false);
+                log.info("Ładowanie listy " + notificationList.size() + " kont bankowych ");
+                return notificationList.size();
+            }
         }
         return 0;
     }
