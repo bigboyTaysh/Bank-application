@@ -106,6 +106,24 @@
                     </table>
                 </td>
             </tr>
+            <tr th:unless="${transaction.fromBankAccountNumber != null || transaction.fromBankAccountNumber != null}">
+                <td>
+                    <div th:if="${transaction.fromBankAccountNumber.toString().equals(userAccount.bankAccountNumber.toString())}">
+                        <span>Na rachunek:</span>
+                    </div>
+                    <div th:if="${transaction.toBankAccountNumber.toString().equals(userAccount.bankAccountNumber.toString())}">
+                        <span>Z rachunku:</span>
+                    </div>
+                </td>
+                <td>
+                    <div th:if="${transaction.fromBankAccountNumber.toString().equals(userAccount.bankAccountNumber.toString())}">
+                        <span>[[${transaction.toBankAccountNumber}]]</span>
+                    </div>
+                    <div th:if="${transaction.toBankAccountNumber.toString().equals(userAccount.bankAccountNumber.toString())}">
+                        <span>[[${transaction.fromBankAccountNumber}]]</span>
+                    </div>
+                </td>
+            </tr>
             <tr>
                 <td>
                     Operacja:

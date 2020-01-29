@@ -71,7 +71,8 @@
                             <tr>
                                 <div th:if="${transaction.transactionType.type.toString().equals('TRANSFER')}">
                                     <div th:if="${transaction.fromBankAccountNumber.toString().equals(userAccount.bankAccountNumber.toString())}">
-                                        <span>[[${transaction.userNameTo}]]</span>
+                                        <span>[[${transaction.userNameTo}]]</span><br/>
+                                        <span style="font-size: 10pt">[[${transaction.toBankAccountNumber}]]</span>
                                     </div>
                                     <div th:if="${transaction.toBankAccountNumber.toString().equals(userAccount.bankAccountNumber.toString())}">
                                         <span>[[${transaction.userNameFrom}]]</span><br>
