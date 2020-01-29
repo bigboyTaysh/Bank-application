@@ -81,16 +81,16 @@ public class RepositoriesInitializer {
                     currencyService.save(currency2);
 
                     Currency currency3 = new Currency();
-                    currency2.setName("CHF");
-                    currency2.setPurchase(new BigDecimal("3.9804"));
-                    currency2.setSale(new BigDecimal("4.0005"));
-                    currencyService.save(currency2);
+                    currency3.setName("CHF");
+                    currency3.setPurchase(new BigDecimal("3.9804"));
+                    currency3.setSale(new BigDecimal("4.0005"));
+                    currencyService.save(currency3);
 
                     Currency currency4 = new Currency();
-                    currency2.setName("USD");
-                    currency2.setPurchase(new BigDecimal("3.8805"));
-                    currency2.setSale(new BigDecimal("3.8997"));
-                    currencyService.save(currency2);
+                    currency4.setName("USD");
+                    currency4.setPurchase(new BigDecimal("3.8805"));
+                    currency4.setSale(new BigDecimal("3.8997"));
+                    currencyService.save(currency4);
 
                     AccountType accountType = new AccountType(AccountType.Types.PAY_ACC_FOR_ADULT);
                     AccountType accountType2 = new AccountType(AccountType.Types.PAY_ACC_FOR_YOUNG);

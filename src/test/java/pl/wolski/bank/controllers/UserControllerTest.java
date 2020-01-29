@@ -17,8 +17,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 import org.springframework.web.context.WebApplicationContext;
@@ -51,6 +53,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureDataJpa
+@TestPropertySource(locations="classpath:application-test.properties")
 class UserControllerTest {
     @Autowired
     private EmailService emailService;
@@ -101,12 +104,16 @@ class UserControllerTest {
 
     @Test
     void greeting() throws Exception {
+        mockMvc = MockMvcBuilders.standaloneSetup(new UserController(this.userService)).build();
+
         String someString = "dsadasda";
         String uri = "/confirm?id=" + someString;
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(uri)
                 .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(view().name("actionMessage"))
-                .andExpect(model().attribute("message", "Nie udało się aktywować konta")).andReturn();
+                .andExpect(model().attribute("message", "Nie udało się aktywować konta"))
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
 
         int status = mvcResult.getResponse().getStatus();
         assertEquals(200, status);
@@ -114,12 +121,16 @@ class UserControllerTest {
 
     @Test
     void newPassword() throws Exception {
+        mockMvc = MockMvcBuilders.standaloneSetup(new UserController(this.userService)).build();
+
         String someString = "dsadasda";
         String uri = "/newPassword?confirmationId=" + someString;
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.get(uri)
                 .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(view().name("actionMessage"))
-                .andExpect(model().attribute("message", "Nie udało się nadać nowego hasła")).andReturn();
+                .andExpect(model().attribute("message", "Nie udało się nadać nowego hasła"))
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
 
         int status = mvcResult.getResponse().getStatus();
         assertEquals(200, status);
@@ -132,11 +143,12 @@ class UserControllerTest {
         String uri = "/newPassword";
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.post(uri)
                 .param("password", "password")
-                .param("passwordConfirm", "wrongpassword")
+                .param("passwordConfirm", "password")
                 .param("confirmationId", "")
                 .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(model().attribute("message", "Nie udało się ustawić hasła"))
                 .andExpect(view().name("actionMessage"))
+                .andDo(MockMvcResultHandlers.print())
                 .andReturn();
 
         int status = mvcResult.getResponse().getStatus();

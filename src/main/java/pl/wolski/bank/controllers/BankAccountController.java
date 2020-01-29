@@ -74,11 +74,14 @@ public class BankAccountController {
     @ModelAttribute("currencyList")
     public List<Currency> loadTypes(){
         List<Currency> currencyList = currencyService.findAll();
-        for (Currency currency : currencyList) {
-            if (currency.getName().equals("PLN")){
-                currencyList.remove(currency);
+        int position = 0;
+        for (int i = 0; i < currencyList.size(); i++) {
+            if (currencyList.get(i).getName().equals("PLN")){
+                position = i;
             }
         }
+        currencyList.remove(position);
+
         log.info("Ładowanie listy "+ currencyList.size() +" walut");
         return currencyList;
     }
