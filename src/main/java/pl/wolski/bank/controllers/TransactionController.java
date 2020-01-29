@@ -94,9 +94,11 @@ public class TransactionController {
                     model.addAttribute("message", "Pomyślnie wykonanano przelew");
                 } else {
                     model.addAttribute("message", "Brak środków na koncie");
+                    return "transactionForm";
                 }
             } else {
                 model.addAttribute("message", "Podaj poprawną walutę");
+                return "transactionForm";
             }
         } else {
             if (transactionService.isTransferPossible(user, transaction)) {
@@ -104,6 +106,7 @@ public class TransactionController {
                 model.addAttribute("message", "Pomyślnie wykonanano przelew");
             } else {
                 model.addAttribute("message", "Nie udało się wykonać przelewu");
+                return "transactionForm";
             }
         }
 
