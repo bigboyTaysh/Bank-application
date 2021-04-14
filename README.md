@@ -1,11 +1,9 @@
 # Aplikacja bankowa 
-projekt z platform programowania, sem 5 - 2019
-# java, springboot, maven, thymeleaf
+**java, springboot, maven, thymeleaf**
 
-# Użytkownik  
-Możliwość:  
-  -stworzenia konta  
-  -resetowania hasła przez email  
+Użytkownik   
+  -stworzenie konta  
+  -resetowanie hasła przez email  
   -tworzenie różnego rodzaju kont bankowych  
   -wysyłanie przelewów, różna waluta(przewalutowanie między kontami), blokada na koncie  
   -przelewy stałe  
@@ -13,7 +11,7 @@ Możliwość:
   -składanie wniosków o kredyt  
   -tworzenie lokat  
 
-# Pracownik
+Pracownik
   -akceptowanie/odrzucanie wniosków  
   -wpłata na konta  
   -wypłata z konta  
