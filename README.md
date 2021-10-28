@@ -1,18 +1,26 @@
-# Aplikacja bankowa 
-**java, springboot, maven, thymeleaf**
+# Bank application
 
-Użytkownik   
-- stworzenie konta
-- resetowanie hasła przez email
-- tworzenie różnego rodzaju kont bankowych
-- wysyłanie przelewów, różna waluta(przewalutowanie między kontami), blokada na koncie
-- przelewy stałe
-- pobieranie bądź wysłanie na email potwierdzenia w formacie pdf
-- składanie wniosków o kredyt
-- tworzenie lokat
+## Technology stack
+* _**Springboot**_
+* _**PostgreSQL**_
+* _**Maven**_
+* _**Thymeleaf**_
+* _**Bootstrap**_
+* _**Quartz for scheduled tasks**_
 
-Pracownik
-- akceptowanie/odrzucanie wniosków
-- wpłata na konta
-- wypłata z konta
-- wyszukiwanie użytkowników
+## User   
+- account creation  
+- password reset via email  
+- creating various types of bank accounts  
+- sending transfers, different currency (currency conversion between accounts), blockade on the account  
+- permanent transfers  
+- download or send an email confirmation of payment in pdf format  
+- applying for a loan  
+- creation of deposits  
+- receiving various notifications  
+
+## Employee  
+- accepting / rejecting applications  
+- deposit 
+- withdrawal  
+- searching for users  
